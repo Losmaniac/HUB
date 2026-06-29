@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="Lead & Speak — a mobile game to improve your leadership skills and English." />
+  <title>Lead &amp; Speak — Leadership + English Game</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg2: #1e293b;
+      --card: #1e293b;
+      --card2: #273449;
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --good: #34d399;
+      --bad: #fb7185;
+      --warn: #fbbf24;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(129,140,248,.18), transparent 60%),
+        radial-gradient(1000px 500px at -10% 110%, rgba(56,189,248,.16), transparent 55%),
+        var(--bg);
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+    .app {
+      max-width: 520px;
+      margin: 0 auto;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    }
+
+    /* Top bar / HUD */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .2px; }
+    .brand .logo {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid; place-items: center; font-size: 20px; box-shadow: var(--shadow);
+    }
+    .brand small { display:block; font-weight: 600; color: var(--muted); font-size: 11px; }
+
+    .stats { display: flex; gap: 8px; }
+    .stat {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 6px 10px; text-align: center; min-width: 52px;
+    }
+    .stat b { font-size: 16px; display: block; line-height: 1.1; }
+    .stat span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+    /* Progress bar */
+    .progress-wrap { height: 8px; background: var(--card); border-radius: 999px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--line); }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .4s ease; }
+
+    main { flex: 1; display: flex; flex-direction: column; }
+
+    .card {
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    /* Screens */
+    .screen { display: none; animation: fade .35s ease; }
+    .screen.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+
+    h1 { font-size: 26px; margin: 0 0 6px; line-height: 1.15; }
+    h2 { font-size: 19px; margin: 0 0 10px; }
+    p { line-height: 1.5; color: var(--text); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .tag {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .4px;
+      text-transform: uppercase; color: var(--accent);
+      background: rgba(56,189,248,.12); border: 1px solid rgba(56,189,248,.3);
+      padding: 4px 9px; border-radius: 999px; margin-bottom: 12px;
+    }
+
+    .scenario {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 14px 0 18px;
+      font-size: 16px; line-height: 1.55;
+    }
+    .scenario .who { color: var(--accent2); font-weight: 700; }
+
+    /* Options */
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option {
+      text-align: left; width: 100%;
+      background: var(--card2); color: var(--text);
+      border: 1px solid var(--line); border-radius: 14px;
+      padding: 14px 16px; font-size: 15px; line-height: 1.45;
+      cursor: pointer; transition: transform .08s ease, border-color .15s, background .15s;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .option:active { transform: scale(.985); }
+    .option .key {
+      flex: none; width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(255,255,255,.06); border: 1px solid var(--line);
+      display: grid; place-items: center; font-weight: 800; font-size: 13px; color: var(--muted);
+    }
+    .option.correct { border-color: var(--good); background: rgba(52,211,153,.12); }
+    .option.correct .key { background: var(--good); color: #04221a; border-color: var(--good); }
+    .option.wrong { border-color: var(--bad); background: rgba(251,113,133,.12); }
+    .option.wrong .key { background: var(--bad); color: #2a0710; border-color: var(--bad); }
+    .option:disabled { cursor: default; opacity: .9; }
+    .option.dim { opacity: .5; }
+
+    /* Feedback */
+    .feedback { margin-top: 16px; display: none; }
+    .feedback.show { display: block; animation: fade .3s ease; }
+    .feedback .verdict { font-weight: 800; font-size: 16px; margin-bottom: 6px; }
+    .feedback .verdict.good { color: var(--good); }
+    .feedback .verdict.partial { color: var(--warn); }
+    .feedback .verdict.bad { color: var(--bad); }
+    .feedback .why { color: var(--text); font-size: 14.5px; line-height: 1.5; }
+
+    .vocab {
+      margin-top: 14px; background: rgba(129,140,248,.08);
+      border: 1px solid rgba(129,140,248,.3); border-radius: 12px; padding: 12px 14px;
+    }
+    .vocab h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent2); }
+    .vocab dl { margin: 0; display: grid; gap: 8px; }
+    .vocab .term { font-weight: 700; color: var(--text); }
+    .vocab .term em { font-style: normal; color: var(--accent); }
+    .vocab .def { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+
+    /* Buttons */
+    .btn {
+      appearance: none; border: 0; cursor: pointer;
+      width: 100%; padding: 15px 18px; border-radius: 14px;
+      font-size: 16px; font-weight: 800; letter-spacing: .2px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #06121f;
+      box-shadow: var(--shadow); transition: transform .08s ease, filter .15s;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn.secondary { background: var(--card2); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
+    .btn.ghost { background: transparent; color: var(--muted); box-shadow: none; font-weight: 600; }
+    .btn[disabled] { opacity: .5; filter: grayscale(.3); pointer-events: none; }
+    .actions { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+
+    .features { display: grid; gap: 10px; margin: 18px 0; }
+    .feature { display: flex; gap: 12px; align-items: flex-start; background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+    .feature .ic { font-size: 22px; }
+    .feature b { display:block; }
+    .feature span { color: var(--muted); font-size: 13.5px; }
+
+    .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+    .level-card { text-align:left; background: var(--card2); border:1px solid var(--line); border-radius:14px; padding:14px; cursor:pointer; transition: transform .08s, border-color .15s; }
+    .level-card:active { transform: scale(.98); }
+    .level-card.selected { border-color: var(--accent); background: rgba(56,189,248,.1); }
+    .level-card .lv-ic { font-size: 24px; }
+    .level-card b { display:block; margin-top:6px; }
+    .level-card span { color: var(--muted); font-size: 12px; }
+
+    /* Results */
+    .score-ring { text-align:center; margin: 6px 0 14px; }
+    .score-ring .big { font-size: 52px; font-weight: 900; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .score-ring .sub { color: var(--muted); margin-top: 4px; }
+    .rank { text-align:center; font-size: 20px; font-weight: 800; margin: 8px 0; }
+    .breakdown { display:grid; gap:8px; margin: 14px 0; }
+    .brk { display:flex; justify-content: space-between; background: rgba(255,255,255,.03); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:14px; }
+    .brk b { color: var(--accent); }
+    .word-bank { margin-top: 8px; }
+    .chip { display:inline-block; background: rgba(129,140,248,.12); border:1px solid rgba(129,140,248,.3); color: var(--text); border-radius:999px; padding:5px 10px; font-size:12.5px; margin: 0 6px 6px 0; }
+
+    footer { text-align:center; color: var(--muted); font-size: 11.5px; padding: 16px 0 4px; }
+    .qcount { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">🧭</div>
+        <div>Lead &amp; Speak
+          <small>Leadership + English</small>
+        </div>
+      </div>
+      <div class="stats" id="hud" style="visibility:hidden">
+        <div class="stat"><b id="hudScore">0</b><span>Score</span></div>
+        <div class="stat"><b id="hudStreak">0</b><span>Streak</span></div>
+      </div>
+    </header>
+
+    <div class="progress-wrap" id="progressWrap" style="visibility:hidden">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <main>
+      <!-- START SCREEN -->
+      <section class="screen active" id="screen-start">
+        <div class="card">
+          <span class="tag">Mobile Game</span>
+          <h1>Lead &amp; Speak</h1>
+          <p class="lead">Make real leadership decisions in tricky workplace scenarios — all in English. Sharpen how you <b>lead</b> and how you <b>communicate</b>.</p>
+
+          <div class="features">
+            <div class="feature"><div class="ic">🎯</div><div><b>Decide like a leader</b><span>Handle conflict, feedback, delegation &amp; motivation.</span></div></div>
+            <div class="feature"><div class="ic">💬</div><div><b>Learn business English</b><span>Useful phrases &amp; vocabulary after every choice.</span></div></div>
+            <div class="feature"><div class="ic">📈</div><div><b>Get scored &amp; ranked</b><span>Build a streak and earn your leadership rank.</span></div></div>
+          </div>
+
+          <h2 style="margin-top:18px">Choose difficulty</h2>
+          <div class="level-grid" id="levelGrid">
+            <button class="level-card selected" data-level="easy"><div class="lv-ic">🌱</div><b>Team Lead</b><span>Everyday situations · simpler English</span></button>
+            <button class="level-card" data-level="hard"><div class="lv-ic">🔥</div><b>Director</b><span>High-stakes calls · advanced English</span></button>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="btnStart">Start playing ▶</button>
+          </div>
+        </div>
+        <footer>No sign-up · Works offline · Best on your phone</footer>
+      </section>
+
+      <!-- QUESTION SCREEN -->
+      <section class="screen" id="screen-game">
+        <div class="card">
+          <div class="qcount" id="qCount">Scenario 1 of 8</div>
+          <span class="tag" id="qSkill">Communication</span>
+          <h2 id="qTitle">Scenario title</h2>
+          <div class="scenario" id="qScenario">Scenario text…</div>
+
+          <div class="options" id="qOptions"></div>
+
+          <div class="feedback" id="qFeedback">
+            <div class="verdict" id="fbVerdict"></div>
+            <div class="why" id="fbWhy"></div>
+            <div class="vocab" id="fbVocab">
+              <h3>📘 English you just used</h3>
+              <dl id="fbVocabList"></dl>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="btnNext" style="display:none">Next ▶</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS SCREEN -->
+      <section class="screen" id="screen-end">
+        <div class="card">
+          <span class="tag">Debrief</span>
+          <div class="score-ring">
+            <div class="big"><span id="endScore">0</span><span style="font-size:24px;color:var(--muted)">/<span id="endMax">0</span></span></div>
+            <div class="sub" id="endPct">0%</div>
+          </div>
+          <div class="rank" id="endRank">—</div>
+          <p class="lead" id="endMsg" style="text-align:center"></p>
+
+          <div class="breakdown" id="endBreakdown"></div>
+
+          <div class="vocab">
+            <h3>📘 Your word bank</h3>
+            <div class="word-bank" id="endWords"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="btnAgain">Play again 🔄</button>
+            <button class="btn secondary" id="btnHome">Change difficulty</button>
+          </div>
+        </div>
+        <footer>Keep practicing — great leaders are made, not born.</footer>
+      </section>
+    </main>
+  </div>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* ---------------------------------------------------------------
+       CONTENT: each scenario teaches a leadership skill + English.
+       options[].q = leadership quality of the choice: best | ok | poor
+       --------------------------------------------------------------- */
+    const SCENARIOS = {
+      easy: [
+        {
+          skill: "Giving Feedback",
+          title: "The missed deadline",
+          text: '<span class="who">Maya</span>, normally reliable, just missed an important deadline for the first time. The team is watching how you react.',
+          options: [
+            { t: "Call her out in front of the team so everyone learns the lesson.", q: "poor" },
+            { t: "Speak with her privately, ask what happened, and agree on a plan.", q: "best" },
+            { t: "Say nothing and quietly do the work yourself this time.", q: "ok" },
+          ],
+          why: {
+            best: "Great. You <b>praise in public, criticise in private</b>. Asking before assuming shows respect and uncovers the real cause.",
+            ok: "Covering for her avoids conflict but it doesn't help Maya grow — and it quietly overloads you.",
+            poor: "Public criticism creates fear and resentment. People stop taking risks when they're afraid of being shamed.",
+          },
+          vocab: [
+            { term: "to <em>miss a deadline</em>", def: "to fail to finish something by the agreed time." },
+            { term: "<em>one-on-one</em>", def: "a private meeting between two people." },
+            { term: "to <em>praise in public, criticise in private</em>", def: "a classic leadership rule for feedback." },
+          ],
+        },
+        {
+          skill: "Delegation",
+          title: "Drowning in tasks",
+          text: 'Your to-do list is overflowing and you are working late every night. A capable junior, <span class="who">Tom</span>, has free time.',
+          options: [
+            { t: "Keep doing everything yourself — it's faster than explaining.", q: "poor" },
+            { t: "Delegate a clear task to Tom with context, a deadline and check-ins.", q: "best" },
+            { t: "Dump a pile of work on Tom with no instructions.", q: "ok" },
+          ],
+          why: {
+            best: "Exactly. Good delegation = clear <b>ownership</b>, context and a way to follow up. It grows your team and frees your time.",
+            ok: "You delegated — good instinct — but without context people get stuck or deliver the wrong thing.",
+            poor: "Doing it all yourself is a <b>bottleneck</b>. Leaders multiply their impact through others.",
+          },
+          vocab: [
+            { term: "to <em>delegate</em>", def: "to give a task or responsibility to someone else." },
+            { term: "<em>bottleneck</em>", def: "a point where things slow down because everything depends on one person." },
+            { term: "to <em>follow up</em>", def: "to check on progress after assigning something." },
+          ],
+        },
+        {
+          skill: "Motivation",
+          title: "A demotivated teammate",
+          text: '<span class="who">Sara</span> used to be energetic but has gone quiet and stopped sharing ideas in meetings.',
+          options: [
+            { t: "Ignore it — moods come and go.", q: "poor" },
+            { t: "Check in genuinely: 'How are you doing? You've been quiet lately.'", q: "best" },
+            { t: "Publicly ask her to 'cheer up and be more positive.'", q: "ok" },
+          ],
+          why: {
+            best: "Yes. A genuine, curious <b>check-in</b> opens the door. People disengage for reasons — listen before you fix.",
+            ok: "Telling someone to 'cheer up' dismisses their feelings and rarely changes anything.",
+            poor: "Ignoring disengagement lets small problems become resignations.",
+          },
+          vocab: [
+            { term: "to <em>check in (with someone)</em>", def: "to ask how someone is doing." },
+            { term: "<em>to disengage</em>", def: "to lose interest and involvement." },
+            { term: "<em>burnout</em>", def: "exhaustion from long-term stress at work." },
+          ],
+        },
+        {
+          skill: "Decision Making",
+          title: "Two good ideas",
+          text: 'The team is split between two solid plans and the discussion is going in circles. People look to you.',
+          options: [
+            { t: "Let them keep debating until everyone fully agrees.", q: "ok" },
+            { t: "Summarise both, set a decision criterion, then decide and commit.", q: "best" },
+            { t: "Pick the idea from whoever argued loudest.", q: "poor" },
+          ],
+          why: {
+            best: "Strong. Leaders <b>make the call</b> when consensus stalls — with clear reasoning the team can rally behind.",
+            ok: "Waiting for total agreement can mean <b>analysis paralysis</b> — nothing ships.",
+            poor: "Rewarding volume over merit teaches people that being loud beats being right.",
+          },
+          vocab: [
+            { term: "to <em>make the call</em>", def: "to make the final decision." },
+            { term: "<em>to go in circles</em>", def: "to keep discussing without progress." },
+            { term: "<em>analysis paralysis</em>", def: "being unable to decide because you over-think it." },
+          ],
+        },
+        {
+          skill: "Handling Conflict",
+          title: "Two clashing colleagues",
+          text: 'Two teammates, <span class="who">Leo</span> and <span class="who">Nina</span>, keep interrupting each other and tension is rising in the room.',
+          options: [
+            { t: "Take a side immediately to end it quickly.", q: "poor" },
+            { t: "Pause the meeting, hear each side calmly, find common ground.", q: "best" },
+            { t: "Pretend you didn't notice and move on.", q: "ok" },
+          ],
+          why: {
+            best: "Well done. Staying neutral and seeking <b>common ground</b> de-escalates conflict and keeps both people's respect.",
+            ok: "Ignoring it signals the behaviour is acceptable; it usually gets worse.",
+            poor: "Taking sides fast turns a disagreement into a lasting rivalry.",
+          },
+          vocab: [
+            { term: "<em>common ground</em>", def: "things two sides both agree on." },
+            { term: "to <em>de-escalate</em>", def: "to make a tense situation calmer." },
+            { term: "to <em>take sides</em>", def: "to support one person in an argument." },
+          ],
+        },
+        {
+          skill: "Accountability",
+          title: "Your own mistake",
+          text: "You gave the client the wrong figures and they noticed. Your team knows it was your error.",
+          options: [
+            { t: "Blame the data the analyst gave you.", q: "poor" },
+            { t: "Own it openly, fix it fast, and explain how you'll prevent it.", q: "best" },
+            { t: "Downplay it and hope nobody brings it up again.", q: "ok" },
+          ],
+          why: {
+            best: "Excellent. <b>Owning your mistakes</b> builds trust faster than being perfect ever could. It also gives the team permission to be honest.",
+            ok: "Downplaying erodes credibility — people notice when you dodge.",
+            poor: "Shifting blame is the quickest way to lose your team's respect.",
+          },
+          vocab: [
+            { term: "to <em>own (a mistake)</em>", def: "to take full responsibility for it." },
+            { term: "to <em>shift the blame</em>", def: "to make someone else look responsible." },
+            { term: "<em>accountability</em>", def: "being answerable for your actions and results." },
+          ],
+        },
+        {
+          skill: "Recognition",
+          title: "A quiet win",
+          text: '<span class="who">Priya</span> quietly solved a problem that saved the project, but nobody noticed.',
+          options: [
+            { t: "Say nothing — it's just part of the job.", q: "poor" },
+            { t: "Recognise her specifically and publicly, naming what she did.", q: "best" },
+            { t: "Give vague team-wide thanks: 'good job everyone.'", q: "ok" },
+          ],
+          why: {
+            best: "Perfect. <b>Specific recognition</b> ('you spotted the bug before launch') means far more than generic praise and motivates everyone.",
+            ok: "Generic thanks is better than silence, but it doesn't make Priya feel seen.",
+            poor: "Unrecognised effort is the fastest path to a quiet, disengaged team.",
+          },
+          vocab: [
+            { term: "to <em>recognise (someone's work)</em>", def: "to notice and praise it." },
+            { term: "to <em>give credit</em>", def: "to acknowledge who deserves praise." },
+            { term: "<em>to go the extra mile</em>", def: "to make more effort than expected." },
+          ],
+        },
+        {
+          skill: "Vision & Communication",
+          title: "The 'why' is missing",
+          text: 'You announce a new process. The team complies but seems confused and unmotivated about it.',
+          options: [
+            { t: "Just repeat the instructions, louder and in more detail.", q: "ok" },
+            { t: "Explain the 'why' — the goal and how it helps them and customers.", q: "best" },
+            { t: "Tell them 'because I said so' and move on.", q: "poor" },
+          ],
+          why: {
+            best: "Spot on. People commit to a <b>'why,'</b> not a 'what.' Purpose turns compliance into ownership.",
+            ok: "More detail on the 'how' doesn't fix a missing 'why.'",
+            poor: "'Because I said so' gets obedience today and resentment tomorrow.",
+          },
+          vocab: [
+            { term: "to <em>buy in</em>", def: "to genuinely support an idea or plan." },
+            { term: "<em>the big picture</em>", def: "the overall goal beyond daily tasks." },
+            { term: "to <em>get everyone on the same page</em>", def: "to make sure all share the same understanding." },
+          ],
+        },
+      ],
+      hard: [
+        {
+          skill: "Crisis Leadership",
+          title: "Outage during the demo",
+          text: "Minutes before a make-or-break client demo, production goes down. Your team is panicking and the client is already on the call.",
+          options: [
+            { t: "Freeze and wait for engineering to figure it out silently.", q: "poor" },
+            { t: "Calmly acknowledge it to the client, give a realistic ETA, assign clear roles.", q: "best" },
+            { t: "Tell the client everything is fine and frantically improvise.", q: "ok" },
+          ],
+          why: {
+            best: "Outstanding. In a crisis, <b>calm transparency</b> plus clear roles preserves trust. Clients forgive incidents; they don't forgive being misled.",
+            ok: "Pretending all is well risks getting caught and torching credibility.",
+            poor: "A frozen leader spreads panic. People mirror your composure.",
+          },
+          vocab: [
+            { term: "<em>to keep a cool head</em>", def: "to stay calm under pressure." },
+            { term: "<em>ETA</em>", def: "Estimated Time of Arrival — when something will be ready." },
+            { term: "<em>make-or-break</em>", def: "decisive — it will determine success or failure." },
+          ],
+        },
+        {
+          skill: "Difficult Conversations",
+          title: "Underperformance",
+          text: 'A senior, well-liked employee, <span class="who">Daniel</span>, has been underperforming for months. The team has started to notice and morale is slipping.',
+          options: [
+            { t: "Avoid it to keep the peace; he's popular.", q: "poor" },
+            { t: "Have a direct, kind conversation with specific examples and a clear improvement plan.", q: "best" },
+            { t: "Hint at it in a team-wide email about 'raising standards.'", q: "ok" },
+          ],
+          why: {
+            best: "Excellent. <b>Radical candour</b> — caring personally while challenging directly — respects Daniel and the team. Specifics and a plan make it fair.",
+            ok: "Passive-aggressive group messages confuse the innocent and let the real issue slide.",
+            poor: "Avoiding it to 'keep the peace' is unfair to the rest of the team and to Daniel himself.",
+          },
+          vocab: [
+            { term: "<em>radical candour</em>", def: "caring about someone while being direct with them." },
+            { term: "to <em>address an issue</em>", def: "to deal with a problem openly." },
+            { term: "<em>to beat around the bush</em>", def: "to avoid saying something directly." },
+          ],
+        },
+        {
+          skill: "Strategic Trade-offs",
+          title: "Scope vs. deadline",
+          text: "Leadership wants the full feature set AND the original ship date. Engineering says you can realistically have one, not both.",
+          options: [
+            { t: "Promise both and push the team to crunch indefinitely.", q: "poor" },
+            { t: "Present the trade-off with options and a clear recommendation, then align upward.", q: "best" },
+            { t: "Silently cut quality to hit both and hope it holds.", q: "ok" },
+          ],
+          why: {
+            best: "Strong leadership. You <b>manage up</b> with honest trade-offs and a recommendation — protecting the team while serving the business.",
+            ok: "Cutting quality silently creates <b>technical debt</b> and a bigger crisis later.",
+            poor: "Endless crunch burns out your best people and rarely delivers quality.",
+          },
+          vocab: [
+            { term: "<em>trade-off</em>", def: "giving up one thing to gain another." },
+            { term: "to <em>manage up</em>", def: "to communicate effectively with your own boss." },
+            { term: "<em>scope</em>", def: "the full set of work included in a project." },
+          ],
+        },
+        {
+          skill: "Building Trust",
+          title: "Inheriting a wary team",
+          text: "You've just been hired to lead a team that has been through three managers in two years. They're skeptical and guarded.",
+          options: [
+            { t: "Announce a bold reorg in week one to show you're in charge.", q: "poor" },
+            { t: "Listen first: one-on-ones, learn their pain points, deliver one quick win.", q: "best" },
+            { t: "Keep your distance and let results speak for themselves.", q: "ok" },
+          ],
+          why: {
+            best: "Exactly right. With a burned team you <b>earn trust</b> by listening and delivering a visible quick win before making big moves.",
+            ok: "Staying distant with an already-skeptical team reads as cold and prolongs the doubt.",
+            poor: "A big reorg before you understand the team destroys the little trust that's left.",
+          },
+          vocab: [
+            { term: "to <em>earn trust</em>", def: "to gain confidence through consistent actions." },
+            { term: "<em>quick win</em>", def: "a small, fast result that builds momentum." },
+            { term: "<em>pain point</em>", def: "a specific problem people struggle with." },
+          ],
+        },
+        {
+          skill: "Ethical Courage",
+          title: "Pressure to cut corners",
+          text: "Your boss pressures you to ship a product you know has a safety issue, to hit the quarterly numbers.",
+          options: [
+            { t: "Comply quietly — they outrank you.", q: "poor" },
+            { t: "Raise the risk clearly in writing, propose a safe alternative, escalate if ignored.", q: "best" },
+            { t: "Refuse loudly in the open meeting to make a point.", q: "ok" },
+          ],
+          why: {
+            best: "Courageous and professional. You <b>put it on record</b>, offer a path forward, and escalate responsibly — protecting users and the company.",
+            ok: "Public refusal may feel righteous but a calmer, documented escalation is more effective and harder to dismiss.",
+            poor: "'Just following orders' on a safety issue is an ethical and legal failure.",
+          },
+          vocab: [
+            { term: "to <em>cut corners</em>", def: "to do something cheaply or carelessly to save time." },
+            { term: "to <em>escalate</em>", def: "to raise an issue to a higher level." },
+            { term: "to <em>put something on the record</em>", def: "to document it officially." },
+          ],
+        },
+        {
+          skill: "Change Management",
+          title: "Resistance to change",
+          text: "You're rolling out a tool the company needs, but a vocal group of veterans is openly resisting and influencing others.",
+          options: [
+            { t: "Mandate it and discipline anyone who pushes back.", q: "poor" },
+            { t: "Engage the skeptics, address concerns, turn a respected veteran into a champion.", q: "best" },
+            { t: "Quietly drop it to avoid the friction.", q: "ok" },
+          ],
+          why: {
+            best: "Masterful. Converting a respected skeptic into a <b>change champion</b> shifts the whole group far better than force.",
+            ok: "Dropping needed change to dodge friction means your decisions won't stick in future.",
+            poor: "Mandates breed malicious compliance; the change adopts on paper but fails in practice.",
+          },
+          vocab: [
+            { term: "to <em>roll out</em>", def: "to introduce something gradually." },
+            { term: "<em>change champion</em>", def: "a person who actively promotes a change." },
+            { term: "to <em>push back</em>", def: "to resist or disagree with something." },
+          ],
+        },
+        {
+          skill: "Developing People",
+          title: "Your star wants your job",
+          text: 'Your best performer, <span class="who">Aisha</span>, tells you she feels stuck and is thinking of leaving for a bigger role elsewhere.',
+          options: [
+            { t: "Discourage her ambition so you don't lose your top performer.", q: "poor" },
+            { t: "Map a growth path, give her stretch projects, advocate for her promotion.", q: "best" },
+            { t: "Give her a raise and hope money keeps her.", q: "ok" },
+          ],
+          why: {
+            best: "This is what great leaders do — <b>grow people even at your own cost</b>. Loyalty and reputation follow leaders who develop talent.",
+            ok: "Money rarely fixes a growth problem; she'll still feel stuck and leave later.",
+            poor: "Holding talent back is short-sighted; she'll leave anyway and resent you for it.",
+          },
+          vocab: [
+            { term: "<em>stretch project</em>", def: "a challenging task that grows someone's skills." },
+            { term: "to <em>advocate for someone</em>", def: "to support and promote them to others." },
+            { term: "<em>career path</em>", def: "the planned steps of someone's professional growth." },
+          ],
+        },
+        {
+          skill: "Leading Remotely",
+          title: "The invisible remote worker",
+          text: 'A remote team member, <span class="who">Carlos</span>, delivers good work but is silent in meetings and increasingly out of the loop.',
+          options: [
+            { t: "Assume he's fine since the work gets done.", q: "ok" },
+            { t: "Create space for him: ask his input directly, set async updates, a regular 1:1.", q: "best" },
+            { t: "Require everyone to be on camera and online 9–5.", q: "poor" },
+          ],
+          why: {
+            best: "Excellent remote leadership. You <b>create inclusion deliberately</b> — proximity bias hurts remote folks unless you design against it.",
+            ok: "'The work gets done' misses growing isolation that ends in a surprise resignation.",
+            poor: "Surveillance-style rules signal distrust and crush the autonomy remote workers value.",
+          },
+          vocab: [
+            { term: "<em>out of the loop</em>", def: "not informed about what's happening." },
+            { term: "<em>async (asynchronous)</em>", def: "communication that doesn't happen in real time." },
+            { term: "<em>proximity bias</em>", def: "favouring people who are physically present." },
+          ],
+        },
+      ],
+    };
+
+    const RANKS = [
+      { min: 0.0, name: "Aspiring Leader 🌱", msg: "A solid start. Every great leader began exactly here — keep practising." },
+      { min: 0.5, name: "Capable Manager 🧭", msg: "You handle people and pressure well. Refine the tough calls and you'll shine." },
+      { min: 0.75, name: "Trusted Leader ⭐", msg: "Strong judgement and clear communication. Your team would follow you." },
+      { min: 0.92, name: "Visionary Leader 🏆", msg: "Outstanding. Calm, fair and decisive — the kind of leader people remember." },
+    ];
+
+    const POINTS = { best: 100, ok: 50, poor: 0 };
+
+    // --- State ---
+    let level = "easy";
+    let deck = [];
+    let idx = 0;
+    let score = 0;
+    let streak = 0;
+    let answered = false;
+    const learnedWords = new Set();
+    let breakdown = { best: 0, ok: 0, poor: 0 };
+
+    // --- Helpers ---
+    const $ = (id) => document.getElementById(id);
+    const show = (id) => {
+      document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+      $(id).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+    function updateHUD() {
+      $("hudScore").textContent = score;
+      $("hudStreak").textContent = streak;
+      const pct = ((idx) / deck.length) * 100;
+      $("progressBar").style.width = pct + "%";
+    }
+
+    // --- Level selection ---
+    document.querySelectorAll(".level-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".level-card").forEach((c) => c.classList.remove("selected"));
+        card.classList.add("selected");
+        level = card.dataset.level;
+      });
+    });
+
+    // --- Start ---
+    function startGame() {
+      deck = shuffle([...SCENARIOS[level]]).map((s) => {
+        const opts = s.options.map((o, i) => ({ ...o, _orig: i }));
+        return { ...s, options: shuffle(opts) };
+      });
+      idx = 0; score = 0; streak = 0;
+      learnedWords.clear();
+      breakdown = { best: 0, ok: 0, poor: 0 };
+      $("hud").style.visibility = "visible";
+      $("progressWrap").style.visibility = "visible";
+      show("screen-game");
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      answered = false;
+      const s = deck[idx];
+      $("qCount").textContent = `Scenario ${idx + 1} of ${deck.length}`;
+      $("qSkill").textContent = s.skill;
+      $("qTitle").textContent = s.title;
+      $("qScenario").innerHTML = s.text;
+
+      const wrap = $("qOptions");
+      wrap.innerHTML = "";
+      const keys = ["A", "B", "C", "D"];
+      s.options.forEach((o, i) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.innerHTML = `<span class="key">${keys[i]}</span><span>${o.t}</span>`;
+        btn.addEventListener("click", () => choose(i, btn));
+        wrap.appendChild(btn);
+      });
+
+      $("qFeedback").classList.remove("show");
+      $("btnNext").style.display = "none";
+      $("btnNext").textContent = idx === deck.length - 1 ? "See results 🏁" : "Next ▶";
+      updateHUD();
+    }
+
+    function choose(i, btn) {
+      if (answered) return;
+      answered = true;
+      const s = deck[idx];
+      const opt = s.options[i];
+      const gained = POINTS[opt.q];
+      score += gained;
+      breakdown[opt.q]++;
+
+      if (opt.q === "best") streak++; else streak = 0;
+
+      // mark options
+      const buttons = $("qOptions").querySelectorAll(".option");
+      buttons.forEach((b, bi) => {
+        b.disabled = true;
+        const bq = s.options[bi].q;
+        if (bi === i) {
+          if (opt.q === "best") b.classList.add("correct");
+          else if (opt.q === "poor") b.classList.add("wrong");
+          else { b.style.borderColor = "var(--warn)"; b.style.background = "rgba(251,191,36,.12)"; }
+        } else if (bq === "best") {
+          b.classList.add("correct"); // reveal the best answer
+        } else {
+          b.classList.add("dim");
+        }
+      });
+
+      // feedback
+      const verdict = $("fbVerdict");
+      if (opt.q === "best") { verdict.textContent = `✓ Best choice  ·  +${gained}`; verdict.className = "verdict good"; }
+      else if (opt.q === "ok") { verdict.textContent = `~ Not bad  ·  +${gained}`; verdict.className = "verdict partial"; }
+      else { verdict.textContent = `✗ Risky choice  ·  +${gained}`; verdict.className = "verdict bad"; }
+      $("fbWhy").innerHTML = s.why[opt.q];
+
+      // vocab
+      const list = $("fbVocabList");
+      list.innerHTML = "";
+      s.vocab.forEach((v) => {
+        learnedWords.add(v.term.replace(/<\/?em>/g, ""));
+        const div = document.createElement("div");
+        div.innerHTML = `<div class="term">${v.term}</div><div class="def">${v.def}</div>`;
+        list.appendChild(div);
+      });
+
+      $("qFeedback").classList.add("show");
+      $("btnNext").style.display = "block";
+      updateHUD();
+    }
+
+    function next() {
+      if (idx < deck.length - 1) { idx++; renderQuestion(); $("qFeedback").classList.remove("show"); }
+      else endGame();
+    }
+
+    function endGame() {
+      $("progressBar").style.width = "100%";
+      const max = deck.length * POINTS.best;
+      const pct = max ? score / max : 0;
+      $("endScore").textContent = score;
+      $("endMax").textContent = max;
+      $("endPct").textContent = Math.round(pct * 100) + "% leadership rating";
+
+      let rank = RANKS[0];
+      RANKS.forEach((r) => { if (pct >= r.min) rank = r; });
+      $("endRank").textContent = rank.name;
+      $("endMsg").textContent = rank.msg;
+
+      $("endBreakdown").innerHTML = `
+        <div class="brk"><span>✓ Best decisions</span><b>${breakdown.best}</b></div>
+        <div class="brk"><span>~ Acceptable decisions</span><b>${breakdown.ok}</b></div>
+        <div class="brk"><span>✗ Risky decisions</span><b>${breakdown.poor}</b></div>
+        <div class="brk"><span>📚 English terms learned</span><b>${learnedWords.size}</b></div>`;
+
+      const wb = $("endWords");
+      wb.innerHTML = "";
+      [...learnedWords].forEach((w) => {
+        const c = document.createElement("span");
+        c.className = "chip";
+        c.innerHTML = w;
+        wb.appendChild(c);
+      });
+
+      $("hud").style.visibility = "hidden";
+      $("progressWrap").style.visibility = "hidden";
+      show("screen-end");
+    }
+
+    // --- Wire up ---
+    $("btnStart").addEventListener("click", startGame);
+    $("btnNext").addEventListener("click", next);
+    $("btnAgain").addEventListener("click", startGame);
+    $("btnHome").addEventListener("click", () => show("screen-start"));
+  })();
+  </script>
+</body>
+</html>
