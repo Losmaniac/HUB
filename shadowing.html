@@ -77,6 +77,8 @@
   .hidden{display:none!important}
   .notice{background:rgba(255,180,84,.12);border:1px solid rgba(255,180,84,.4);
     color:#ffd9a8;border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+  .voicehint{margin-top:8px;font-size:11.5px;color:#ffd9a8;background:rgba(255,180,84,.10);
+    border:1px solid rgba(255,180,84,.35);border-radius:10px;padding:7px 9px;line-height:1.4}
   footer{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
   .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--panel2);
     border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12px}
@@ -141,6 +143,10 @@
       <div class="slider" style="min-width:200px">
         <label>Voice <span class="badge" id="voiceBadge"></span></label>
         <select id="voiceSel"></select>
+        <div class="voicehint hidden" id="voiceHint">
+          🤖 Only robotic system voices found. For a natural American voice, open this in
+          <b>Microsoft Edge</b> and pick a <b>“(Natural)”</b> voice — they're free.
+        </div>
       </div>
     </div>
   </div>
@@ -251,23 +257,49 @@ const $ = s => document.querySelector(s);
 const synth = window.speechSynthesis;
 let voices = [], chosenVoice = null;
 
+// Higher score = more natural-sounding. The Web Speech API only gives us
+// whatever voices the browser/OS ships, so we rank them and default to the best.
+function voiceScore(v){
+  const n = v.name || "";
+  let s = 0;
+  if(/en[-_]US/i.test(v.lang)) s += 100;          // American English first
+  else if(/^en/i.test(v.lang)) s += 45;            // other English next
+  if(/natural|neural/i.test(n)) s += 70;           // Edge neural voices (best, free)
+  if(v.localService === false) s += 30;            // cloud/online voices ≈ higher quality
+  if(/Google US English/i.test(n)) s += 50;        // Chrome's decent built-in
+  if(/\b(Aria|Jenny|Ana|Michelle|Roger|Steffan|Eric|Christopher|Nova|Samantha|Ava|Allison|Alex|Evan|Zoe|Joanna|Matthew|Salli|Kendra|Kimberly|Joey)\b/i.test(n)) s += 28;
+  if(/e[\s-]?speak|festival|pico|robot|compact|\bDavid\b|\bMark\b|\bZira\b/i.test(n)) s -= 60; // robotic
+  return s;
+}
+function qualityLabel(v){
+  if(!v) return "no voice";
+  if(/natural|neural/i.test(v.name)) return "Neural ✓";
+  if(v.localService === false) return "HD";
+  if(/Google US English/i.test(v.name)) return "Good";
+  if(/en[-_]US/i.test(v.lang)) return "US";
+  return v.lang || "";
+}
 function loadVoices(){
   voices = synth ? synth.getVoices() : [];
   const sel = $("#voiceSel");
-  // Prefer US English voices
-  const us = voices.filter(v=>/en[-_]US/i.test(v.lang));
-  const enAny = voices.filter(v=>/^en/i.test(v.lang));
-  const list = (us.length?us:enAny.length?enAny:voices);
+  // English voices, best-sounding first
+  const list = voices
+    .filter(v=>/^en/i.test(v.lang))
+    .sort((a,b)=>voiceScore(b)-voiceScore(a));
+  const pool = list.length ? list : voices.slice();
   sel.innerHTML = "";
-  list.forEach((v)=>{
+  pool.forEach((v)=>{
     const o=document.createElement("option");
-    o.value=v.name; o.textContent=`${v.name} (${v.lang})`;
+    const tag = qualityLabel(v);
+    o.value=v.name; o.textContent=`${v.name} (${v.lang})${tag&&tag!=="US"?" — "+tag:""}`;
     sel.appendChild(o);
   });
-  // pick a good default
-  const preferred = list.find(v=>/Samantha|Google US English|Microsoft (Aria|Jenny|Zira|Guy)/i.test(v.name)) || list[0];
+  const preferred = pool[0];
   if(preferred){ chosenVoice = preferred; sel.value = preferred.name; }
-  $("#voiceBadge").textContent = chosenVoice ? (/en[-_]US/i.test(chosenVoice.lang)?"US ✓":chosenVoice.lang) : "no voice";
+  $("#voiceBadge").textContent = qualityLabel(chosenVoice);
+  // If no natural-sounding voice is available, nudge the user toward Edge.
+  const hasNatural = pool.some(v=>/natural|neural/i.test(v.name) || v.localService===false || /Google US English/i.test(v.name));
+  $("#voiceHint").classList.toggle("hidden", hasNatural);
 }
 if(synth){
   loadVoices();
@@ -275,7 +307,7 @@ if(synth){
 }
 $("#voiceSel").addEventListener("change", e=>{
   chosenVoice = voices.find(v=>v.name===e.target.value)||chosenVoice;
-  $("#voiceBadge").textContent = chosenVoice ? (/en[-_]US/i.test(chosenVoice.lang)?"US ✓":chosenVoice.lang) : "";
+  $("#voiceBadge").textContent = qualityLabel(chosenVoice);
 });
 
 function speak(text, rate){
