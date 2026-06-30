@@ -99,12 +99,13 @@
     border:1px solid var(--line);color:var(--muted)}
   .songcard .go{margin-top:11px;font-size:12.5px;font-weight:600;color:var(--accent2)}
   .ghostbtn{background:transparent}
-  /* ---- live full lyrics (Lyrics.ovh) ---- */
-  #fullLyrics{white-space:pre-line;background:var(--panel);border:1px solid var(--line);
-    border-radius:16px;padding:18px 20px;margin-top:4px;font-size:15px;line-height:1.7;
-    color:var(--text);box-shadow:var(--shadow)}
-  #fullLyrics .lyr-err{display:block;color:var(--warn);font-weight:700;margin-bottom:4px}
-  #fullLyrics .lyr-note{display:block;color:var(--muted);font-size:13px}
+  /* ---- plain (un-annotated) lyric lines from the live full lyrics ---- */
+  .line.plain{background:transparent;border-color:transparent}
+  .line.plain .head{cursor:default;padding:7px 15px}
+  .line.plain .lyric{font-weight:500;color:#cdd2ee}
+  .loading{color:var(--muted);font-size:14px;padding:18px 4px}
+  .notice{background:rgba(255,180,84,.12);border:1px solid rgba(255,180,84,.4);
+    color:#ffd9a8;border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:12px}
   @media(max-width:560px){.line .head{padding:11px 12px}.body .inner{padding:10px 12px 13px}
     .songgrid{grid-template-columns:1fr}}
 </style>
@@ -141,7 +142,6 @@
           <button id="btnSpeakLine" title="Read each lyric aloud as you open it">🔊 Speak: <span id="speakState">on</span></button>
           <button id="btnExpand">Expand all</button>
           <button id="btnCollapse">Collapse all</button>
-          <button id="btnFull" title="Fetch the complete lyrics from the live Lyrics.ovh API">📜 Full lyrics</button>
         </div>
       </div>
       <div class="songmeta">
@@ -159,13 +159,11 @@
     </div>
 
     <div id="lyrics"></div>
-
-    <div id="fullLyrics" class="hidden" aria-live="polite"></div>
   </div>
 
   <footer>
     Tip: tap any line to reveal a plain-English explanation. <span style="color:var(--slang)">Purple words</span> are slang — hover or tap to learn them.<br/>
-    Lyrics are quoted for educational study. To add a song, drop a new entry into the <code>SONGS</code> object (or a <code>songs/&lt;id&gt;.json</code> file).
+    Full lyrics are fetched live from the <a href="https://lyrics.ovh" target="_blank" rel="noopener">Lyrics.ovh</a> API for study; explanations are hand-written. To add a song, drop a new entry into the <code>SONGS</code> object.
   </footer>
 </div>
 
@@ -507,7 +505,7 @@ const SONGS = {
     emoji: "🔥", colors:["#ffb454","#ff6b6b"],
     tagline: "One shot at your dream — do you capture it or let it slip?",
     tags: ["motivation idioms", "body-language phrases", "carpe diem"],
-    intro: "Eminem's Oscar-winning anthem about seizing your one big chance. Packed with everyday idioms about nerves, opportunity, and never giving up — some of the most useful figurative English a learner can know. (Selected verses & hook, annotated for study.)",
+    intro: "Eminem's Oscar-winning anthem about seizing your one big chance. Packed with everyday idioms about nerves, opportunity, and never giving up — some of the most useful figurative English a learner can know. Full lyrics load live; key lines carry explanations.",
     sections: [
       { type:"verse", label:"Verse 1 (opening)", lines:[
         { text:"His palms are sweaty, knees weak, arms are heavy",
@@ -579,7 +577,7 @@ const SONGS = {
     emoji: "🕊️", colors:["#6c8cff","#34d0a8"],
     tagline: "A tender letter to his daughter through tough times.",
     tags: ["family idioms", "everyday English", "gentler language"],
-    intro: "A heartfelt song to his daughter Hailie about hard years when money and his marriage were falling apart. The language is gentler and the idioms are everyday-life ones — ideal for learners who want natural, emotional English. (Selected verses & hook, annotated for study.)",
+    intro: "A heartfelt song to his daughter Hailie about hard years when money and his marriage were falling apart. The language is gentler and the idioms are everyday-life ones — ideal for learners who want natural, emotional English. Full lyrics load live; key lines carry explanations.",
     sections: [
       { type:"verse", label:"Verse 1 (highlights)", lines:[
         { text:"I know sometimes things may not always make sense to you right now",
@@ -671,41 +669,96 @@ function noteHTML(n){
   </div>`;
 }
 
-function lineHTML(line){
-  const notesHTML = (line.notes && line.notes.length)
-    ? `<div class="notes">${line.notes.map(noteHTML).join("")}</div>` : "";
-  return `<div class="line" data-say="${esc(line.text)}">
+// Build one lyric row. `ann` (optional) carries {meaning, notes} for annotated lines.
+function lineHTML(text, ann){
+  if (!ann){                                            // plain lyric line — readable, not expandable
+    return `<div class="line plain"><div class="head">
+      <div class="lyric">${esc(text)}</div></div></div>`;
+  }
+  const notesHTML = (ann.notes && ann.notes.length)
+    ? `<div class="notes">${ann.notes.map(noteHTML).join("")}</div>` : "";
+  return `<div class="line" data-say="${esc(text)}">
     <div class="head">
-      <div class="lyric">${highlightTerms(line.text, line.notes)}</div>
+      <div class="lyric">${highlightTerms(text, ann.notes)}</div>
       <span class="chev">▶</span>
     </div>
     <div class="body"><div class="inner">
-      <div class="meaning"><b>Meaning:</b> ${line.meaning}</div>
+      <div class="meaning"><b>Meaning:</b> ${ann.meaning}</div>
       ${notesHTML}
     </div></div>
   </div>`;
 }
 
+// Normalize a lyric line so live-API text matches my hand-written annotations.
+function normalize(s){
+  return s.toLowerCase()
+    .replace(/\([^)]*\)/g, " ")        // drop ad-libs like (Sing), (Uh-huh)
+    .replace(/[^a-z0-9']+/g, " ")      // keep letters, digits, apostrophes
+    .replace(/\s+/g, " ").trim();
+}
+
+// Map normalized line -> annotation, across all sections of a song.
+function annotationMap(song){
+  const map = new Map();
+  song.sections.forEach(sec => sec.lines.forEach(l => {
+    const k = normalize(l.text);
+    if (k && !map.has(k)) map.set(k, l);
+  }));
+  return map;
+}
+
+let renderToken = 0;   // guards against a slow fetch overwriting a newer song
+
 function renderSong(id){
   const song = SONGS[id];
   if (!song) return;
+  const token = ++renderToken;
   $("songTitle").textContent = song.title;
   $("songBy").textContent = `${song.artist} · ${song.album}`;
   $("songIntro").textContent = song.intro || "";
+  $("lineCount").textContent = "· loading full lyrics…";
+  $("lyrics").innerHTML = `<div class="loading">Fetching the full lyrics…</div>`;
 
-  let lineTotal = 0;
+  fetchLyrics(song.artist, song.title)
+    .then(lyrics => { if (token === renderToken) renderFull(song, lyrics); })
+    .catch(()    => { if (token === renderToken) renderAnnotatedFallback(song); });
+}
+
+// Full song from Lyrics.ovh, with my explanations overlaid on matching lines.
+function renderFull(song, lyrics){
+  const ann = annotationMap(song);
+  const rows = lyrics.replace(/\r/g, "").split("\n");
+  let annotated = 0, total = 0, html = "", open = false;
+  const flush = () => { if (open){ html += `</div>`; open = false; } };
+
+  for (const raw of rows){
+    const line = raw.trim();
+    if (!line){ flush(); continue; }                   // blank line = stanza break
+    if (!open){ html += `<div class="section">`; open = true; }
+    total++;
+    const a = ann.get(normalize(line));
+    if (a) annotated++;
+    html += lineHTML(line, a);
+  }
+  flush();
+  $("lyrics").innerHTML = html || `<div class="loading">No lyrics returned.</div>`;
+  $("lineCount").textContent = `· full lyrics · ${annotated} of ${total} lines explained`;
+  wireLines();
+}
+
+// Offline / API-down fallback: show the hand-annotated lines we have.
+function renderAnnotatedFallback(song){
+  let total = 0;
   const html = song.sections.map(sec => {
-    lineTotal += sec.lines.length;
+    total += sec.lines.length;
     return `<div class="section ${esc(sec.type)}">
       <span class="lbl">${esc(sec.label)}</span>
-      ${sec.lines.map(lineHTML).join("")}
+      ${sec.lines.map(l => lineHTML(l.text, l)).join("")}
     </div>`;
   }).join("");
-  $("lyrics").innerHTML = html;
-  $("lineCount").textContent = `· ${lineTotal} lines annotated`;
-  const fl = $("fullLyrics");                 // reset live-lyrics panel for the new song
-  fl.classList.add("hidden");
-  fl.textContent = "";
+  $("lyrics").innerHTML =
+    `<div class="notice">Couldn't load live full lyrics right now — showing the annotated lines. Try again in a moment.</div>` + html;
+  $("lineCount").textContent = `· ${total} annotated lines (offline)`;
   wireLines();
 }
 
@@ -758,7 +811,7 @@ function buildMenu(){
       <div class="cover">${s.emoji || "🎵"}</div>
       <div class="info">
         <p class="st">${esc(s.title)}</p>
-        <p class="sa">${esc(s.artist)} · ${esc(s.album)} · ${countLines(s)} lines</p>
+        <p class="sa">${esc(s.artist)} · ${esc(s.album)} · ${countLines(s)} explained lines</p>
         <p class="tagline">${esc(s.tagline || "")}</p>
         <div class="tags">${tags}</div>
         <div class="go">Learn this one →</div>
@@ -814,25 +867,6 @@ async function fetchLyrics(artist, title){
   return data.lyrics;
 }
 
-async function loadFullLyrics(){
-  const song = SONGS[$("songSel").value];
-  if (!song) return;
-  const box = $("fullLyrics");
-  const btn = $("btnFull");
-  box.classList.remove("hidden");
-  box.textContent = "Loading full lyrics…";
-  btn.disabled = true;
-  try {
-    const lyrics = await fetchLyrics(song.artist, song.title);
-    box.textContent = lyrics.trim();                           // \n renders via white-space:pre-line
-  } catch (e) {
-    box.innerHTML = `<span class="lyr-err">Lyrics not found.</span>` +
-      `<span class="lyr-note">The live lyric service couldn't return this song. The annotated lines above still work offline.</span>`;
-  } finally {
-    btn.disabled = false;
-  }
-}
-
 (async function init(){
   // await loadExternalSongs(["songs/lose-yourself.json"]); // example, optional
   buildSongSelector();
@@ -840,7 +874,6 @@ async function loadFullLyrics(){
   // Start on the menu so the user picks a song to learn today.
 
   $("btnBack").addEventListener("click", showMenu);
-  $("btnFull").addEventListener("click", loadFullLyrics);
   $("btnExpand").addEventListener("click", () =>
     document.querySelectorAll(".line").forEach(l => l.classList.add("open")));
   $("btnCollapse").addEventListener("click", () =>
