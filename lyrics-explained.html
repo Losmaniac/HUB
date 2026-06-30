@@ -163,7 +163,7 @@
 
   <footer>
     Tip: tap any line to reveal a plain-English explanation. <span style="color:var(--slang)">Purple words</span> are slang — hover or tap to learn them.<br/>
-    Full lyrics are fetched live from the <a href="https://lyrics.ovh" target="_blank" rel="noopener">Lyrics.ovh</a> API for study; explanations are hand-written. To add a song, drop a new entry into the <code>SONGS</code> object.
+    Full lyrics with a plain-English explanation on every line, quoted for educational study. To add a song, drop a new entry into the <code>SONGS</code> object.
   </footer>
 </div>
 
@@ -505,67 +505,277 @@ const SONGS = {
     emoji: "🔥", colors:["#ffb454","#ff6b6b"],
     tagline: "One shot at your dream — do you capture it or let it slip?",
     tags: ["motivation idioms", "body-language phrases", "carpe diem"],
-    intro: "Eminem's Oscar-winning anthem about seizing your one big chance. Packed with everyday idioms about nerves, opportunity, and never giving up — some of the most useful figurative English a learner can know. Full lyrics load live; key lines carry explanations.",
+    intro: "Eminem's Oscar-winning anthem about seizing your one big chance. Packed with everyday idioms about nerves, opportunity and never giving up — some of the most useful figurative English a learner can know. Every line of the full lyric is explained.",
     sections: [
-      { type:"verse", label:"Verse 1 (opening)", lines:[
+      { type:"verse", label:"Intro", lines:[
+        { text:"Look",
+          meaning:"A casual way to grab your attention before making a point — like \"listen.\"",
+          notes:[{type:"slang", term:"Look", explain:"used to start a serious statement: \"listen / pay attention.\""}] },
+        { text:"If you had one shot, or one opportunity",
+          meaning:"Imagine you had a single chance…",
+          notes:[{type:"idiom", term:"one shot", explain:"\"one shot\" = a single chance to do something."}] },
+        { text:"To seize everything you ever wanted",
+          meaning:"…to grab everything you've ever dreamed of.",
+          notes:[{type:"idiom", term:"seize", explain:"\"to seize\" = to grab/take eagerly; cf. \"seize the day.\""}] },
+        { text:"One moment",
+          meaning:"In just one brief moment.", notes:[] },
+        { text:"Would you capture it or just let it slip?",
+          meaning:"Would you take the chance, or let it get away?",
+          notes:[{type:"idiom", term:"let it slip", explain:"\"to let something slip\" = to lose it through inaction."}] },
+        { text:"Yo",
+          meaning:"A hip-hop call-out to grab attention, like \"hey.\"",
+          notes:[{type:"slang", term:"Yo", explain:"an attention-getting interjection: \"hey / listen.\""}] },
+      ]},
+      { type:"verse", label:"Verse 1", lines:[
         { text:"His palms are sweaty, knees weak, arms are heavy",
-          meaning:"His body shows pure stage-fright: sweating hands, shaky legs, tense arms.",
-          notes:[
-            {type:"idiom", term:"palms are sweaty", explain:"\"sweaty palms\" = a classic physical sign of nervousness/anxiety."},
-            {type:"idiom", term:"knees weak", explain:"\"weak in the knees\" = so nervous or overwhelmed your legs feel unsteady."}] },
+          meaning:"His body shows pure stage-fright: sweaty hands, shaky legs, tense arms.",
+          notes:[{type:"idiom", term:"palms are sweaty", explain:"\"sweaty palms\" = a classic physical sign of nervousness."}, {type:"idiom", term:"knees weak", explain:"\"weak in the knees\" = so nervous your legs feel unsteady."}] },
         { text:"There's vomit on his sweater already, mom's spaghetti",
           meaning:"He's so nervous he's already thrown up the spaghetti his mom made.",
-          notes:[{type:"ref", term:"mom's spaghetti", explain:"a now-famous meme line; spaghetti is cheap home food — a sign of his poor background."}] },
-        { text:"He's nervous, but on the surface, he looks calm and ready",
-          meaning:"Inside he's terrified, but outwardly he appears cool and prepared.",
-          notes:[{type:"idiom", term:"on the surface", explain:"\"on the surface\" = on the outside / how things appear, vs. the hidden reality."}] },
-        { text:"To drop bombs, but he keeps on forgettin'",
-          meaning:"He's ready to deliver killer rap verses, but his memory keeps failing.",
-          notes:[{type:"slang", term:"drop bombs", explain:"\"to drop bombs\" = to deliver powerful, impressive lines/verses in rap."}] },
-        { text:"What he wrote down, the whole crowd goes so loud",
-          meaning:"He blanks on his written lyrics as the audience roars.",
+          notes:[{type:"ref", term:"mom's spaghetti", explain:"now a famous meme; cheap home food that hints at his poor background."}] },
+        { text:"He's nervous, but on the surface he looks calm and ready to drop bombs",
+          meaning:"Inside he's scared, but he looks cool and ready to deliver killer verses.",
+          notes:[{type:"idiom", term:"on the surface", explain:"\"on the surface\" = on the outside / how it appears."}, {type:"slang", term:"drop bombs", explain:"\"to drop bombs\" = to deliver powerful, impressive rap lines."}] },
+        { text:"But he keeps on forgetting what he wrote down, the whole crowd goes so loud",
+          meaning:"He keeps blanking on his written lyrics while the audience roars.",
           notes:[{type:"slang", term:"crowd goes so loud", explain:"\"the crowd goes wild/loud\" = the audience reacts with huge excitement."}] },
         { text:"He opens his mouth, but the words won't come out",
           meaning:"He tries to rap but freezes — nothing comes.",
-          notes:[{type:"idiom", term:"words won't come out", explain:"to be unable to speak from fear/shock; a common way to describe choking up."}] },
-        { text:"He's chokin', how? Everybody's jokin' now",
-          meaning:"He's failing under pressure while the crowd starts mocking him.",
-          notes:[{type:"idiom", term:"chokin'", explain:"\"to choke\" = to fail at the critical moment because of pressure/nerves."}] },
+          notes:[{type:"idiom", term:"words won't come out", explain:"unable to speak from fear/shock; a common way to describe choking up."}] },
+        { text:"He's choking how, everybody's joking now",
+          meaning:"He's failing under pressure and the crowd starts mocking him.",
+          notes:[{type:"idiom", term:"choking", explain:"\"to choke\" = to fail at the critical moment because of nerves."}] },
         { text:"The clock's run out, time's up, over, blaow!",
-          meaning:"His time on stage is finished — it's all over.",
+          meaning:"His stage time is finished — it's all over. (\"Blaow\" = a gunshot-style sound effect.)",
           notes:[{type:"idiom", term:"time's up", explain:"\"time's up\" = the allotted time has ended; no more chances."}] },
+        { text:"Snap back to reality",
+          meaning:"Suddenly he's pulled out of his head and back to the real situation.",
+          notes:[{type:"idiom", term:"snap back to reality", explain:"\"snap back to reality\" = to abruptly return to the real world from daydreaming."}] },
+        { text:"Oh, there goes gravity",
+          meaning:"His grip slips — wordplay on falling and on his rap name.",
+          notes:[{type:"ref", term:"there goes gravity", explain:"a play on losing control (falling) and on the line's famous internal rhyme."}] },
+        { text:"Oh, there goes Rabbit, he choked",
+          meaning:"\"Rabbit\" (his character in the film 8 Mile) just failed.",
+          notes:[{type:"ref", term:"Rabbit", explain:"Eminem's character in the 2002 film 8 Mile, which this song is from."}] },
+        { text:"He's so mad, but he won't give up that easy, no",
+          meaning:"He's furious at himself but refuses to quit.",
+          notes:[{type:"idiom", term:"give up", explain:"\"to give up\" = to quit / stop trying."}] },
+        { text:"He won't have it, he knows his whole back's to these ropes",
+          meaning:"He won't accept failure; he knows he's cornered with no escape.",
+          notes:[{type:"idiom", term:"back's to these ropes", explain:"from boxing: \"back against the ropes\" = trapped, under heavy pressure."}] },
+        { text:"It don't matter, he's dope",
+          meaning:"None of that matters — he's genuinely talented.",
+          notes:[{type:"slang", term:"dope", explain:"\"dope\" = excellent, very good, impressive."}, {type:"gram", term:"It don't matter", explain:"casual/AAVE \"it don't\" for \"it doesn't.\""}] },
+        { text:"He knows that but he's broke",
+          meaning:"He knows he's good, but he has no money.",
+          notes:[{type:"slang", term:"broke", explain:"\"broke\" = having no money."}] },
+        { text:"He's so stagnant, he knows when he goes back to his mobile home, that's when it's",
+          meaning:"He feels stuck; soon he'll go back to his trailer, and then…",
+          notes:[{type:"gram", term:"stagnant", explain:"\"stagnant\" = not moving or developing; stuck."}, {type:"ref", term:"mobile home", explain:"a \"mobile home / trailer\" = cheap movable housing, a marker of poverty."}] },
+        { text:"Back to the lab again, yo",
+          meaning:"…back to writing and recording music again.",
+          notes:[{type:"slang", term:"the lab", explain:"\"the lab\" = the recording studio / where an artist creates."}] },
+        { text:"This whole rhapsody",
+          meaning:"This whole intense burst of music/emotion.",
+          notes:[{type:"gram", term:"rhapsody", explain:"\"rhapsody\" = an ecstatic, free-flowing piece of music or speech."}] },
+        { text:"He better go capture this moment and hope it don't pass him",
+          meaning:"He'd better seize this moment and hope it doesn't pass him by.",
+          notes:[{type:"idiom", term:"pass him", explain:"\"to pass someone by\" = (of a chance) to go by unused."}] },
       ]},
-      { type:"chorus", label:"Chorus (hook)", lines:[
+      { type:"chorus", label:"Chorus", lines:[
         { text:"You better lose yourself in the music, the moment",
           meaning:"Give yourself completely to the music and the present moment.",
-          notes:[
-            {type:"idiom", term:"lose yourself", explain:"\"to lose yourself in something\" = to become so absorbed you forget everything else."},
-            {type:"gram", term:"You better", explain:"casual for \"you had better\" = strong advice/warning: you should, or else."}] },
+          notes:[{type:"idiom", term:"lose yourself", explain:"\"to lose yourself in something\" = to get so absorbed you forget everything else."}, {type:"gram", term:"You better", explain:"casual for \"you had better\" — strong advice/warning: do it, or else."}] },
         { text:"You own it, you better never let it go",
-          meaning:"Seize the opportunity and never give it up.",
-          notes:[{type:"idiom", term:"let it go", explain:"\"to let something go\" = to release it / give it up. Here: don't waste the chance."}] },
+          meaning:"It's yours now — never give it up.",
+          notes:[{type:"idiom", term:"let it go", explain:"\"to let something go\" = to release or give it up; here, don't waste the chance."}] },
         { text:"You only get one shot, do not miss your chance to blow",
-          meaning:"You get just one opportunity — don't waste your chance to succeed.",
-          notes:[
-            {type:"idiom", term:"one shot", explain:"\"one shot\" = a single chance/opportunity to do something."},
-            {type:"slang", term:"chance to blow", explain:"\"to blow (up)\" = to suddenly become hugely successful/famous."}] },
+          meaning:"You get just one opportunity — don't waste your chance to make it big.",
+          notes:[{type:"idiom", term:"one shot", explain:"\"one shot\" = a single chance/opportunity."}, {type:"slang", term:"chance to blow", explain:"\"to blow (up)\" = to suddenly become hugely successful/famous."}] },
         { text:"This opportunity comes once in a lifetime",
           meaning:"A chance this good will never come again.",
-          notes:[{type:"idiom", term:"once in a lifetime", explain:"\"once-in-a-lifetime\" = extremely rare; happening only once ever."}] },
+          notes:[{type:"idiom", term:"once in a lifetime", explain:"\"once-in-a-lifetime\" = extremely rare; happens only once ever."}] },
       ]},
-      { type:"verse", label:"Verse 2 (highlights)", lines:[
-        { text:"The soul's escaping, through this hole that it's gaping",
-          meaning:"He feels his spirit slipping away through an open wound/emptiness.",
+      { type:"chorus", label:"Chorus", lines:[
+        { text:"You better lose yourself in the music, the moment",
+          meaning:"(Hook repeats) Give yourself fully to the music and the moment.", notes:[] },
+        { text:"You own it, you better never let it go",
+          meaning:"(Hook) It's yours — never give it up.", notes:[] },
+        { text:"You only get one shot, do not miss your chance to blow",
+          meaning:"(Hook) One chance — don't miss your shot to make it big.", notes:[] },
+        { text:"This opportunity comes once in a lifetime",
+          meaning:"(Hook) A chance like this comes only once.", notes:[] },
+        { text:"You better",
+          meaning:"Lead-in to the next verse: \"you'd better…\"", notes:[] },
+      ]},
+      { type:"verse", label:"Verse 2", lines:[
+        { text:"The soul's escaping, through this hole that is gaping",
+          meaning:"He feels his spirit draining out through an open wound/emptiness.",
           notes:[{type:"gram", term:"gaping", explain:"\"gaping\" = wide open (usually a hole or wound)."}] },
         { text:"This world is mine for the taking",
           meaning:"Success is right there for him to grab.",
-          notes:[{type:"idiom", term:"mine for the taking", explain:"\"there for the taking\" = easily available to whoever grabs it."}] },
+          notes:[{type:"idiom", term:"mine for the taking", explain:"\"there for the taking\" = freely available to whoever grabs it."}] },
         { text:"Make me king, as we move toward a new world order",
           meaning:"This success could crown him as a leader of a changing world.",
-          notes:[{type:"ref", term:"new world order", explain:"a loaded political phrase for a major global power shift — used here for ambition."}] },
+          notes:[{type:"ref", term:"new world order", explain:"a loaded political phrase for a big global power shift, used here for ambition."}] },
+        { text:"A normal life is boring, but superstardom's close to post mortem",
+          meaning:"An ordinary life bores him, but fame is almost deadly.",
+          notes:[{type:"ref", term:"post mortem", explain:"Latin for \"after death\"; here it means fame is nearly fatal/destructive."}] },
+        { text:"It only grows harder, homie grows hotter",
+          meaning:"It keeps getting tougher as he (\"homie\") gets more popular.",
+          notes:[{type:"slang", term:"homie", explain:"\"homie\" = a close friend/buddy; here, himself."}, {type:"slang", term:"grows hotter", explain:"\"hot\" = popular, in demand."}] },
+        { text:"He blows, it's all over",
+          meaning:"He blows up (becomes famous), and life changes completely.",
+          notes:[{type:"slang", term:"blows", explain:"\"to blow (up)\" = to suddenly become famous/successful."}] },
+        { text:"These hoes is all on him",
+          meaning:"Women now chase him because of his fame.",
+          notes:[{type:"slang", term:"hoes", explain:"crude slang for women (disrespectful); common in hip-hop."}, {type:"idiom", term:"all on him", explain:"\"all over him / all on him\" = pursuing him eagerly."}] },
+        { text:"Coast to coast shows, he's known as the globetrotter",
+          meaning:"He performs everywhere and is famous for constant travel.",
+          notes:[{type:"idiom", term:"coast to coast", explain:"\"coast to coast\" = all across the country (Atlantic to Pacific)."}, {type:"slang", term:"globetrotter", explain:"\"globetrotter\" = someone who travels the world constantly."}] },
+        { text:"Lonely roads, God only knows",
+          meaning:"Touring is isolating, and who knows where it leads.",
+          notes:[{type:"idiom", term:"God only knows", explain:"\"God only knows\" = nobody can say / it's uncertain."}] },
+        { text:"He's knows is grown farther from home, he's no father",
+          meaning:"He's drifted far from home and isn't being a real father.", notes:[] },
+        { text:"He goes home and barely knows his own daughter",
+          meaning:"When he does go home, he hardly knows his own child.", notes:[] },
+        { text:"But hold your nose 'cause here goes the cold water",
+          meaning:"Brace yourself for the harsh truth coming next.",
+          notes:[{type:"idiom", term:"hold your nose", explain:"\"hold your nose\" = prepare for something unpleasant."}, {type:"idiom", term:"cold water", explain:"a \"splash of cold water\" = a harsh dose of reality."}] },
+        { text:"His hoes don't want him no more, he's cold product",
+          meaning:"The women have lost interest; he's now seen as worthless/unwanted.",
+          notes:[{type:"slang", term:"cold product", explain:"\"cold\" here = no longer in demand; \"product\" = a sellable thing/person."}, {type:"gram", term:"don't want him no more", explain:"double negative (AAVE/casual) = \"don't want him anymore.\""}] },
+        { text:"They moved on to the next schmoe who flows",
+          meaning:"They've gone to the next average rapper.",
+          notes:[{type:"slang", term:"schmoe", explain:"\"schmoe\" (Yiddish-origin) = an ordinary, foolish nobody."}, {type:"slang", term:"flows", explain:"\"to flow\" = to rap rhythmically."}] },
+        { text:"He nose dove and sold nada",
+          meaning:"His career crashed and he sold nothing.",
+          notes:[{type:"idiom", term:"nose dove", explain:"\"to nosedive\" = to drop/fail sharply."}, {type:"slang", term:"nada", explain:"\"nada\" (Spanish) = nothing."}] },
+        { text:"So the soap opera is told and unfolds",
+          meaning:"So this dramatic story keeps playing out.",
+          notes:[{type:"ref", term:"soap opera", explain:"a never-ending, overly dramatic TV drama; here, his messy life."}] },
+        { text:"I suppose it's old partner but the beat goes on",
+          meaning:"It may be a familiar story, but life keeps moving.",
+          notes:[{type:"idiom", term:"the beat goes on", explain:"\"the beat goes on\" = life/things continue regardless."}] },
+        { text:"Da da dum, da dum da da",
+          meaning:"He hums the melody to fill the bar.", notes:[] },
+      ]},
+      { type:"chorus", label:"Chorus", lines:[
+        { text:"You better lose yourself in the music, the moment",
+          meaning:"(Hook repeats) Give yourself fully to the music and the moment.", notes:[] },
+        { text:"You own it, you better never let it go",
+          meaning:"(Hook) It's yours — never give it up.", notes:[] },
+        { text:"You only get one shot, do not miss your chance to blow",
+          meaning:"(Hook) One chance — don't miss your shot to make it big.", notes:[] },
+        { text:"This opportunity comes once in a lifetime",
+          meaning:"(Hook) A chance like this comes only once.", notes:[] },
+      ]},
+      { type:"chorus", label:"Chorus", lines:[
+        { text:"You better lose yourself in the music, the moment",
+          meaning:"(Hook repeats) Give yourself fully to the music and the moment.", notes:[] },
+        { text:"You own it, you better never let it go",
+          meaning:"(Hook) It's yours — never give it up.", notes:[] },
+        { text:"You only get one shot, do not miss your chance to blow",
+          meaning:"(Hook) One chance — don't miss your shot to make it big.", notes:[] },
+        { text:"This opportunity comes once in a lifetime",
+          meaning:"(Hook) A chance like this comes only once.", notes:[] },
+        { text:"You better",
+          meaning:"Lead-in to the final verse: \"you'd better…\"", notes:[] },
+      ]},
+      { type:"verse", label:"Verse 3", lines:[
+        { text:"No more games, I'ma change what you call rage",
+          meaning:"No more messing around; he'll redefine what anger/intensity means.",
+          notes:[{type:"slang", term:"I'ma", explain:"\"I'ma\" = \"I'm going to / I'm gonna.\""}] },
+        { text:"Tear this motherfucking roof off like two dogs caged",
+          meaning:"He'll explode with energy like trapped dogs breaking loose.",
+          notes:[{type:"idiom", term:"tear the roof off", explain:"\"to tear the roof off\" = to perform with explosive, wild energy."}] },
+        { text:"I was playing in the beginning, the mood all changed",
+          meaning:"He started light, but his mood turned serious.", notes:[] },
+        { text:"I've been chewed up and spit out and booed off stage",
+          meaning:"He's been used, rejected, and jeered off the stage.",
+          notes:[{type:"idiom", term:"chewed up and spit out", explain:"\"chewed up and spit out\" = used badly then thrown away."}, {type:"idiom", term:"booed off stage", explain:"\"booed off\" = driven off stage by the crowd's jeers."}] },
+        { text:"But I kept rhyming and stepped right into the next cypher",
+          meaning:"He kept rapping and joined the next rap circle.",
+          notes:[{type:"slang", term:"cypher", explain:"a \"cypher\" = a circle of rappers freestyling in turn."}] },
+        { text:"Best believe somebody's paying the pied piper",
+          meaning:"You can be sure someone always pays the price in the end.",
+          notes:[{type:"slang", term:"best believe", explain:"\"best believe\" = you'd better believe it / it's certain."}, {type:"ref", term:"pied piper", explain:"from the fable; \"pay the piper\" = face the consequences/cost."}] },
+        { text:"All the pain inside amplified by the fact",
+          meaning:"All his inner pain made worse by the fact…", notes:[] },
+        { text:"That I can't get by with my 9-to-5",
+          meaning:"…that a normal day job can't support him.",
+          notes:[{type:"idiom", term:"get by", explain:"\"to get by\" = to survive financially / manage."}, {type:"idiom", term:"9-to-5", explain:"\"a 9-to-5\" = a regular full-time day job."}] },
+        { text:"And I can't provide the right type of life for my family",
+          meaning:"He can't give his family the life he wants for them.", notes:[] },
+        { text:"'Cause man, these goddamn food stamps don't buy diapers",
+          meaning:"Welfare food benefits can't be used for baby diapers.",
+          notes:[{type:"ref", term:"food stamps", explain:"U.S. government coupons/benefits for buying food when poor."}] },
+        { text:"And it's no movie, there's no Mekhi Phifer, this is my life",
+          meaning:"This is real life, not a film with actors.",
+          notes:[{type:"ref", term:"Mekhi Phifer", explain:"an actor in 8 Mile; the point is \"this is real, not a movie.\""}] },
+        { text:"And these times are so hard, and it's getting even harder",
+          meaning:"Life is very tough and getting tougher.",
+          notes:[{type:"idiom", term:"times are so hard", explain:"\"hard times\" = a difficult period, especially financially."}] },
+        { text:"Trying to feed and water my seed, plus",
+          meaning:"Trying to provide for his child, and on top of that…",
+          notes:[{type:"slang", term:"seed", explain:"\"seed\" = slang for one's child/offspring."}] },
+        { text:"Teeter totter caught up between being a father and a prima donna",
+          meaning:"He's torn back and forth between fatherhood and stardom.",
+          notes:[{type:"idiom", term:"teeter totter", explain:"a \"see-saw\"; here, wavering back and forth between two things."}, {type:"ref", term:"prima donna", explain:"a vain, self-important star (from opera)."}] },
+        { text:"Baby mama drama's screaming on and",
+          meaning:"Constant conflict with the mother of his child keeps blowing up.",
+          notes:[{type:"slang", term:"baby mama", explain:"\"baby mama\" = the mother of your child you're no longer with."}, {type:"slang", term:"drama", explain:"\"drama\" = ongoing emotional conflict/trouble."}] },
+        { text:"Too much for me to wanna stay in one spot, another day of monotony",
+          meaning:"It's too much to stay put for another dull, repetitive day.",
+          notes:[{type:"gram", term:"monotony", explain:"\"monotony\" = boring sameness, lack of variety."}] },
+        { text:"Has gotten me to the point, I'm like a snail I've got to formulate a plot or I end up in jail or shot",
+          meaning:"Life's so slow and dangerous he must make a plan or face jail or death.",
+          notes:[{type:"idiom", term:"formulate a plot", explain:"\"to formulate a plan/plot\" = to work out a scheme."}] },
+        { text:"Success is my only motherfucking option, failure's not",
+          meaning:"He must succeed; failing is not allowed.",
+          notes:[{type:"idiom", term:"failure's not (an option)", explain:"\"failure is not an option\" = success is the only acceptable outcome."}] },
+        { text:"Mom, I love you, but this trailer's got to go",
+          meaning:"He loves his mother but must escape the trailer-park life.",
+          notes:[{type:"ref", term:"trailer", explain:"a \"trailer\" = cheap mobile housing; symbol of his poverty."}] },
+        { text:"I cannot grow old in Salem's lot",
+          meaning:"He refuses to spend his life trapped in this dead-end place.",
+          notes:[{type:"ref", term:"Salem's lot", explain:"from Stephen King's Salem's Lot; here, a doomed place to escape."}] },
+        { text:"So here I go it's my shot",
+          meaning:"So this is it — his one chance.",
+          notes:[{type:"idiom", term:"my shot", explain:"\"my shot\" = my opportunity/chance."}] },
+        { text:"Feet, fail me not, this may be the only opportunity that I got",
+          meaning:"He begs his nerve to hold — this may be his only chance.",
+          notes:[{type:"idiom", term:"fail me not", explain:"old-style \"do not fail me\" = please don't let me down (here, his courage/legs)."}] },
+        { text:"You better",
+          meaning:"Lead-in to the final hook: \"you'd better…\"", notes:[] },
+      ]},
+      { type:"chorus", label:"Chorus", lines:[
+        { text:"You better lose yourself in the music, the moment",
+          meaning:"(Hook repeats) Give yourself fully to the music and the moment.", notes:[] },
+        { text:"You own it, you better never let it go",
+          meaning:"(Hook) It's yours — never give it up.", notes:[] },
+        { text:"You only get one shot, do not miss your chance to blow",
+          meaning:"(Hook) One chance — don't miss your shot to make it big.", notes:[] },
+        { text:"This opportunity comes once in a lifetime",
+          meaning:"(Hook) A chance like this comes only once.", notes:[] },
+      ]},
+      { type:"chorus", label:"Chorus", lines:[
+        { text:"You better lose yourself in the music, the moment",
+          meaning:"(Hook repeats) Give yourself fully to the music and the moment.", notes:[] },
+        { text:"You own it, you better never let it go",
+          meaning:"(Hook) It's yours — never give it up.", notes:[] },
+        { text:"You only get one shot, do not miss your chance to blow",
+          meaning:"(Hook) One chance — don't miss your shot to make it big.", notes:[] },
+        { text:"This opportunity comes once in a lifetime",
+          meaning:"(Hook) A chance like this comes only once.", notes:[] },
+        { text:"You better",
+          meaning:"Final lead-out: \"you'd better…\"", notes:[] },
+      ]},
+      { type:"outro", label:"Outro", lines:[
         { text:"You can do anything you set your mind to, man",
-          meaning:"With determination, you can achieve whatever you decide to.",
-          notes:[{type:"idiom", term:"set your mind to", explain:"\"to set your mind to something\" = to decide firmly to do it and focus fully."}] },
+          meaning:"Closing message: with determination you can achieve anything.",
+          notes:[{type:"idiom", term:"set your mind to", explain:"\"to set your mind to something\" = to decide firmly and focus on it."}] },
       ]},
     ]
   },
@@ -577,64 +787,261 @@ const SONGS = {
     emoji: "🕊️", colors:["#6c8cff","#34d0a8"],
     tagline: "A tender letter to his daughter through tough times.",
     tags: ["family idioms", "everyday English", "gentler language"],
-    intro: "A heartfelt song to his daughter Hailie about hard years when money and his marriage were falling apart. The language is gentler and the idioms are everyday-life ones — ideal for learners who want natural, emotional English. Full lyrics load live; key lines carry explanations.",
+    intro: "A heartfelt song to his daughter Hailie about hard years when money and his marriage were falling apart. The language is gentler and the idioms are everyday-life ones — ideal for learners who want natural, emotional English. Every line of the full lyric is explained.",
     sections: [
-      { type:"verse", label:"Verse 1 (highlights)", lines:[
-        { text:"I know sometimes things may not always make sense to you right now",
-          meaning:"He tells his daughter that life may feel confusing to her at the moment.",
-          notes:[{type:"idiom", term:"make sense to you", explain:"\"to make sense to someone\" = to be understandable/clear to them."}] },
-        { text:"But hey, what'd Daddy always tell you?",
+      { type:"verse", label:"Intro", lines:[
+        { text:"Yeah",
+          meaning:"A spoken filler to open the song.", notes:[] },
+        { text:"I know sometimes",
+          meaning:"He begins gently: he understands that sometimes…", notes:[] },
+        { text:"Things may not always make sense to you right now",
+          meaning:"…life may feel confusing to her at the moment.",
+          notes:[{type:"idiom", term:"make sense to you", explain:"\"to make sense to someone\" = to be understandable to them."}] },
+        { text:"But hey",
+          meaning:"A soft way to get her attention.", notes:[] },
+        { text:"What Daddy always tell you?",
           meaning:"He reminds her of the lesson he always repeats.",
-          notes:[{type:"gram", term:"what'd Daddy", explain:"\"what'd\" = \"what did\"; \"Daddy\" = an affectionate child's word for father."}] },
-        { text:"Straighten up, little soldier, stiffen up that upper lip",
-          meaning:"Be brave and stay strong; don't cry — hold it together.",
-          notes:[
-            {type:"idiom", term:"Straighten up", explain:"\"straighten up\" = to behave better / pull yourself together and be strong."},
-            {type:"idiom", term:"stiffen up that upper lip", explain:"from \"keep a stiff upper lip\" = stay calm and brave, hide your distress."}] },
-        { text:"What you crying about? You got me",
-          meaning:"There's no need to cry, because she still has her dad.",
-          notes:[{type:"idiom", term:"You got me", explain:"\"you've got me\" = you can rely on me; I'm here for you."}] },
-        { text:"And I can't blame you, 'cause at the time I never knew",
-          meaning:"He doesn't fault her for being upset, since back then he didn't realize things either.",
-          notes:[{type:"idiom", term:"can't blame you", explain:"\"I can't blame you\" = your reaction is understandable; it's not your fault."}] },
-        { text:"Times have changed, 'cause every day I grow",
-          meaning:"Life is different now; he keeps maturing.",
-          notes:[{type:"idiom", term:"Times have changed", explain:"\"times have changed\" = things are different now than before."}] },
+          notes:[{type:"gram", term:"What Daddy always tell you", explain:"casual speech drops \"does\": standard = \"What does Daddy always tell you?\""}] },
+        { text:"Straighten up, little soldier",
+          meaning:"Be brave and strong, my tough little one.",
+          notes:[{type:"idiom", term:"Straighten up", explain:"\"straighten up\" = pull yourself together / be strong."}, {type:"idiom", term:"little soldier", explain:"calling a child \"little soldier\" = praising their bravery."}] },
+        { text:"Stiffen up that upper lip",
+          meaning:"Don't cry — hold your emotions together.",
+          notes:[{type:"idiom", term:"stiffen up that upper lip", explain:"from \"keep a stiff upper lip\" = stay brave, hide distress."}] },
+        { text:"What you cryin' about?",
+          meaning:"There's no need to cry.",
+          notes:[{type:"gram", term:"What you cryin' about", explain:"casual: drops \"are\" — standard \"What are you crying about?\""}] },
+        { text:"You got me",
+          meaning:"You can rely on me; I'm here for you.",
+          notes:[{type:"idiom", term:"You got me", explain:"\"you've got me\" = you can count on me."}] },
       ]},
-      { type:"chorus", label:"Chorus (hook)", lines:[
+      { type:"verse", label:"Verse 1", lines:[
+        { text:"Hailie, I know you miss your mom, and I know you miss your dad",
+          meaning:"He names his daughter and acknowledges she misses both parents.",
+          notes:[{type:"ref", term:"Hailie", explain:"Eminem's real daughter, Hailie Jade, a recurring figure in his music."}] },
+        { text:"When I'm gone, but I'm tryin' to give you the life that I never had",
+          meaning:"He's often away, but he's working to give her a better childhood than his.",
+          notes:[{type:"idiom", term:"the life that I never had", explain:"giving a child \"the life you never had\" = better than your own upbringing."}] },
+        { text:"I can see you're sad, even when you smile, even when you laugh",
+          meaning:"He senses her sadness even behind her smiles.", notes:[] },
+        { text:"I can see it in your eyes, deep inside, you wanna cry",
+          meaning:"He reads the hidden urge to cry in her eyes.",
+          notes:[{type:"idiom", term:"see it in your eyes", explain:"\"to see it in someone's eyes\" = to read their true feelings from their face."}] },
+        { text:"'Cause you're scared, I ain't there, Daddy's wit' you in your prayers",
+          meaning:"She's scared he's absent, but he's with her in spirit/prayers.",
+          notes:[{type:"gram", term:"ain't", explain:"\"ain't\" = casual for \"am not / isn't / aren't.\""}, {type:"gram", term:"wit'", explain:"\"wit'\" = casual spelling of \"with.\""}] },
+        { text:"No more cryin', wipe them tears, Daddy's here, no more nightmares",
+          meaning:"He comforts her: stop crying, dry your eyes, I'm here.",
+          notes:[{type:"idiom", term:"wipe them tears", explain:"\"wipe your tears\" = stop crying / be comforted."}, {type:"gram", term:"them tears", explain:"casual/AAVE \"them\" used for \"those.\""}] },
+        { text:"We gon' pull together through it, we gon' do it",
+          meaning:"Together they'll get through the hard times.",
+          notes:[{type:"slang", term:"gon'", explain:"\"gon'\" = casual for \"going to / gonna.\""}, {type:"idiom", term:"pull together", explain:"\"to pull together\" = to unite and cope through difficulty."}] },
+        { text:"Lainie, Uncle's crazy, ain't he? Yeah, but he loves you, girl, and you better know it",
+          meaning:"He speaks to his niece Lainie too: he's wild, but he loves her.",
+          notes:[{type:"ref", term:"Lainie", explain:"his niece, whom Eminem helped raise alongside Hailie."}] },
+        { text:"We're all we got in this world when it spins, when it swirls",
+          meaning:"They only have each other as the world turns chaotic.",
+          notes:[{type:"idiom", term:"all we got", explain:"\"we're all we've got\" = we only have each other."}] },
+        { text:"When it whirls, when it twirls, two little beautiful girls",
+          meaning:"As life spins on, he thinks of the two girls.", notes:[] },
+        { text:"Lookin' puzzled, in a daze, I know it's confusin' you",
+          meaning:"They look confused and dazed; he knows it's bewildering.",
+          notes:[{type:"idiom", term:"in a daze", explain:"\"in a daze\" = stunned and unable to think clearly."}] },
+        { text:"Daddy's always on the move, Mama's always on the news",
+          meaning:"He's constantly traveling; the girls' mother is in the headlines.",
+          notes:[{type:"idiom", term:"on the move", explain:"\"on the move\" = constantly traveling/busy."}] },
+        { text:"I try to keep you sheltered from it, but somehow it seems",
+          meaning:"He tries to protect her from the chaos, but it seems…",
+          notes:[{type:"idiom", term:"sheltered", explain:"\"to shelter someone from\" = to protect them from harsh realities."}] },
+        { text:"The harder that I try to do that, the more it backfires on me",
+          meaning:"…the more he protects her, the worse it turns out.",
+          notes:[{type:"idiom", term:"backfires on me", explain:"\"to backfire\" = to produce the opposite, bad result."}] },
+        { text:"All the things growin' up as Daddy that he had to see",
+          meaning:"All the harsh things he himself had to witness growing up…", notes:[] },
+        { text:"Daddy don't want you to see, but you see just as much as he did",
+          meaning:"…he wants to spare her, but she sees just as much.",
+          notes:[{type:"gram", term:"Daddy don't", explain:"casual/AAVE \"don't\" for \"doesn't.\""}] },
+        { text:"We did not plan it to be this way, your mother and me",
+          meaning:"He and her mother never intended things to turn out like this.", notes:[] },
+        { text:"But things have got so bad between us, I don't see us ever bein'",
+          meaning:"Their relationship is so broken he can't imagine them…", notes:[] },
+        { text:"Together ever again, like we used to be when we was teenagers",
+          meaning:"…being a couple again as they were as teens.",
+          notes:[{type:"gram", term:"we was", explain:"casual/AAVE \"we was\" for \"we were.\""}] },
+        { text:"But then, of course, everything always happens for a reason",
+          meaning:"Still, he believes events occur for a purpose.",
+          notes:[{type:"idiom", term:"happens for a reason", explain:"\"everything happens for a reason\" = a comforting belief in purpose/fate."}] },
+        { text:"I guess it was never meant to be",
+          meaning:"Maybe they were simply not destined to last.",
+          notes:[{type:"idiom", term:"meant to be", explain:"\"meant to be\" = destined to happen."}] },
+        { text:"But it's just somethin' we have no control over, and that's what destiny is",
+          meaning:"Some things are beyond control — that's destiny.",
+          notes:[{type:"idiom", term:"no control over", explain:"\"to have no control over\" = to be unable to influence it."}] },
+        { text:"But no more worries, rest your head and go to sleep",
+          meaning:"He soothes her: stop worrying and sleep.",
+          notes:[{type:"idiom", term:"rest your head", explain:"\"rest your head\" = lie down and sleep/relax."}] },
+        { text:"Maybe one day we'll wake up and this'll all just be a dream",
+          meaning:"He hopes the pain will vanish like a bad dream.",
+          notes:[{type:"idiom", term:"just be a dream", explain:"wishing a hard reality were only a dream that ends."}] },
+      ]},
+      { type:"chorus", label:"Chorus", lines:[
         { text:"Now hush, little baby, don't you cry",
           meaning:"A soothing line telling the child to be quiet and stop crying.",
-          notes:[{type:"ref", term:"hush, little baby", explain:"borrows the famous American lullaby \"Hush, Little Baby\" (the 'mockingbird' song)."}] },
+          notes:[{type:"ref", term:"hush, little baby", explain:"borrows the American lullaby \"Hush, Little Baby\" (the 'mockingbird' song)."}] },
         { text:"Everything's gonna be alright",
-          meaning:"A reassurance that things will turn out okay.",
-          notes:[{type:"idiom", term:"gonna be alright", explain:"\"gonna\" = \"going to\"; \"be alright\" = turn out fine. A classic comforting phrase."}] },
-        { text:"Stiffen that upper lip up, little lady, I told you",
-          meaning:"Again: be brave, don't cry — as he keeps reminding her.",
-          notes:[{type:"idiom", term:"little lady", explain:"\"little lady\" = an affectionate way to address a young girl."}] },
-        { text:"Daddy's here to hold you through the night",
-          meaning:"He promises to comfort and protect her all night.",
-          notes:[{type:"idiom", term:"hold you through the night", explain:"\"to hold someone through the night\" = to comfort/stay with them until morning."}] },
+          meaning:"Reassurance that things will turn out fine.",
+          notes:[{type:"idiom", term:"gonna be alright", explain:"\"gonna\" = \"going to\"; \"be alright\" = turn out okay."}] },
+        { text:"Stiffen that upper lip up, little lady, I told ya",
+          meaning:"Be brave, don't cry — as he keeps telling her.",
+          notes:[{type:"idiom", term:"stiffen that upper lip", explain:"from \"keep a stiff upper lip\" = stay calm and brave."}, {type:"gram", term:"ya", explain:"\"ya\" = casual spelling of \"you.\""}] },
+        { text:"Daddy's here to hold ya through the night",
+          meaning:"He'll comfort and protect her all night.",
+          notes:[{type:"idiom", term:"hold ya through the night", explain:"to comfort/stay with someone until morning."}] },
+        { text:"I know Mommy's not here right now, and we don't know why",
+          meaning:"Her mother is absent and the reason is unclear.", notes:[] },
+        { text:"We feel how we feel inside",
+          meaning:"Our feelings are real, whatever they are.", notes:[] },
+        { text:"It may seem a little crazy, pretty baby",
+          meaning:"It might feel strange, sweetheart.",
+          notes:[{type:"idiom", term:"pretty baby", explain:"an affectionate term for a loved child/person."}] },
+        { text:"But I promise Mama's gon' be alright",
+          meaning:"He promises her mother will be okay.",
+          notes:[{type:"slang", term:"gon'", explain:"\"gon'\" = casual/AAVE for \"going to / gonna.\""}] },
       ]},
-      { type:"verse", label:"Verse 2 (highlights)", lines:[
-        { text:"It's funny, I remember back one year when Daddy had no money",
+      { type:"verse", label:"Verse 2", lines:[
+        { text:"Heh, it's funny",
+          meaning:"A wry chuckle as he recalls a memory.", notes:[] },
+        { text:"I remember back one year when Daddy had no money",
           meaning:"He recalls a year when he was broke.",
-          notes:[{type:"idiom", term:"had no money", explain:"\"to have no money\" = to be broke/poor. Casual: \"I'm broke.\""}] },
+          notes:[{type:"idiom", term:"had no money", explain:"\"to have no money\" = to be broke/poor."}] },
         { text:"Mommy wrapped the Christmas presents up and stuck 'em under the tree",
-          meaning:"Despite being poor, her mom still wrapped gifts and put them under the Christmas tree.",
-          notes:[
-            {type:"slang", term:"stuck 'em", explain:"\"'em\" = casual spelling of \"them\"; \"stuck them\" = put/placed them."},
-            {type:"ref", term:"under the tree", explain:"American tradition: gifts are placed under the Christmas tree to open on Christmas."}] },
-        { text:"And finally got a tree, this Christmas we had a hard time",
-          meaning:"They barely managed to get a tree; that Christmas was financially tough.",
-          notes:[{type:"idiom", term:"had a hard time", explain:"\"to have a hard time\" = to go through a difficult period."}] },
-        { text:"And I was gone, on tour, but I sware on everything",
-          meaning:"He was away performing, but he promises sincerely (about what follows).",
-          notes:[
-            {type:"idiom", term:"on tour", explain:"\"on tour\" = traveling to perform shows in many cities."},
-            {type:"slang", term:"sware on everything", explain:"\"I swear on everything\" = a strong promise that you're telling the truth (spelled phonetically here)."}] },
+          meaning:"Her mom still wrapped gifts and placed them under the Christmas tree.",
+          notes:[{type:"slang", term:"'em", explain:"\"'em\" = casual spelling of \"them.\""}, {type:"ref", term:"under the tree", explain:"U.S. tradition: gifts go under the Christmas tree to open on Christmas."}] },
+        { text:"And said some of 'em were from me 'cause Daddy couldn't buy 'em",
+          meaning:"She pretended some gifts were from him, since he couldn't afford any.", notes:[] },
+        { text:"I'll never forget that Christmas; I sat up the whole night crying",
+          meaning:"He stayed awake all night crying that Christmas.",
+          notes:[{type:"idiom", term:"sat up the whole night", explain:"\"to sit up all night\" = to stay awake through the night."}] },
+        { text:"'Cause Daddy felt like a bum—see, Daddy had a job",
+          meaning:"He felt worthless, even though he did have a job.",
+          notes:[{type:"slang", term:"bum", explain:"\"a bum\" = a lazy, useless or homeless person; here, feeling worthless."}] },
+        { text:"But his job was to keep the food on the table for you and Mom",
+          meaning:"His duty was simply to feed the family.",
+          notes:[{type:"idiom", term:"food on the table", explain:"\"to put food on the table\" = to earn enough to feed your family."}] },
+        { text:"And at the time, every house that we lived in",
+          meaning:"Back then, every home they lived in…", notes:[] },
+        { text:"Either kept gettin' broken into and robbed or shot up on the block",
+          meaning:"…was being burglarized or shot at in the neighborhood.",
+          notes:[{type:"idiom", term:"broken into", explain:"\"to break into\" = to enter illegally to steal."}, {type:"slang", term:"the block", explain:"\"the block\" = the local neighborhood/street."}] },
+        { text:"And your Mom was savin' money for you in a jar",
+          meaning:"Her mom saved coins for her in a jar.", notes:[] },
+        { text:"Tryin' to start a piggy bank for you so you could go to college",
+          meaning:"Building up savings so she could attend college.",
+          notes:[{type:"ref", term:"piggy bank", explain:"a small (often pig-shaped) container for saving coins."}] },
+        { text:"Almost had a thousand dollars 'til someone broke in and stole it",
+          meaning:"They'd nearly saved $1,000 until a burglar stole it.",
+          notes:[{type:"idiom", term:"broke in", explain:"\"to break in\" = to enter by force to rob."}] },
+        { text:"And I know it hurt so bad it broke your Mama's heart",
+          meaning:"The loss devastated her mother emotionally.",
+          notes:[{type:"idiom", term:"broke your Mama's heart", explain:"\"to break someone's heart\" = to cause deep sorrow."}] },
+        { text:"And it seemed like everything was just startin' to fall apart",
+          meaning:"Everything began collapsing.",
+          notes:[{type:"idiom", term:"fall apart", explain:"\"to fall apart\" = to break down / collapse (a life, plan, or relationship)."}] },
+        { text:"Mom and Dad was arguin' a lot",
+          meaning:"Her parents fought frequently.",
+          notes:[{type:"gram", term:"was arguin'", explain:"casual/AAVE \"was\" for \"were.\""}] },
+        { text:"So Mama moved back onto Chalmers in the flat, one-bedroom apartment",
+          meaning:"Her mother moved into a small flat on Chalmers Street.",
+          notes:[{type:"ref", term:"Chalmers", explain:"a real street in Detroit where Eminem lived; \"flat\" = apartment."}] },
+        { text:"And Dad moved back to the other side of 8 Mile on Novara",
+          meaning:"He moved across 8 Mile Road to Novara.",
+          notes:[{type:"ref", term:"8 Mile", explain:"the road dividing Detroit by race/class; the title of his film."}] },
+        { text:"And that's when Daddy went to California with his CD",
+          meaning:"Then he took his demo CD to California.", notes:[] },
+        { text:"And met Dr. Dre, and flew you and Mama out to see me",
+          meaning:"He met Dr. Dre and flew the family out to visit.",
+          notes:[{type:"ref", term:"Dr. Dre", explain:"legendary producer who discovered and signed Eminem."}] },
+        { text:"But Daddy had to work, you and Mama had to leave me",
+          meaning:"He had to work, so they had to go back home.", notes:[] },
+        { text:"Then you started seein' Daddy on the TV",
+          meaning:"Soon she saw her father become famous on TV.", notes:[] },
+        { text:"And Mama didn't like it",
+          meaning:"Her mother disliked his sudden fame.", notes:[] },
+        { text:"And you and Lainie were too young to understand it",
+          meaning:"The two girls were too young to grasp what was happening.", notes:[] },
+        { text:"Papa was a rolling stone, Mama developed a habit",
+          meaning:"He was always away; meanwhile her mother fell into addiction.",
+          notes:[{type:"ref", term:"Papa was a rolling stone", explain:"quotes the Temptations song about an absent father."}, {type:"slang", term:"habit", explain:"\"a habit\" here = a drug addiction."}] },
+        { text:"And it all happened too fast for either one of us to grab it",
+          meaning:"It all unraveled too quickly for either of them to handle.", notes:[] },
+        { text:"I'm just sorry you were there and had to witness it firsthand",
+          meaning:"He's sorry she saw it all up close.",
+          notes:[{type:"idiom", term:"firsthand", explain:"\"firsthand\" = experienced directly/personally."}] },
+        { text:"'Cause all I ever wanted to do was just make you proud",
+          meaning:"All he wanted was to make her proud.",
+          notes:[{type:"idiom", term:"make you proud", explain:"\"to make someone proud\" = to act so they feel proud of you."}] },
+        { text:"Now I'm sittin' in this empty house just reminiscin'",
+          meaning:"Now he sits alone in an empty house remembering the past.",
+          notes:[{type:"slang", term:"reminiscin'", explain:"\"to reminisce\" = to fondly recall past times."}] },
+        { text:"Lookin' at your baby pictures, it just trips me out",
+          meaning:"Looking at her baby photos amazes/overwhelms him.",
+          notes:[{type:"slang", term:"trips me out", explain:"\"to trip someone out\" = to amaze or astonish them."}] },
+        { text:"To see how much you both have grown, it's almost like you're sisters now",
+          meaning:"The girls have grown so much they seem like sisters.", notes:[] },
+        { text:"Wow, guess you pretty much are, and Daddy's still here",
+          meaning:"In effect they are sisters — and he's still present.", notes:[] },
+        { text:"Lainie, I'm talkin' to you too, Daddy's still here",
+          meaning:"He reassures Lainie too that he's here.", notes:[] },
+        { text:"I like the sound of that, yeah, it's got a ring to it, don't it?",
+          meaning:"He likes how \"Daddy's still here\" sounds.",
+          notes:[{type:"idiom", term:"got a ring to it", explain:"\"to have a (nice) ring to it\" = to sound good/pleasing."}] },
+        { text:"Shh, Mama's only gone for the moment",
+          meaning:"He soothes her: her mother is away only temporarily.", notes:[] },
+      ]},
+      { type:"chorus", label:"Chorus", lines:[
+        { text:"Now hush, little baby, don't you cry",
+          meaning:"(Chorus) Be calm and don't cry.", notes:[] },
+        { text:"Everything's gonna be alright",
+          meaning:"(Chorus) Things will be okay.", notes:[] },
+        { text:"Stiffen that upper lip up, little lady, I told ya",
+          meaning:"(Chorus) Be brave, don't cry.", notes:[] },
+        { text:"Daddy's here to hold ya through the night",
+          meaning:"(Chorus) I'll comfort you all night.", notes:[] },
+        { text:"I know Mommy's not here right now, and we don't know why",
+          meaning:"(Chorus) Your mom is away for unclear reasons.", notes:[] },
+        { text:"We feel how we feel inside",
+          meaning:"(Chorus) Our feelings are valid.", notes:[] },
+        { text:"It may seem a little crazy, pretty baby",
+          meaning:"(Chorus) It may feel strange, sweetheart.", notes:[] },
+        { text:"But I promise Mama's gon' be alright",
+          meaning:"(Chorus) I promise your mom will be fine.", notes:[] },
+      ]},
+      { type:"outro", label:"Outro", lines:[
+        { text:"And if you ask me to, Daddy's gonna buy you a mockingbird",
+          meaning:"Echoing the lullaby, he promises to buy her a mockingbird.",
+          notes:[{type:"ref", term:"mockingbird", explain:"from \"Hush, Little Baby\": Papa buys a mockingbird to comfort the child."}] },
+        { text:"I'ma give you the world",
+          meaning:"He'll give her everything.",
+          notes:[{type:"idiom", term:"give you the world", explain:"\"to give someone the world\" = to give them everything they could want."}] },
+        { text:"I'ma buy a diamond ring for you, I'ma sing for you",
+          meaning:"He'll buy her a ring and sing for her (as in the lullaby).",
+          notes:[{type:"slang", term:"I'ma", explain:"\"I'ma\" = \"I'm going to.\""}] },
+        { text:"I'll do anything for you to see you smile",
+          meaning:"He'll do anything to make her happy.", notes:[] },
+        { text:"And if that mockingbird don't sing and that ring don't shine",
+          meaning:"If those gifts fail (from the lullaby)…",
+          notes:[{type:"ref", term:"mockingbird don't sing", explain:"continues the lullaby, which lists gifts that might fail."}] },
+        { text:"I'ma break that birdie's neck",
+          meaning:"…he'll take revenge (a dark, protective joke).", notes:[] },
+        { text:"I'll go back to the jeweler who sold it to ya",
+          meaning:"He'll return to the jeweler who sold the ring.", notes:[] },
+        { text:"And make him eat every carat, don't fuck with Dad (Haha)",
+          meaning:"He jokingly threatens the jeweler — don't mess with him.",
+          notes:[{type:"idiom", term:"don't fuck with", explain:"\"don't fuck with (someone)\" = don't mess with / provoke them (vulgar)."}, {type:"ref", term:"carat", explain:"a \"carat\" = the unit of weight for diamonds/gems."}] },
       ]},
     ]
   }
+
 };
 
 /* ---------------------------- Rendering engine ---------------------------- */
@@ -689,65 +1096,15 @@ function lineHTML(text, ann){
   </div>`;
 }
 
-// Normalize a lyric line so live-API text matches my hand-written annotations.
-function normalize(s){
-  return s.toLowerCase()
-    .replace(/\([^)]*\)/g, " ")        // drop ad-libs like (Sing), (Uh-huh)
-    .replace(/[^a-z0-9']+/g, " ")      // keep letters, digits, apostrophes
-    .replace(/\s+/g, " ").trim();
-}
-
-// Map normalized line -> annotation, across all sections of a song.
-function annotationMap(song){
-  const map = new Map();
-  song.sections.forEach(sec => sec.lines.forEach(l => {
-    const k = normalize(l.text);
-    if (k && !map.has(k)) map.set(k, l);
-  }));
-  return map;
-}
-
-let renderToken = 0;   // guards against a slow fetch overwriting a newer song
-
+// Render the song directly from its baked-in data: every line has an
+// explanation, so the full lyrics are all tappable — works fully offline.
 function renderSong(id){
   const song = SONGS[id];
   if (!song) return;
-  const token = ++renderToken;
   $("songTitle").textContent = song.title;
   $("songBy").textContent = `${song.artist} · ${song.album}`;
   $("songIntro").textContent = song.intro || "";
-  $("lineCount").textContent = "· loading full lyrics…";
-  $("lyrics").innerHTML = `<div class="loading">Fetching the full lyrics…</div>`;
 
-  fetchLyrics(song.artist, song.title)
-    .then(lyrics => { if (token === renderToken) renderFull(song, lyrics); })
-    .catch(()    => { if (token === renderToken) renderAnnotatedFallback(song); });
-}
-
-// Full song from Lyrics.ovh, with my explanations overlaid on matching lines.
-function renderFull(song, lyrics){
-  const ann = annotationMap(song);
-  const rows = lyrics.replace(/\r/g, "").split("\n");
-  let annotated = 0, total = 0, html = "", open = false;
-  const flush = () => { if (open){ html += `</div>`; open = false; } };
-
-  for (const raw of rows){
-    const line = raw.trim();
-    if (!line){ flush(); continue; }                   // blank line = stanza break
-    if (!open){ html += `<div class="section">`; open = true; }
-    total++;
-    const a = ann.get(normalize(line));
-    if (a) annotated++;
-    html += lineHTML(line, a);
-  }
-  flush();
-  $("lyrics").innerHTML = html || `<div class="loading">No lyrics returned.</div>`;
-  $("lineCount").textContent = `· full lyrics · ${annotated} of ${total} lines explained`;
-  wireLines();
-}
-
-// Offline / API-down fallback: show the hand-annotated lines we have.
-function renderAnnotatedFallback(song){
   let total = 0;
   const html = song.sections.map(sec => {
     total += sec.lines.length;
@@ -756,9 +1113,8 @@ function renderAnnotatedFallback(song){
       ${sec.lines.map(l => lineHTML(l.text, l)).join("")}
     </div>`;
   }).join("");
-  $("lyrics").innerHTML =
-    `<div class="notice">Couldn't load live full lyrics right now — showing the annotated lines. Try again in a moment.</div>` + html;
-  $("lineCount").textContent = `· ${total} annotated lines (offline)`;
+  $("lyrics").innerHTML = html;
+  $("lineCount").textContent = `· ${total} lines, every one explained`;
   wireLines();
 }
 
@@ -811,7 +1167,7 @@ function buildMenu(){
       <div class="cover">${s.emoji || "🎵"}</div>
       <div class="info">
         <p class="st">${esc(s.title)}</p>
-        <p class="sa">${esc(s.artist)} · ${esc(s.album)} · ${countLines(s)} explained lines</p>
+        <p class="sa">${esc(s.artist)} · ${esc(s.album)} · ${countLines(s)} lines</p>
         <p class="tagline">${esc(s.tagline || "")}</p>
         <div class="tags">${tags}</div>
         <div class="go">Learn this one →</div>
@@ -852,19 +1208,6 @@ async function loadExternalSongs(manifest = []){
       if (data && data.id) SONGS[data.id] = data;
     } catch(e){ /* offline / file:// — ignore */ }
   }
-}
-
-/* ---- Full lyrics via the Lyrics.ovh public API (https://api.lyrics.ovh/v1) ---- */
-async function fetchLyrics(artist, title){
-  // Route: https://api.lyrics.ovh/v1/{artist}/{title} — inputs URL-encoded.
-  const url = `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);          // e.g. 404 = missing
-  const data = await res.json();
-  if (!data || data.error || !data.lyrics) {                   // API signals misses via an "error" key
-    throw new Error(data && data.error ? data.error : "No lyrics returned");
-  }
-  return data.lyrics;
 }
 
 (async function init(){
