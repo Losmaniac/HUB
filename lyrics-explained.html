@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Lyric Lab — Learn American English Through Eminem</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2e; --panel2:#1f2440; --line:#2a2f55;
+    --text:#eef0fb; --muted:#9aa0c5; --accent:#6c8cff; --accent2:#34d0a8;
+    --warn:#ffb454; --bad:#ff6b6b; --good:#34d0a8; --slang:#c98cff;
+    --shadow:0 10px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 700px at 80% -10%,#22264a 0%,transparent 60%),var(--bg);
+    color:var(--text); -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:20px 18px 90px}
+  header{display:flex;align-items:center;gap:14px;margin:8px 0 18px;flex-wrap:wrap}
+  .logo{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--slang));font-size:24px;box-shadow:var(--shadow)}
+  h1{font-size:21px;margin:0;letter-spacing:.2px}
+  .sub{color:var(--muted);font-size:13px;margin-top:2px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .toolbar .left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  select,button{font:inherit}
+  select{background:var(--panel2);color:var(--text);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;outline:none;max-width:100%}
+  button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);
+    color:var(--text);border-radius:12px;padding:9px 14px;font-weight:600;
+    transition:transform .05s,background .15s,border-color .15s}
+  button:hover{background:#272d52}
+  button:active{transform:translateY(1px)}
+  button.on{background:linear-gradient(135deg,var(--accent),#5570e6);border-color:transparent}
+  .songmeta{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-top:4px}
+  .songmeta h2{margin:0;font-size:24px}
+  .songmeta .by{color:var(--muted);font-size:14px}
+  .pill{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--panel2);
+    border:1px solid var(--line);color:var(--muted)}
+  .intro{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.6}
+  .section{margin:22px 0 8px}
+  .section .lbl{display:inline-block;font-size:12px;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--accent2);font-weight:700;border-left:3px solid var(--accent2);padding-left:8px;margin-bottom:8px}
+  .section.chorus .lbl{color:var(--warn);border-color:var(--warn)}
+  .line{border:1px solid var(--line);border-radius:14px;margin:8px 0;overflow:hidden;
+    background:var(--panel2);transition:border-color .15s}
+  .line:hover{border-color:#3a4170}
+  .line .head{display:flex;align-items:center;gap:10px;padding:13px 15px;cursor:pointer;user-select:none}
+  .line .lyric{flex:1;font-size:clamp(16px,2.6vw,19px);font-weight:600;line-height:1.45}
+  .line .lyric .slang{color:var(--slang);border-bottom:1px dashed rgba(201,140,255,.5);cursor:help}
+  .line .chev{color:var(--muted);font-size:13px;transition:transform .2s;flex:0 0 auto}
+  .line.open .chev{transform:rotate(90deg)}
+  .body{max-height:0;overflow:hidden;transition:max-height .28s ease;border-top:0 solid var(--line)}
+  .line.open .body{max-height:1400px;border-top:1px solid var(--line)}
+  .body .inner{padding:12px 15px 15px}
+  .meaning{font-size:14.5px;line-height:1.6}
+  .meaning b{color:#fff}
+  .notes{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .note{display:flex;gap:10px;font-size:13.5px;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:9px 11px;line-height:1.5}
+  .note .tag{flex:0 0 auto;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+    padding:2px 8px;border-radius:999px;height:fit-content;margin-top:1px}
+  .tag.slang{background:rgba(201,140,255,.16);color:#e3c6ff;border:1px solid rgba(201,140,255,.35)}
+  .tag.idiom{background:rgba(52,208,168,.14);color:#bff4e4;border:1px solid rgba(52,208,168,.35)}
+  .tag.ref{background:rgba(255,180,84,.14);color:#ffe1b3;border:1px solid rgba(255,180,84,.35)}
+  .tag.gram{background:rgba(108,140,255,.16);color:#cdd8ff;border:1px solid rgba(108,140,255,.35)}
+  .note .term{color:#fff;font-weight:700}
+  .note .speak{margin-left:auto;flex:0 0 auto;background:transparent;border:1px solid var(--line);
+    border-radius:8px;padding:3px 8px;font-size:12px;cursor:pointer;color:var(--muted)}
+  .note .speak:hover{background:var(--panel2);color:var(--text)}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .legend .pill{cursor:default}
+  .empty{color:var(--muted);font-size:14px;padding:8px 2px}
+  .count{color:var(--muted);font-size:12.5px}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px;line-height:1.6}
+  footer a{color:var(--accent)}
+  .hidden{display:none!important}
+  @media(max-width:560px){.line .head{padding:11px 12px}.body .inner{padding:10px 12px 13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🎤</div>
+    <div>
+      <h1>Lyric Lab</h1>
+      <div class="sub">Learn real American English — slang, idioms &amp; culture — line by line</div>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="left">
+        <label class="pill" for="songSel" style="cursor:pointer">Song</label>
+        <select id="songSel" aria-label="Choose a song"></select>
+      </div>
+      <div class="left">
+        <button id="btnSpeakLine" title="Read each lyric aloud as you open it">🔊 Speak: <span id="speakState">on</span></button>
+        <button id="btnExpand">Expand all</button>
+        <button id="btnCollapse">Collapse all</button>
+      </div>
+    </div>
+    <div class="songmeta">
+      <h2 id="songTitle">—</h2>
+      <span class="by" id="songBy"></span>
+    </div>
+    <div class="intro" id="songIntro"></div>
+    <div class="legend">
+      <span class="pill"><span style="color:var(--slang)">●</span> slang</span>
+      <span class="pill"><span style="color:var(--good)">●</span> idiom</span>
+      <span class="pill"><span style="color:var(--warn)">●</span> reference</span>
+      <span class="pill"><span style="color:var(--accent)">●</span> grammar</span>
+      <span class="count" id="lineCount"></span>
+    </div>
+  </div>
+
+  <div id="lyrics"></div>
+
+  <footer>
+    Tip: tap any line to reveal a plain-English explanation. <span style="color:var(--slang)">Purple words</span> are slang — hover or tap to learn them.<br/>
+    Lyrics are quoted for educational study. To add a song, drop a new entry into the <code>SONGS</code> object (or a <code>songs/&lt;id&gt;.json</code> file).
+  </footer>
+</div>
+
+<script>
+/* ============================================================================
+   LYRIC LAB — scalable phrase-by-phrase lyric explainer
+   ----------------------------------------------------------------------------
+   HOW TO ADD A SONG (scalable design):
+   Add one entry to the SONGS object below. Shape:
+
+   "song-id": {
+     title:  "Song Name",
+     artist: "Artist",
+     album:  "Album (Year)",
+     intro:  "1–2 sentences of context.",
+     sections: [
+       { type:"verse"|"chorus"|"outro", label:"Verse 1", lines:[
+         {
+           text:    "The exact lyric line",
+           meaning: "Plain-English explanation (HTML allowed via <b>).",
+           // optional: highlight slang words inside `text` and explain them
+           notes: [
+             { type:"slang"|"idiom"|"ref"|"gram", term:"phrase", explain:"what it means" }
+           ]
+         }
+       ]}
+     ]
+   }
+
+   Words listed as a `slang`/`idiom` note whose `term` appears in the line are
+   auto-highlighted in purple. Everything else renders automatically.
+   You can also host songs externally: see loadExternalSongs() at the bottom.
+   ========================================================================== */
+
+const SONGS = {
+  "sing-for-the-moment": {
+    title: "Sing for the Moment",
+    artist: "Eminem",
+    album: "The Eminem Show (2002)",
+    intro: "A song about how rap music gives a voice to troubled, ignored kids — and Eminem's defense against critics who blamed his music for youth violence. It samples Aerosmith's \"Dream On\" (Steven Tyler sings the chorus). Great for learning Detroit/hip-hop slang, dropped 'g' endings (talkin', walkin'), and street idioms.",
+    sections: [
+      { type:"verse", label:"Verse 1", lines:[
+        { text:"These ideas are nightmares to white parents",
+          meaning:"Rebellious thoughts in rap music terrify conservative middle-class (often white, suburban) parents.",
+          notes:[{type:"gram", term:"nightmares to", explain:"\"a nightmare to someone\" = something they dread or fear."}] },
+        { text:"Whose worst fear is a child with dyed hair and who likes earrings",
+          meaning:"Those parents panic over harmless things — colored hair, a son wearing earrings — as signs of rebellion.",
+          notes:[{type:"slang", term:"dyed hair", explain:"hair colored an unnatural color (blue, green) — a sign of teen rebellion in the early 2000s."}] },
+        { text:"Like whatever they say has no bearing",
+          meaning:"To the teen, nothing the parents say matters or has any effect.",
+          notes:[{type:"idiom", term:"has no bearing", explain:"\"to have no bearing (on something)\" = to have no relevance or influence."}] },
+        { text:"It's so scary in a house that allows no swearing",
+          meaning:"Sarcastic: a strict home that bans cursing feels suffocating to the kid.",
+          notes:[{type:"slang", term:"swearing", explain:"using curse words / bad language. Also called \"cussing.\""}] },
+        { text:"To see him walkin' around with his headphones blarin'",
+          meaning:"The kid shuts everyone out, music turned up loud in his headphones.",
+          notes:[
+            {type:"gram", term:"walkin'", explain:"dropped 'g': \"walking → walkin'.\" Extremely common in casual/Southern/AAVE speech and rap."},
+            {type:"slang", term:"blarin'", explain:"\"blaring\" = playing extremely loudly."}] },
+        { text:"Alone in his own zone, cold and he don't care",
+          meaning:"Emotionally shut off in his own world; numb and indifferent.",
+          notes:[
+            {type:"idiom", term:"in his own zone", explain:"\"in the zone / in your own zone\" = deeply absorbed, tuned out from the world."},
+            {type:"slang", term:"cold", explain:"emotionally numb, unfeeling, distant."},
+            {type:"gram", term:"he don't care", explain:"AAVE/casual grammar: \"he don't\" instead of \"he doesn't.\" Common in speech, not standard writing."}] },
+        { text:"He's a problemed child, and what bothers him all comes out",
+          meaning:"He's a troubled kid, and his pain eventually pours out (in his behavior).",
+          notes:[{type:"slang", term:"problemed child", explain:"plays on \"problem child\" = a difficult, troubled kid."}] },
+        { text:"When he talks about his fuckin' dad walkin' out",
+          meaning:"His anger surfaces when the subject of his father abandoning the family comes up.",
+          notes:[{type:"idiom", term:"walkin' out", explain:"\"to walk out (on someone)\" = to abandon them, leave the family/relationship."}] },
+        { text:"'Cause he hates him so bad that he blocks him out",
+          meaning:"He hates his dad so much he refuses to think about him at all.",
+          notes:[{type:"idiom", term:"blocks him out", explain:"\"to block someone out\" = to mentally shut them out, refuse to acknowledge them."}] },
+        { text:"If he ever saw him again, he'd probably knock him out",
+          meaning:"If they ever met, the kid would likely punch him unconscious.",
+          notes:[{type:"idiom", term:"knock him out", explain:"\"to knock someone out\" = to hit them hard enough to make them lose consciousness (KO)."}] },
+        { text:"His thoughts are wacked, he's mad, so he's talkin' back",
+          meaning:"His thinking is messed up; he's angry, so he argues with adults.",
+          notes:[
+            {type:"slang", term:"wacked", explain:"\"wack/wacked\" = messed up, crazy, bad, low quality."},
+            {type:"slang", term:"mad", explain:"in American slang, \"mad\" usually means angry (not insane)."},
+            {type:"idiom", term:"talkin' back", explain:"\"to talk back\" = to reply rudely/defiantly to an authority figure."}] },
+        { text:"Talkin' black, brainwashed from rock and rap",
+          meaning:"Critics claim he imitates Black/urban speech, supposedly 'corrupted' by music.",
+          notes:[{type:"ref", term:"brainwashed", explain:"a real 2000s moral-panic claim that rap and rock 'brainwashed' kids into violence — Eminem mocks it."}] },
+        { text:"He sags his pants, durags, and a stockin' cap",
+          meaning:"He wears hip-hop street fashion of the era.",
+          notes:[
+            {type:"slang", term:"sags his pants", explain:"\"sagging\" = wearing pants very low on the hips — an iconic hip-hop style."},
+            {type:"slang", term:"durags", explain:"a \"durag\" (do-rag) = a cloth tied over the head, often to maintain hair waves."},
+            {type:"slang", term:"stockin' cap", explain:"a \"stocking cap\" = a tight knitted beanie/skull cap."}] },
+        { text:"His stepfather hit him so he socked him back",
+          meaning:"His stepdad hit him, so he punched him in return.",
+          notes:[{type:"slang", term:"socked", explain:"\"to sock someone\" = to punch them hard."}] },
+        { text:"And broke his nose, his house is a broken home",
+          meaning:"He broke the stepdad's nose; his family is dysfunctional and fractured.",
+          notes:[{type:"idiom", term:"broken home", explain:"\"a broken home\" = a family torn apart by divorce, abuse, or absence — a fixed phrase."}] },
+        { text:"There's no control, he just lets his emotions go",
+          meaning:"With no stability or guidance, he gives in to his feelings completely.",
+          notes:[{type:"idiom", term:"lets his emotions go", explain:"\"to let go\" = to stop holding back / release pent-up feelings."}] },
+      ]},
+      { type:"chorus", label:"Chorus (Steven Tyler & Eminem)", lines:[
+        { text:"(Come on) Sing with me (Sing), sing for the year (Sing it)",
+          meaning:"An invitation to sing together — a hook borrowed from Aerosmith's \"Dream On.\"",
+          notes:[{type:"ref", term:"Sing for the year", explain:"echoes Aerosmith's \"Sing for the laughter, sing for the tear\" — Steven Tyler re-sang it for this track."}] },
+        { text:"Sing for the laughter and sing for the tear (Come on)",
+          meaning:"Sing about both joy (laughter) and sorrow (tears) — all of life.",
+          notes:[{type:"gram", term:"the tear", explain:"\"tear\" (a drop from crying) here stands for sadness; rhymes with \"year.\""}] },
+        { text:"Sing it with me, if it's just for today",
+          meaning:"Join in, even if only for this single moment.",
+          notes:[] },
+        { text:"Maybe tomorrow, the good Lord will take you away",
+          meaning:"Live for now, because tomorrow you might die — a 'seize the day' message.",
+          notes:[{type:"idiom", term:"the good Lord will take you away", explain:"a gentle religious euphemism for dying / God taking you to heaven."}] },
+      ]},
+      { type:"verse", label:"Verse 2", lines:[
+        { text:"Entertainment is changin', intertwinin' with gangsters",
+          meaning:"Pop culture is merging with gang/criminal imagery.",
+          notes:[{type:"slang", term:"gangsters", explain:"in rap, often \"gangstas\" = members of street gangs / the criminal lifestyle glorified in some music."}] },
+        { text:"In the land of the killers, a sinner's mind is a sanctum",
+          meaning:"In a violent society, a guilty/troubled mind becomes a private refuge.",
+          notes:[
+            {type:"ref", term:"land of the killers", explain:"a dark twist on \"land of the free\" (the U.S. national anthem)."},
+            {type:"gram", term:"sanctum", explain:"a sacred or private inner space — a refuge."}] },
+        { text:"Holy or unholy, only have one homie",
+          meaning:"Good or bad, he has only one true friend.",
+          notes:[{type:"slang", term:"homie", explain:"\"homie\" (from \"homeboy\") = a close friend, buddy. Core hip-hop slang."}] },
+        { text:"Only this gun, lonely, 'cause don't anyone know me",
+          meaning:"His only 'companion' is his gun; he feels nobody truly knows the real him.",
+          notes:[{type:"gram", term:"'cause don't anyone know me", explain:"poetic/inverted word order for rhyme: standard would be \"because nobody knows me.\""}] },
+        { text:"Yet everybody just feels like they can relate (Uh-huh)",
+          meaning:"Ironically, everyone thinks they understand and connect with him.",
+          notes:[{type:"idiom", term:"relate", explain:"\"to relate (to someone/something)\" = to identify with it, feel a personal connection."}] },
+        { text:"I guess words are a motherfucker, they can be great (Ugh)",
+          meaning:"Words are powerful and dangerous things; they can do good.",
+          notes:[{type:"slang", term:"a motherfucker", explain:"vulgar intensifier: \"X is a motherfucker\" = X is extremely powerful/intense/difficult. Very strong profanity."}] },
+        { text:"Or they can degrade, or even worse, they can teach hate",
+          meaning:"Or words can insult and humiliate, or worst of all, spread hatred.",
+          notes:[{type:"gram", term:"degrade", explain:"to demean or lower someone's dignity."}] },
+        { text:"It's like these kids hang on every single statement we make",
+          meaning:"Kids treat every word rappers say as gospel.",
+          notes:[{type:"idiom", term:"hang on every", explain:"\"to hang on someone's every word\" = to listen with total attention, treat their words as vital."}] },
+        { text:"Like they worship us, plus all the stores ship us platinum",
+          meaning:"Fans idolize them, and albums sell over a million copies (platinum).",
+          notes:[{type:"ref", term:"platinum", explain:"a \"platinum\" record = 1,000,000+ copies sold (RIAA certification). \"Gold\" = 500,000."}] },
+        { text:"Now how the fuck did this metamorphosis happen?",
+          meaning:"How did such a huge transformation (in his life/fame) take place?",
+          notes:[{type:"gram", term:"metamorphosis", explain:"a complete change of form — here, his rise from nothing to stardom."}] },
+        { text:"From standin' on corners and porches just rappin'",
+          meaning:"From rapping on street corners and front porches for free…",
+          notes:[{type:"ref", term:"standin' on corners", explain:"\"the corner\" = the neighborhood street corner, a hub of urban life (and sometimes drug dealing)."}] },
+        { text:"To havin' a fortune, no more kissin' ass",
+          meaning:"…to being rich and no longer having to flatter people for favors.",
+          notes:[{type:"idiom", term:"kissin' ass", explain:"\"to kiss ass\" = to flatter/please someone for personal gain. Vulgar but everyday slang."}] },
+        { text:"But then these critics crucify you (Yep), journalists try to burn you",
+          meaning:"But critics harshly attack you and reporters try to destroy your reputation.",
+          notes:[
+            {type:"idiom", term:"crucify you", explain:"\"to crucify someone\" = to criticize/punish them brutally (from the crucifixion)."},
+            {type:"idiom", term:"burn you", explain:"\"to burn someone\" = to harm, betray, or publicly humiliate them."}] },
+        { text:"Fans turn on you, attorneys all want a turn at you",
+          meaning:"Even fans betray you, and lawyers all line up to sue you.",
+          notes:[
+            {type:"idiom", term:"turn on you", explain:"\"to turn on someone\" = to suddenly become hostile to a person you supported."},
+            {type:"slang", term:"attorneys", explain:"\"attorney\" = the formal American word for a lawyer."}] },
+        { text:"To get they hands on every dime you have",
+          meaning:"They want to grab every last bit of your money.",
+          notes:[
+            {type:"gram", term:"they hands", explain:"AAVE: \"they\" used for \"their.\" Standard: \"their hands.\""},
+            {type:"idiom", term:"every dime", explain:"\"a dime\" = 10 cents; \"every dime\" = every last cent of your money."}] },
+        { text:"They want you to lose your mind every time you mad",
+          meaning:"They provoke you, hoping you'll snap whenever you get angry.",
+          notes:[{type:"idiom", term:"lose your mind", explain:"\"to lose your mind\" = to go crazy / lose self-control."}] },
+        { text:"So they can try to make you out to look like a loose cannon",
+          meaning:"So they can portray you as dangerously unpredictable.",
+          notes:[
+            {type:"idiom", term:"make you out to", explain:"\"to make someone out to be X\" = to portray/depict them as X."},
+            {type:"idiom", term:"loose cannon", explain:"\"a loose cannon\" = an unpredictable person who may cause damage at any moment."}] },
+        { text:"Any dispute won't hesitate to produce handguns",
+          meaning:"(The media implies) at any argument, he'll instantly pull out guns.",
+          notes:[{type:"gram", term:"produce handguns", explain:"\"to produce\" here = to pull out / bring forth (a weapon)."}] },
+        { text:"That's why these prosecutors wanna convict me",
+          meaning:"That's why government lawyers want to find him guilty of a crime.",
+          notes:[{type:"slang", term:"prosecutors", explain:"\"prosecutor\" = the government lawyer who tries to prove someone guilty in court."}] },
+        { text:"Strictly just to get me off of these streets quickly",
+          meaning:"Purely to lock him up and remove him from public life fast.",
+          notes:[{type:"idiom", term:"off of these streets", explain:"\"to get someone off the streets\" = to imprison them / remove them from society."}] },
+        { text:"But all they kids be listenin' to me religiously",
+          meaning:"But those same officials' kids listen to him devotedly.",
+          notes:[
+            {type:"gram", term:"be listenin'", explain:"AAVE \"habitual be\": \"they be listenin'\" = they listen regularly/habitually."},
+            {type:"idiom", term:"religiously", explain:"\"to do something religiously\" = to do it faithfully and without fail."}] },
+        { text:"So, I'm signin' CDs while police fingerprint me",
+          meaning:"He signs autographs even as police book him like a criminal.",
+          notes:[{type:"ref", term:"fingerprint me", explain:"taking fingerprints is part of being arrested/\"booked\" by police."}] },
+        { text:"They're for the judge's daughter, but his grudge is against me",
+          meaning:"The autographs are for the judge's own daughter, yet the judge resents him.",
+          notes:[{type:"idiom", term:"grudge", explain:"\"a grudge\" = a long-held resentment; \"to hold a grudge against someone.\""}] },
+        { text:"If I'm such a fuckin' menace, this shit doesn't make sense, b'",
+          meaning:"If he's really such a danger, then none of this hypocrisy adds up, man.",
+          notes:[
+            {type:"slang", term:"menace", explain:"\"a menace\" = a threat or danger to society."},
+            {type:"idiom", term:"doesn't make sense", explain:"\"to make sense\" = to be logical/understandable; here it's contradictory."},
+            {type:"slang", term:"b'", explain:"\"b\" = short for \"bro/boy,\" a casual term of address (like \"man\" or \"dude\")."}] },
+        { text:"It's all political, if my music is literal",
+          meaning:"It's all about politics: if his violent lyrics are taken literally…",
+          notes:[{type:"gram", term:"literal", explain:"meant word-for-word / not figurative — the opposite of artistic exaggeration."}] },
+        { text:"And I'm a criminal, how the fuck can I raise a little girl?",
+          meaning:"…and he's truly a criminal, how could he be raising his daughter well?",
+          notes:[{type:"ref", term:"a little girl", explain:"refers to his daughter Hailie, a recurring figure in Eminem's music."}] },
+        { text:"I couldn't, I wouldn't be fit to",
+          meaning:"He couldn't and wouldn't be a suitable parent (if the accusations were true).",
+          notes:[{type:"idiom", term:"fit to", explain:"\"fit to do something\" = suitable/qualified/capable of doing it."}] },
+        { text:"You're full of shit too, Guerrera, that was a fist that hit you (Bitch)",
+          meaning:"A direct insult: 'you're a liar' — aimed at a specific person from a real incident.",
+          notes:[
+            {type:"idiom", term:"full of shit", explain:"\"to be full of shit\" = to be lying or talking nonsense. Vulgar but extremely common."},
+            {type:"ref", term:"Guerrera", explain:"a real-name diss tied to a 2000 assault case Eminem was involved in."}] },
+      ]},
+      { type:"verse", label:"Verse 3", lines:[
+        { text:"They say music can alter moods and talk to you",
+          meaning:"Critics claim music can change your emotions and 'speak' to you.",
+          notes:[{type:"gram", term:"alter", explain:"\"to alter\" = to change/modify something."}] },
+        { text:"Well, can it load a gun up for you and cock it too?",
+          meaning:"Sarcastic comeback: but music can't physically load and ready a gun for you.",
+          notes:[{type:"idiom", term:"cock it", explain:"\"to cock a gun\" = to pull back the hammer to prepare it to fire."}] },
+        { text:"Well, if it can, then the next time you assault a dude",
+          meaning:"If music really controls you, then next time you attack someone…",
+          notes:[{type:"slang", term:"dude", explain:"\"dude\" = a casual American word for a guy/man (also a general exclamation)."}] },
+        { text:"Just tell the judge it was my fault, and I'll get sued",
+          meaning:"…just blame Eminem in court, and he'll be the one taken to court.",
+          notes:[{type:"idiom", term:"get sued", explain:"\"to get sued\" = to have someone take legal action against you for money/damages."}] },
+        { text:"See, what these kids do is hear about us totin' pistols",
+          meaning:"Kids hear rappers talk about carrying guns…",
+          notes:[{type:"slang", term:"totin' pistols", explain:"\"to tote\" = to carry; \"totin' pistols\" = carrying handguns."}] },
+        { text:"And they wanna get one 'cause they think this shit's cool",
+          meaning:"…and want a gun because they think it's cool.",
+          notes:[{type:"slang", term:"this shit's cool", explain:"\"shit\" used neutrally as \"stuff/this\"; \"cool\" = admirable/impressive."}] },
+        { text:"Not knowin' we really just protectin' ourselves",
+          meaning:"Not realizing the rappers carry guns only for self-defense.",
+          notes:[{type:"gram", term:"protectin' ourselves", explain:"\"to protect oneself\" = self-defense; note the dropped 'g' again."}] },
+        { text:"We entertainers, of course the shit's affectin' our sales",
+          meaning:"They're performers; naturally a tough image boosts record sales.",
+          notes:[{type:"gram", term:"We entertainers", explain:"AAVE: dropped \"are\" — standard is \"We are entertainers.\""}] },
+        { text:"You ignoramus, but music is reflection of self",
+          meaning:"You fool — music simply mirrors who the artist already is.",
+          notes:[{type:"slang", term:"ignoramus", explain:"\"ignoramus\" = an ignorant, stupid person (a mock-formal insult)."}] },
+        { text:"We just explain it, and then we get our checks in the mail",
+          meaning:"Rappers only describe reality, then get paid for it.",
+          notes:[{type:"idiom", term:"checks in the mail", explain:"getting paid; \"the check is in the mail\" is also a famous excuse phrase, used straight here."}] },
+        { text:"It's fucked up, ain't it? How we can come from practically nothin'",
+          meaning:"It's messed up, isn't it, that they rose from near-poverty…",
+          notes:[
+            {type:"idiom", term:"fucked up", explain:"\"fucked up\" = wrong, messed up, unjust (vulgar but ubiquitous)."},
+            {type:"gram", term:"ain't it", explain:"\"ain't\" = nonstandard contraction for \"isn't/aren't/am not/hasn't.\" Very common in speech."}] },
+        { text:"To bein' able to have any fuckin' thing that we wanted",
+          meaning:"…to being able to afford anything they want.",
+          notes:[{type:"gram", term:"any fuckin' thing", explain:"\"fuckin'\" inserted as an intensifier — adds emphasis, not meaning."}] },
+        { text:"That's why we sing for these kids who don't have a thing",
+          meaning:"That's why they make music for kids who have nothing.",
+          notes:[{type:"idiom", term:"don't have a thing", explain:"\"to not have a thing\" = to have nothing at all."}] },
+        { text:"Except for a dream and a fuckin' rap magazine (Haha)",
+          meaning:"…except hopes and a hip-hop magazine to dream over.",
+          notes:[{type:"ref", term:"rap magazine", explain:"e.g. The Source, XXL, Vibe — magazines poor kids read to follow their idols."}] },
+        { text:"Who post pin-up pictures on they walls all day long",
+          meaning:"Kids who cover their bedroom walls with posters of rappers.",
+          notes:[{type:"slang", term:"pin-up pictures", explain:"\"pin-ups\" = posters/photos pinned to a wall, usually of stars or idols."}] },
+        { text:"Idolize they favorite rappers and know all they songs",
+          meaning:"They worship their favorite rappers and memorize every song.",
+          notes:[{type:"gram", term:"idolize", explain:"\"to idolize someone\" = to admire them so much you treat them like an idol/god."}] },
+        { text:"Or for anyone who's ever been through shit in they lives",
+          meaning:"…or for anyone who has suffered hard times.",
+          notes:[{type:"idiom", term:"been through shit", explain:"\"to go through shit\" = to endure painful/difficult experiences."}] },
+        { text:"So they sit and they cry at night, wishin' they'd die",
+          meaning:"Kids so hurt that they cry at night and wish they were dead.",
+          notes:[{type:"gram", term:"wishin' they'd die", explain:"\"they'd\" = \"they would\"; expresses a hopeless wish."}] },
+        { text:"'Til they throw on a rap record, and they sit and they vibe",
+          meaning:"…until they put on a rap song and just relax and feel it.",
+          notes:[
+            {type:"idiom", term:"throw on", explain:"\"to throw on\" music = to quickly start playing it."},
+            {type:"slang", term:"vibe", explain:"\"to vibe\" = to relax and enjoy the mood/feeling of something."}] },
+        { text:"We're nothin' to you, but we're the fuckin' shit in they eyes",
+          meaning:"Critics see them as worthless, but to those kids they're amazing.",
+          notes:[{type:"slang", term:"the shit", explain:"\"the shit\" (with \"the\") = the best, excellent. Note: \"shit\" alone = bad, but \"THE shit\" = great!"}] },
+        { text:"That's why we seize the moment, try to freeze it and own it",
+          meaning:"That's why they grab the moment, hold onto it, and make it theirs.",
+          notes:[{type:"idiom", term:"seize the moment", explain:"\"to seize the moment\" = to act on an opportunity right now (carpe diem) — the song's core theme."}] },
+        { text:"Squeeze it and hold it 'cause we consider these minutes golden",
+          meaning:"They cling to these moments because they see them as precious.",
+          notes:[{type:"idiom", term:"golden", explain:"\"golden\" = precious, valuable, a perfect opportunity (as in \"a golden opportunity\")."}] },
+        { text:"And maybe they'll admit it when we're gone",
+          meaning:"Maybe people will acknowledge his worth only after he dies.",
+          notes:[{type:"idiom", term:"when we're gone", explain:"\"when someone is gone\" is a soft way of saying \"after they die.\""}] },
+        { text:"Just let our spirits live on",
+          meaning:"He hopes his spirit/legacy continues after death.",
+          notes:[{type:"idiom", term:"live on", explain:"\"to live on\" = to continue existing/being remembered after death."}] },
+        { text:"Through our lyrics that you hear in our songs, and we can—",
+          meaning:"…through the lyrics in his songs (leading into the chorus).",
+          notes:[] },
+      ]},
+      { type:"chorus", label:"Chorus", lines:[
+        { text:"Sing with me (Sing), sing for the year (Sing it)",
+          meaning:"Repeat of the Aerosmith-sampled hook — a call to sing together.",
+          notes:[] },
+        { text:"Sing for the laughter and sing for the tear (Come on)",
+          meaning:"Sing about joy and sorrow alike.",
+          notes:[] },
+        { text:"Sing it with me, if it's just for today",
+          meaning:"Join in, even if only for this moment.",
+          notes:[] },
+        { text:"Maybe tomorrow, the good Lord will take you away",
+          meaning:"Cherish today, because life is short.",
+          notes:[] },
+      ]},
+      { type:"outro", label:"Outro", lines:[
+        { text:"Sing with me (Sing), sing for the year (Sing it)",
+          meaning:"The hook fades out, repeating the message to live for the moment.",
+          notes:[] },
+        { text:"Sing for the laughter and sing for the tear (Come on)",
+          meaning:"One last call to embrace both happiness and pain.",
+          notes:[] },
+        { text:"Sing it with me, if it's just for today",
+          meaning:"A final invitation to join in, if only briefly.",
+          notes:[] },
+        { text:"Maybe tomorrow, the good Lord will take you away",
+          meaning:"Closing reminder: seize the moment — tomorrow isn't promised.",
+          notes:[] },
+      ]},
+    ]
+  }
+};
+
+/* ---------------------------- Rendering engine ---------------------------- */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let speakOn = true;
+
+// Highlight any slang/idiom terms found in the line text (purple, hoverable).
+function highlightTerms(text, notes){
+  let html = esc(text);
+  const terms = (notes||[])
+    .filter(n => n.type === "slang" || n.type === "idiom")
+    .map(n => n.term)
+    .filter(Boolean)
+    .sort((a,b) => b.length - a.length); // longest first to avoid nested matches
+  for (const term of terms){
+    const safe = esc(term);
+    const re = new RegExp(`(^|[^>\\w])(${safe.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})(?![^<]*>)`, "i");
+    html = html.replace(re, (m, pre, hit) =>
+      `${pre}<span class="slang" title="${esc(term)}">${hit}</span>`);
+  }
+  return html;
+}
+
+function noteHTML(n){
+  const label = {slang:"slang", idiom:"idiom", ref:"reference", gram:"grammar"}[n.type] || n.type;
+  return `<div class="note">
+    <span class="tag ${esc(n.type)}">${esc(label)}</span>
+    <span><span class="term">${esc(n.term)}</span> — ${n.explain}</span>
+    <button class="speak" data-say="${esc(n.term)}" title="Hear it">🔊</button>
+  </div>`;
+}
+
+function lineHTML(line){
+  const notesHTML = (line.notes && line.notes.length)
+    ? `<div class="notes">${line.notes.map(noteHTML).join("")}</div>` : "";
+  return `<div class="line" data-say="${esc(line.text)}">
+    <div class="head">
+      <div class="lyric">${highlightTerms(line.text, line.notes)}</div>
+      <span class="chev">▶</span>
+    </div>
+    <div class="body"><div class="inner">
+      <div class="meaning"><b>Meaning:</b> ${line.meaning}</div>
+      ${notesHTML}
+    </div></div>
+  </div>`;
+}
+
+function renderSong(id){
+  const song = SONGS[id];
+  if (!song) return;
+  $("songTitle").textContent = song.title;
+  $("songBy").textContent = `${song.artist} · ${song.album}`;
+  $("songIntro").textContent = song.intro || "";
+
+  let lineTotal = 0;
+  const html = song.sections.map(sec => {
+    lineTotal += sec.lines.length;
+    return `<div class="section ${esc(sec.type)}">
+      <span class="lbl">${esc(sec.label)}</span>
+      ${sec.lines.map(lineHTML).join("")}
+    </div>`;
+  }).join("");
+  $("lyrics").innerHTML = html;
+  $("lineCount").textContent = `· ${lineTotal} lines annotated`;
+  wireLines();
+}
+
+function speak(text){
+  if (!speakOn || !window.speechSynthesis) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/\([^)]*\)/g, "")); // drop ad-libs
+    u.lang = "en-US"; u.rate = 0.95;
+    speechSynthesis.speak(u);
+  } catch(e){ /* speech not available */ }
+}
+
+function wireLines(){
+  document.querySelectorAll(".line .head").forEach(head => {
+    head.addEventListener("click", () => {
+      const line = head.closest(".line");
+      const wasOpen = line.classList.contains("open");
+      line.classList.toggle("open");
+      if (!wasOpen) speak(line.getAttribute("data-say") || "");
+    });
+  });
+  document.querySelectorAll(".note .speak").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      speak(btn.getAttribute("data-say") || "");
+    });
+  });
+}
+
+function buildSongSelector(){
+  const sel = $("songSel");
+  sel.innerHTML = Object.entries(SONGS)
+    .map(([id, s]) => `<option value="${esc(id)}">${esc(s.title)} — ${esc(s.artist)}</option>`)
+    .join("");
+  sel.addEventListener("change", () => renderSong(sel.value));
+}
+
+/* Optional: load extra songs from external JSON so the app scales without
+   editing this file. Drop files in a "songs/" folder and list them here,
+   each shaped like a SONGS entry plus an "id" field. Fails silently offline. */
+async function loadExternalSongs(manifest = []){
+  for (const url of manifest){
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data && data.id) SONGS[data.id] = data;
+    } catch(e){ /* offline / file:// — ignore */ }
+  }
+}
+
+(async function init(){
+  // await loadExternalSongs(["songs/lose-yourself.json"]); // example, optional
+  buildSongSelector();
+  const first = Object.keys(SONGS)[0];
+  $("songSel").value = first;
+  renderSong(first);
+
+  $("btnExpand").addEventListener("click", () =>
+    document.querySelectorAll(".line").forEach(l => l.classList.add("open")));
+  $("btnCollapse").addEventListener("click", () =>
+    document.querySelectorAll(".line").forEach(l => l.classList.remove("open")));
+  $("btnSpeakLine").addEventListener("click", () => {
+    speakOn = !speakOn;
+    $("speakState").textContent = speakOn ? "on" : "off";
+    $("btnSpeakLine").classList.toggle("on", speakOn);
+    if (!speakOn && window.speechSynthesis) speechSynthesis.cancel();
+  });
+  $("btnSpeakLine").classList.add("on");
+})();
+</script>
+</body>
+</html>
