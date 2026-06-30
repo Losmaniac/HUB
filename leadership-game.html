@@ -4,808 +4,940 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="Lead & Speak — a mobile game to improve your leadership skills and English." />
-  <title>Lead &amp; Speak — Leadership + English Game</title>
+  <meta name="description" content="Lead Sim — a leadership work simulator. Run a team, ship a project, and master business English under real pressure." />
+  <title>Lead Sim — Leadership Work Simulator</title>
   <style>
-    :root {
-      --bg: #0f172a;
-      --bg2: #1e293b;
-      --card: #1e293b;
-      --card2: #273449;
-      --line: #334155;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent2: #818cf8;
-      --good: #34d399;
-      --bad: #fb7185;
-      --warn: #fbbf24;
-      --radius: 18px;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    :root{
+      --bg:#0f172a; --card:#1e293b; --card2:#273449; --line:#334155;
+      --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8; --accent2:#818cf8;
+      --good:#34d399; --bad:#fb7185; --warn:#fbbf24; --pur:#c084fc;
+      --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.35);
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-      color: var(--text);
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      margin:0;color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
       background:
-        radial-gradient(1200px 600px at 80% -10%, rgba(129,140,248,.18), transparent 60%),
-        radial-gradient(1000px 500px at -10% 110%, rgba(56,189,248,.16), transparent 55%),
+        radial-gradient(1200px 600px at 85% -10%,rgba(129,140,248,.16),transparent 60%),
+        radial-gradient(1000px 500px at -10% 110%,rgba(56,189,248,.14),transparent 55%),
         var(--bg);
-      -webkit-font-smoothing: antialiased;
-      overscroll-behavior: none;
+      -webkit-font-smoothing:antialiased;overscroll-behavior:none;
     }
-    .app {
-      max-width: 520px;
-      margin: 0 auto;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-      padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
-    }
+    .app{max-width:540px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+      padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+    .screen{display:none;animation:fade .3s ease}
+    .screen.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-    /* Top bar / HUD */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .2px; }
-    .brand .logo {
-      width: 38px; height: 38px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: grid; place-items: center; font-size: 20px; box-shadow: var(--shadow);
-    }
-    .brand small { display:block; font-weight: 600; color: var(--muted); font-size: 11px; }
+    h1{font-size:25px;margin:0 0 6px;line-height:1.15}
+    h2{font-size:18px;margin:0 0 8px}
+    h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2)}
+    p{line-height:1.5}
+    .lead{color:var(--muted);margin-top:0}
+    .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+    .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+      color:var(--accent);background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);
+      padding:4px 9px;border-radius:999px;margin-bottom:10px}
 
-    .stats { display: flex; gap: 8px; }
-    .stat {
-      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-      padding: 6px 10px; text-align: center; min-width: 52px;
-    }
-    .stat b { font-size: 16px; display: block; line-height: 1.1; }
-    .stat span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    /* buttons */
+    .btn{appearance:none;border:0;cursor:pointer;width:100%;padding:14px 16px;border-radius:13px;
+      font-size:16px;font-weight:800;letter-spacing:.2px;color:#06121f;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:var(--shadow);
+      transition:transform .08s ease,filter .15s}
+    .btn:active{transform:scale(.98)}
+    .btn.secondary{background:var(--card2);color:var(--text);border:1px solid var(--line);box-shadow:none}
+    .btn.ghost{background:transparent;color:var(--muted);box-shadow:none;font-weight:700}
+    .btn[disabled]{opacity:.45;filter:grayscale(.3);pointer-events:none}
+    .actions{display:flex;flex-direction:column;gap:9px;margin-top:14px}
 
-    /* Progress bar */
-    .progress-wrap { height: 8px; background: var(--card); border-radius: 999px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--line); }
-    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .4s ease; }
+    /* HUD */
+    .hud{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+    .hud .brand{display:flex;align-items:center;gap:9px;font-weight:800}
+    .hud .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:var(--shadow)}
+    .hud small{display:block;font-weight:600;color:var(--muted);font-size:10px}
+    .hud .wk{text-align:right}
+    .hud .wk b{font-size:15px}
+    .hud .wk span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 
-    main { flex: 1; display: flex; flex-direction: column; }
+    .focuschip{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);
+      border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px}
+    .focuschip .dots{display:inline-flex;gap:3px}
+    .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+    .dot.on{background:var(--accent)}
 
-    .card {
-      background: linear-gradient(180deg, var(--card), var(--card2));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
-    }
+    /* metric bars */
+    .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .metric{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:11px;padding:9px 10px}
+    .metric .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+    .metric .lab{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+    .metric .val{font-size:14px;font-weight:800}
+    .bar{height:7px;background:rgba(0,0,0,.3);border-radius:999px;overflow:hidden}
+    .bar > i{display:block;height:100%;border-radius:999px;transition:width .5s ease,background .3s}
+    .delta{font-size:11px;font-weight:800;margin-left:6px}
+    .delta.up{color:var(--good)} .delta.down{color:var(--bad)}
 
-    /* Screens */
-    .screen { display: none; animation: fade .35s ease; }
-    .screen.active { display: block; }
-    @keyframes fade { from { opacity: 0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+    /* team */
+    .team{display:grid;gap:8px}
+    .member{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.03);
+      border:1px solid var(--line);border-radius:12px;padding:10px}
+    .member.gone{opacity:.45;filter:grayscale(.6)}
+    .ava{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:18px;
+      background:linear-gradient(135deg,#334155,#1e293b);border:1px solid var(--line)}
+    .member .info{flex:1;min-width:0}
+    .member .nm{font-weight:800;font-size:14px}
+    .member .ro{font-size:11px;color:var(--muted)}
+    .mini{display:flex;gap:8px;margin-top:5px}
+    .mini .m{flex:1}
+    .mini .ml{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+    .mbar{height:5px;background:rgba(0,0,0,.3);border-radius:999px;overflow:hidden}
+    .mbar > i{display:block;height:100%}
+    .badge{font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;white-space:nowrap}
+    .badge.note{background:rgba(251,191,36,.15);color:var(--warn);border:1px solid rgba(251,191,36,.3)}
 
-    h1 { font-size: 26px; margin: 0 0 6px; line-height: 1.15; }
-    h2 { font-size: 19px; margin: 0 0 10px; }
-    p { line-height: 1.5; color: var(--text); }
-    .lead { color: var(--muted); margin-top: 0; }
+    /* event */
+    .event{border-left:4px solid var(--pur);background:rgba(192,132,252,.06)}
+    .event .who{color:var(--accent2);font-weight:800}
+    .scenario{font-size:15.5px;line-height:1.55;margin:6px 0 4px}
+    .opt{text-align:left;width:100%;background:var(--card2);color:var(--text);border:1px solid var(--line);
+      border-radius:12px;padding:12px 14px;font-size:14.5px;line-height:1.45;cursor:pointer;
+      display:flex;gap:10px;align-items:flex-start;transition:transform .08s,border-color .15s,background .15s}
+    .opt:active{transform:scale(.985)}
+    .opt .k{flex:none;width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.06);
+      border:1px solid var(--line);display:grid;place-items:center;font-weight:800;font-size:12px;color:var(--muted)}
+    .cost{font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap;align-self:center}
 
-    .tag {
-      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .4px;
-      text-transform: uppercase; color: var(--accent);
-      background: rgba(56,189,248,.12); border: 1px solid rgba(56,189,248,.3);
-      padding: 4px 9px; border-radius: 999px; margin-bottom: 12px;
-    }
+    /* action menu */
+    .amenu{display:grid;gap:8px}
+    .act{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;background:var(--card2);
+      color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px 13px;cursor:pointer;
+      transition:transform .08s,border-color .15s}
+    .act:active{transform:scale(.985)}
+    .act:disabled{opacity:.4;cursor:default}
+    .act .ic{font-size:20px;flex:none;width:26px;text-align:center}
+    .act .ttl{display:block;font-weight:800;font-size:14px}
+    .act .ds{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.35}
+    .act .fc{margin-left:auto;align-self:center;font-size:11px;font-weight:800;color:var(--accent);white-space:nowrap}
 
-    .scenario {
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--accent2);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin: 14px 0 18px;
-      font-size: 16px; line-height: 1.55;
-    }
-    .scenario .who { color: var(--accent2); font-weight: 700; }
+    /* modal */
+    .scrim{position:fixed;inset:0;background:rgba(2,6,23,.72);display:none;align-items:flex-end;
+      justify-content:center;z-index:50;padding:0;backdrop-filter:blur(2px)}
+    .scrim.show{display:flex;animation:fade .2s ease}
+    .sheet{width:100%;max-width:540px;background:linear-gradient(180deg,var(--card),var(--card2));
+      border:1px solid var(--line);border-bottom:0;border-radius:18px 18px 0 0;box-shadow:var(--shadow);
+      padding:18px 16px max(18px,env(safe-area-inset-bottom));animation:up .25s ease;max-height:88vh;overflow:auto}
+    @keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+    .fb{margin-top:12px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:12px}
+    .fb .v{font-weight:800;margin-bottom:4px}
+    .fb .v.good{color:var(--good)} .fb .v.bad{color:var(--bad)} .fb .v.mid{color:var(--warn)}
+    .fb .why{font-size:14px;color:var(--text);line-height:1.5}
+    .effs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .eff{font-size:11.5px;font-weight:800;padding:4px 8px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    .eff.up{color:var(--good)} .eff.down{color:var(--bad)}
+    .vocab{margin-top:12px;background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.3);border-radius:12px;padding:11px 13px}
+    .vocab dl{margin:0;display:grid;gap:7px}
+    .vocab .term{font-weight:800} .vocab .term em{font-style:normal;color:var(--accent)}
+    .vocab .def{color:var(--muted);font-size:13px;margin-top:1px}
 
-    /* Options */
-    .options { display: flex; flex-direction: column; gap: 10px; }
-    .option {
-      text-align: left; width: 100%;
-      background: var(--card2); color: var(--text);
-      border: 1px solid var(--line); border-radius: 14px;
-      padding: 14px 16px; font-size: 15px; line-height: 1.45;
-      cursor: pointer; transition: transform .08s ease, border-color .15s, background .15s;
-      display: flex; gap: 12px; align-items: flex-start;
-    }
-    .option:active { transform: scale(.985); }
-    .option .key {
-      flex: none; width: 26px; height: 26px; border-radius: 8px;
-      background: rgba(255,255,255,.06); border: 1px solid var(--line);
-      display: grid; place-items: center; font-weight: 800; font-size: 13px; color: var(--muted);
-    }
-    .option.correct { border-color: var(--good); background: rgba(52,211,153,.12); }
-    .option.correct .key { background: var(--good); color: #04221a; border-color: var(--good); }
-    .option.wrong { border-color: var(--bad); background: rgba(251,113,133,.12); }
-    .option.wrong .key { background: var(--bad); color: #2a0710; border-color: var(--bad); }
-    .option:disabled { cursor: default; opacity: .9; }
-    .option.dim { opacity: .5; }
+    .pickgrid{display:grid;gap:8px;margin-top:6px}
 
-    /* Feedback */
-    .feedback { margin-top: 16px; display: none; }
-    .feedback.show { display: block; animation: fade .3s ease; }
-    .feedback .verdict { font-weight: 800; font-size: 16px; margin-bottom: 6px; }
-    .feedback .verdict.good { color: var(--good); }
-    .feedback .verdict.partial { color: var(--warn); }
-    .feedback .verdict.bad { color: var(--bad); }
-    .feedback .why { color: var(--text); font-size: 14.5px; line-height: 1.5; }
+    /* misc */
+    .features{display:grid;gap:9px;margin:16px 0}
+    .feature{display:flex;gap:11px;align-items:flex-start;background:rgba(255,255,255,.03);
+      border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+    .feature .ic{font-size:21px} .feature b{display:block} .feature span{color:var(--muted);font-size:13px}
+    .level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+    .level-card{text-align:left;background:var(--card2);border:1px solid var(--line);border-radius:13px;
+      padding:11px;cursor:pointer;transition:transform .08s,border-color .15s}
+    .level-card:active{transform:scale(.97)}
+    .level-card.selected{border-color:var(--accent);background:rgba(56,189,248,.1)}
+    .level-card .lv{font-size:22px} .level-card b{display:block;margin-top:5px;font-size:14px}
+    .level-card span{color:var(--muted);font-size:11px}
 
-    .vocab {
-      margin-top: 14px; background: rgba(129,140,248,.08);
-      border: 1px solid rgba(129,140,248,.3); border-radius: 12px; padding: 12px 14px;
-    }
-    .vocab h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent2); }
-    .vocab dl { margin: 0; display: grid; gap: 8px; }
-    .vocab .term { font-weight: 700; color: var(--text); }
-    .vocab .term em { font-style: normal; color: var(--accent); }
-    .vocab .def { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
-
-    /* Buttons */
-    .btn {
-      appearance: none; border: 0; cursor: pointer;
-      width: 100%; padding: 15px 18px; border-radius: 14px;
-      font-size: 16px; font-weight: 800; letter-spacing: .2px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #06121f;
-      box-shadow: var(--shadow); transition: transform .08s ease, filter .15s;
-    }
-    .btn:active { transform: scale(.98); }
-    .btn.secondary { background: var(--card2); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
-    .btn.ghost { background: transparent; color: var(--muted); box-shadow: none; font-weight: 600; }
-    .btn[disabled] { opacity: .5; filter: grayscale(.3); pointer-events: none; }
-    .actions { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
-
-    .features { display: grid; gap: 10px; margin: 18px 0; }
-    .feature { display: flex; gap: 12px; align-items: flex-start; background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
-    .feature .ic { font-size: 22px; }
-    .feature b { display:block; }
-    .feature span { color: var(--muted); font-size: 13.5px; }
-
-    .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
-    .level-card { text-align:left; background: var(--card2); border:1px solid var(--line); border-radius:14px; padding:14px; cursor:pointer; transition: transform .08s, border-color .15s; }
-    .level-card:active { transform: scale(.98); }
-    .level-card.selected { border-color: var(--accent); background: rgba(56,189,248,.1); }
-    .level-card .lv-ic { font-size: 24px; }
-    .level-card b { display:block; margin-top:6px; }
-    .level-card span { color: var(--muted); font-size: 12px; }
-
-    /* Results */
-    .score-ring { text-align:center; margin: 6px 0 14px; }
-    .score-ring .big { font-size: 52px; font-weight: 900; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-    .score-ring .sub { color: var(--muted); margin-top: 4px; }
-    .rank { text-align:center; font-size: 20px; font-weight: 800; margin: 8px 0; }
-    .breakdown { display:grid; gap:8px; margin: 14px 0; }
-    .brk { display:flex; justify-content: space-between; background: rgba(255,255,255,.03); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:14px; }
-    .brk b { color: var(--accent); }
-    .word-bank { margin-top: 8px; }
-    .chip { display:inline-block; background: rgba(129,140,248,.12); border:1px solid rgba(129,140,248,.3); color: var(--text); border-radius:999px; padding:5px 10px; font-size:12.5px; margin: 0 6px 6px 0; }
-
-    footer { text-align:center; color: var(--muted); font-size: 11.5px; padding: 16px 0 4px; }
-    .qcount { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+    .ribbon{text-align:center;font-size:12px;color:var(--muted);margin:2px 0 10px}
+    .resbar{display:flex;justify-content:space-between;font-size:13px;background:rgba(255,255,255,.03);
+      border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:7px}
+    .resbar b{color:var(--accent)}
+    .score-ring{text-align:center;margin:4px 0 10px}
+    .score-ring .big{font-size:48px;font-weight:900;line-height:1;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .score-ring .sub{color:var(--muted);margin-top:3px}
+    .rank{text-align:center;font-size:19px;font-weight:900;margin:6px 0}
+    .chip{display:inline-block;background:rgba(129,140,248,.12);border:1px solid rgba(129,140,248,.3);
+      color:var(--text);border-radius:999px;padding:5px 10px;font-size:12px;margin:0 6px 6px 0}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--card2);
+      border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:999px;font-size:13px;
+      font-weight:700;box-shadow:var(--shadow);z-index:60;opacity:0;transition:opacity .25s;pointer-events:none}
+    .toast.show{opacity:1}
+    footer{text-align:center;color:var(--muted);font-size:11px;padding:14px 0 4px}
+    .endgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+    .ec{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:11px;padding:10px;text-align:center}
+    .ec b{display:block;font-size:18px} .ec span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+    .hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.45}
   </style>
 </head>
 <body>
   <div class="app">
-    <header>
-      <div class="brand">
-        <div class="logo">🧭</div>
-        <div>Lead &amp; Speak
-          <small>Leadership + English</small>
+    <!-- ===== START ===== -->
+    <section class="screen active" id="screen-start">
+      <div class="card">
+        <span class="tag">Leadership Work Simulator</span>
+        <h1>Lead Sim</h1>
+        <p class="lead">You've just been promoted to lead a team. You have one quarter to <b>ship the project</b> — while keeping your people healthy, your stakeholders happy, and your budget alive. Every week you choose where to spend limited <b>focus</b>. There are no perfect moves, only trade-offs.</p>
+
+        <div class="features">
+          <div class="feature"><div class="ic">🧩</div><div><b>Manage a living team</b><span>People have skill, morale &amp; workload. Overload them and they burn out — or quit.</span></div></div>
+          <div class="feature"><div class="ic">⚖️</div><div><b>Juggle real trade-offs</b><span>Progress, quality, morale, trust, budget &amp; your own energy all pull against each other.</span></div></div>
+          <div class="feature"><div class="ic">🗣️</div><div><b>Lead in English</b><span>Status updates, 1-on-1s &amp; tough talks — strong professional English earns you trust.</span></div></div>
+          <div class="feature"><div class="ic">🎲</div><div><b>Survive the unexpected</b><span>Scope creep, outages, attrition and conflict hit when you least expect them.</span></div></div>
+        </div>
+
+        <h3>Choose your difficulty</h3>
+        <div class="level-grid" id="levelGrid">
+          <button class="level-card" data-level="intern"><div class="lv">🌤️</div><b>Calm Quarter</b><span>14 weeks · 4 focus · forgiving</span></button>
+          <button class="level-card selected" data-level="manager"><div class="lv">⛅</div><b>Real World</b><span>12 weeks · 3 focus · balanced</span></button>
+          <button class="level-card" data-level="founder"><div class="lv">⛈️</div><b>Crunch Mode</b><span>10 weeks · 3 focus · brutal</span></button>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="btnStart">Start the quarter ▶</button>
         </div>
       </div>
-      <div class="stats" id="hud" style="visibility:hidden">
-        <div class="stat"><b id="hudScore">0</b><span>Score</span></div>
-        <div class="stat"><b id="hudStreak">0</b><span>Streak</span></div>
+      <footer>No sign-up · Works offline · Built for your phone</footer>
+    </section>
+
+    <!-- ===== SIM ===== -->
+    <section class="screen" id="screen-sim">
+      <div class="hud">
+        <div class="brand"><div class="logo">🧭</div><div>Lead Sim<small id="hudGoal">Ship the project</small></div></div>
+        <div class="wk"><b id="hudWeek">Week 1 / 12</b><span id="hudPhase">Plan your week</span></div>
       </div>
-    </header>
 
-    <div class="progress-wrap" id="progressWrap" style="visibility:hidden">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <main>
-      <!-- START SCREEN -->
-      <section class="screen active" id="screen-start">
-        <div class="card">
-          <span class="tag">Mobile Game</span>
-          <h1>Lead &amp; Speak</h1>
-          <p class="lead">Make real leadership decisions in tricky workplace scenarios — all in English. Sharpen how you <b>lead</b> and how you <b>communicate</b>.</p>
-
-          <div class="features">
-            <div class="feature"><div class="ic">🎯</div><div><b>Decide like a leader</b><span>Handle conflict, feedback, delegation &amp; motivation.</span></div></div>
-            <div class="feature"><div class="ic">💬</div><div><b>Learn business English</b><span>Useful phrases &amp; vocabulary after every choice.</span></div></div>
-            <div class="feature"><div class="ic">📈</div><div><b>Get scored &amp; ranked</b><span>Build a streak and earn your leadership rank.</span></div></div>
-          </div>
-
-          <h2 style="margin-top:18px">Choose difficulty</h2>
-          <div class="level-grid" id="levelGrid">
-            <button class="level-card selected" data-level="easy"><div class="lv-ic">🌱</div><b>Team Lead</b><span>Everyday situations · simpler English</span></button>
-            <button class="level-card" data-level="hard"><div class="lv-ic">🔥</div><b>Director</b><span>High-stakes calls · advanced English</span></button>
-          </div>
-
-          <div class="actions">
-            <button class="btn" id="btnStart">Start playing ▶</button>
-          </div>
+      <div class="card" style="padding:12px 14px">
+        <div class="top" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="focuschip">🎯 Focus <span class="dots" id="focusDots"></span></div>
+          <div style="font-size:12px;color:var(--muted)" id="deadlineNote"></div>
         </div>
-        <footer>No sign-up · Works offline · Best on your phone</footer>
-      </section>
+        <div class="metrics" id="metrics"></div>
+      </div>
 
-      <!-- QUESTION SCREEN -->
-      <section class="screen" id="screen-game">
-        <div class="card">
-          <div class="qcount" id="qCount">Scenario 1 of 8</div>
-          <span class="tag" id="qSkill">Communication</span>
-          <h2 id="qTitle">Scenario title</h2>
-          <div class="scenario" id="qScenario">Scenario text…</div>
+      <div class="card" id="teamCard">
+        <h3>Your team</h3>
+        <div class="team" id="team"></div>
+      </div>
 
-          <div class="options" id="qOptions"></div>
+      <div id="eventSlot"></div>
 
-          <div class="feedback" id="qFeedback">
-            <div class="verdict" id="fbVerdict"></div>
-            <div class="why" id="fbWhy"></div>
-            <div class="vocab" id="fbVocab">
-              <h3>📘 English you just used</h3>
-              <dl id="fbVocabList"></dl>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="btn" id="btnNext" style="display:none">Next ▶</button>
-          </div>
+      <div class="card" id="actionCard">
+        <h3 id="actHead">Spend your focus</h3>
+        <div class="amenu" id="amenu"></div>
+        <div class="actions">
+          <button class="btn" id="btnAdvance">Advance to next week ▶</button>
+          <button class="btn ghost" id="btnQuitSim" style="margin-top:2px">Give up &amp; resign</button>
         </div>
-      </section>
+        <div class="hint" id="actHint"></div>
+      </div>
+    </section>
 
-      <!-- RESULTS SCREEN -->
-      <section class="screen" id="screen-end">
-        <div class="card">
-          <span class="tag">Debrief</span>
-          <div class="score-ring">
-            <div class="big"><span id="endScore">0</span><span style="font-size:24px;color:var(--muted)">/<span id="endMax">0</span></span></div>
-            <div class="sub" id="endPct">0%</div>
-          </div>
-          <div class="rank" id="endRank">—</div>
-          <p class="lead" id="endMsg" style="text-align:center"></p>
-
-          <div class="breakdown" id="endBreakdown"></div>
-
-          <div class="vocab">
-            <h3>📘 Your word bank</h3>
-            <div class="word-bank" id="endWords"></div>
-          </div>
-
-          <div class="actions">
-            <button class="btn" id="btnAgain">Play again 🔄</button>
-            <button class="btn secondary" id="btnHome">Change difficulty</button>
-          </div>
+    <!-- ===== END ===== -->
+    <section class="screen" id="screen-end">
+      <div class="card">
+        <span class="tag" id="endTag">Quarter review</span>
+        <div class="score-ring">
+          <div class="big" id="endScore">0</div>
+          <div class="sub" id="endSub">Leadership score</div>
         </div>
-        <footer>Keep practicing — great leaders are made, not born.</footer>
-      </section>
-    </main>
+        <div class="rank" id="endRank">—</div>
+        <p class="lead" id="endMsg" style="text-align:center"></p>
+        <div class="endgrid" id="endGrid"></div>
+        <div class="vocab"><h3>📘 English you practised</h3><div id="endWords" style="margin-top:4px"></div></div>
+        <div class="actions">
+          <button class="btn" id="btnAgain">Run it again 🔄</button>
+          <button class="btn secondary" id="btnHome">Change difficulty</button>
+        </div>
+      </div>
+      <footer>Great leaders aren't born — they iterate.</footer>
+    </section>
   </div>
 
+  <!-- modal -->
+  <div class="scrim" id="scrim"><div class="sheet" id="sheet"></div></div>
+  <div class="toast" id="toast"></div>
+
   <script>
-  (function () {
+  (function(){
     "use strict";
+    const $=(id)=>document.getElementById(id);
+    const clamp=(n,lo=0,hi=100)=>Math.max(lo,Math.min(hi,n));
+    const rnd=(a,b)=>a+Math.random()*(b-a);
+    const pick=(a)=>a[Math.floor(Math.random()*a.length)];
+    const round=(n)=>Math.round(n);
+    const shuffle=(a)=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 
-    /* ---------------------------------------------------------------
-       CONTENT: each scenario teaches a leadership skill + English.
-       options[].q = leadership quality of the choice: best | ok | poor
-       --------------------------------------------------------------- */
-    const SCENARIOS = {
-      easy: [
-        {
-          skill: "Giving Feedback",
-          title: "The missed deadline",
-          text: '<span class="who">Maya</span>, normally reliable, just missed an important deadline for the first time. The team is watching how you react.',
-          options: [
-            { t: "Call her out in front of the team so everyone learns the lesson.", q: "poor" },
-            { t: "Speak with her privately, ask what happened, and agree on a plan.", q: "best" },
-            { t: "Say nothing and quietly do the work yourself this time.", q: "ok" },
-          ],
-          why: {
-            best: "Great. You <b>praise in public, criticise in private</b>. Asking before assuming shows respect and uncovers the real cause.",
-            ok: "Covering for her avoids conflict but it doesn't help Maya grow — and it quietly overloads you.",
-            poor: "Public criticism creates fear and resentment. People stop taking risks when they're afraid of being shamed.",
-          },
-          vocab: [
-            { term: "to <em>miss a deadline</em>", def: "to fail to finish something by the agreed time." },
-            { term: "<em>one-on-one</em>", def: "a private meeting between two people." },
-            { term: "to <em>praise in public, criticise in private</em>", def: "a classic leadership rule for feedback." },
-          ],
-        },
-        {
-          skill: "Delegation",
-          title: "Drowning in tasks",
-          text: 'Your to-do list is overflowing and you are working late every night. A capable junior, <span class="who">Tom</span>, has free time.',
-          options: [
-            { t: "Keep doing everything yourself — it's faster than explaining.", q: "poor" },
-            { t: "Delegate a clear task to Tom with context, a deadline and check-ins.", q: "best" },
-            { t: "Dump a pile of work on Tom with no instructions.", q: "ok" },
-          ],
-          why: {
-            best: "Exactly. Good delegation = clear <b>ownership</b>, context and a way to follow up. It grows your team and frees your time.",
-            ok: "You delegated — good instinct — but without context people get stuck or deliver the wrong thing.",
-            poor: "Doing it all yourself is a <b>bottleneck</b>. Leaders multiply their impact through others.",
-          },
-          vocab: [
-            { term: "to <em>delegate</em>", def: "to give a task or responsibility to someone else." },
-            { term: "<em>bottleneck</em>", def: "a point where things slow down because everything depends on one person." },
-            { term: "to <em>follow up</em>", def: "to check on progress after assigning something." },
-          ],
-        },
-        {
-          skill: "Motivation",
-          title: "A demotivated teammate",
-          text: '<span class="who">Sara</span> used to be energetic but has gone quiet and stopped sharing ideas in meetings.',
-          options: [
-            { t: "Ignore it — moods come and go.", q: "poor" },
-            { t: "Check in genuinely: 'How are you doing? You've been quiet lately.'", q: "best" },
-            { t: "Publicly ask her to 'cheer up and be more positive.'", q: "ok" },
-          ],
-          why: {
-            best: "Yes. A genuine, curious <b>check-in</b> opens the door. People disengage for reasons — listen before you fix.",
-            ok: "Telling someone to 'cheer up' dismisses their feelings and rarely changes anything.",
-            poor: "Ignoring disengagement lets small problems become resignations.",
-          },
-          vocab: [
-            { term: "to <em>check in (with someone)</em>", def: "to ask how someone is doing." },
-            { term: "<em>to disengage</em>", def: "to lose interest and involvement." },
-            { term: "<em>burnout</em>", def: "exhaustion from long-term stress at work." },
-          ],
-        },
-        {
-          skill: "Decision Making",
-          title: "Two good ideas",
-          text: 'The team is split between two solid plans and the discussion is going in circles. People look to you.',
-          options: [
-            { t: "Let them keep debating until everyone fully agrees.", q: "ok" },
-            { t: "Summarise both, set a decision criterion, then decide and commit.", q: "best" },
-            { t: "Pick the idea from whoever argued loudest.", q: "poor" },
-          ],
-          why: {
-            best: "Strong. Leaders <b>make the call</b> when consensus stalls — with clear reasoning the team can rally behind.",
-            ok: "Waiting for total agreement can mean <b>analysis paralysis</b> — nothing ships.",
-            poor: "Rewarding volume over merit teaches people that being loud beats being right.",
-          },
-          vocab: [
-            { term: "to <em>make the call</em>", def: "to make the final decision." },
-            { term: "<em>to go in circles</em>", def: "to keep discussing without progress." },
-            { term: "<em>analysis paralysis</em>", def: "being unable to decide because you over-think it." },
-          ],
-        },
-        {
-          skill: "Handling Conflict",
-          title: "Two clashing colleagues",
-          text: 'Two teammates, <span class="who">Leo</span> and <span class="who">Nina</span>, keep interrupting each other and tension is rising in the room.',
-          options: [
-            { t: "Take a side immediately to end it quickly.", q: "poor" },
-            { t: "Pause the meeting, hear each side calmly, find common ground.", q: "best" },
-            { t: "Pretend you didn't notice and move on.", q: "ok" },
-          ],
-          why: {
-            best: "Well done. Staying neutral and seeking <b>common ground</b> de-escalates conflict and keeps both people's respect.",
-            ok: "Ignoring it signals the behaviour is acceptable; it usually gets worse.",
-            poor: "Taking sides fast turns a disagreement into a lasting rivalry.",
-          },
-          vocab: [
-            { term: "<em>common ground</em>", def: "things two sides both agree on." },
-            { term: "to <em>de-escalate</em>", def: "to make a tense situation calmer." },
-            { term: "to <em>take sides</em>", def: "to support one person in an argument." },
-          ],
-        },
-        {
-          skill: "Accountability",
-          title: "Your own mistake",
-          text: "You gave the client the wrong figures and they noticed. Your team knows it was your error.",
-          options: [
-            { t: "Blame the data the analyst gave you.", q: "poor" },
-            { t: "Own it openly, fix it fast, and explain how you'll prevent it.", q: "best" },
-            { t: "Downplay it and hope nobody brings it up again.", q: "ok" },
-          ],
-          why: {
-            best: "Excellent. <b>Owning your mistakes</b> builds trust faster than being perfect ever could. It also gives the team permission to be honest.",
-            ok: "Downplaying erodes credibility — people notice when you dodge.",
-            poor: "Shifting blame is the quickest way to lose your team's respect.",
-          },
-          vocab: [
-            { term: "to <em>own (a mistake)</em>", def: "to take full responsibility for it." },
-            { term: "to <em>shift the blame</em>", def: "to make someone else look responsible." },
-            { term: "<em>accountability</em>", def: "being answerable for your actions and results." },
-          ],
-        },
-        {
-          skill: "Recognition",
-          title: "A quiet win",
-          text: '<span class="who">Priya</span> quietly solved a problem that saved the project, but nobody noticed.',
-          options: [
-            { t: "Say nothing — it's just part of the job.", q: "poor" },
-            { t: "Recognise her specifically and publicly, naming what she did.", q: "best" },
-            { t: "Give vague team-wide thanks: 'good job everyone.'", q: "ok" },
-          ],
-          why: {
-            best: "Perfect. <b>Specific recognition</b> ('you spotted the bug before launch') means far more than generic praise and motivates everyone.",
-            ok: "Generic thanks is better than silence, but it doesn't make Priya feel seen.",
-            poor: "Unrecognised effort is the fastest path to a quiet, disengaged team.",
-          },
-          vocab: [
-            { term: "to <em>recognise (someone's work)</em>", def: "to notice and praise it." },
-            { term: "to <em>give credit</em>", def: "to acknowledge who deserves praise." },
-            { term: "<em>to go the extra mile</em>", def: "to make more effort than expected." },
-          ],
-        },
-        {
-          skill: "Vision & Communication",
-          title: "The 'why' is missing",
-          text: 'You announce a new process. The team complies but seems confused and unmotivated about it.',
-          options: [
-            { t: "Just repeat the instructions, louder and in more detail.", q: "ok" },
-            { t: "Explain the 'why' — the goal and how it helps them and customers.", q: "best" },
-            { t: "Tell them 'because I said so' and move on.", q: "poor" },
-          ],
-          why: {
-            best: "Spot on. People commit to a <b>'why,'</b> not a 'what.' Purpose turns compliance into ownership.",
-            ok: "More detail on the 'how' doesn't fix a missing 'why.'",
-            poor: "'Because I said so' gets obedience today and resentment tomorrow.",
-          },
-          vocab: [
-            { term: "to <em>buy in</em>", def: "to genuinely support an idea or plan." },
-            { term: "<em>the big picture</em>", def: "the overall goal beyond daily tasks." },
-            { term: "to <em>get everyone on the same page</em>", def: "to make sure all share the same understanding." },
-          ],
-        },
-      ],
-      hard: [
-        {
-          skill: "Crisis Leadership",
-          title: "Outage during the demo",
-          text: "Minutes before a make-or-break client demo, production goes down. Your team is panicking and the client is already on the call.",
-          options: [
-            { t: "Freeze and wait for engineering to figure it out silently.", q: "poor" },
-            { t: "Calmly acknowledge it to the client, give a realistic ETA, assign clear roles.", q: "best" },
-            { t: "Tell the client everything is fine and frantically improvise.", q: "ok" },
-          ],
-          why: {
-            best: "Outstanding. In a crisis, <b>calm transparency</b> plus clear roles preserves trust. Clients forgive incidents; they don't forgive being misled.",
-            ok: "Pretending all is well risks getting caught and torching credibility.",
-            poor: "A frozen leader spreads panic. People mirror your composure.",
-          },
-          vocab: [
-            { term: "<em>to keep a cool head</em>", def: "to stay calm under pressure." },
-            { term: "<em>ETA</em>", def: "Estimated Time of Arrival — when something will be ready." },
-            { term: "<em>make-or-break</em>", def: "decisive — it will determine success or failure." },
-          ],
-        },
-        {
-          skill: "Difficult Conversations",
-          title: "Underperformance",
-          text: 'A senior, well-liked employee, <span class="who">Daniel</span>, has been underperforming for months. The team has started to notice and morale is slipping.',
-          options: [
-            { t: "Avoid it to keep the peace; he's popular.", q: "poor" },
-            { t: "Have a direct, kind conversation with specific examples and a clear improvement plan.", q: "best" },
-            { t: "Hint at it in a team-wide email about 'raising standards.'", q: "ok" },
-          ],
-          why: {
-            best: "Excellent. <b>Radical candour</b> — caring personally while challenging directly — respects Daniel and the team. Specifics and a plan make it fair.",
-            ok: "Passive-aggressive group messages confuse the innocent and let the real issue slide.",
-            poor: "Avoiding it to 'keep the peace' is unfair to the rest of the team and to Daniel himself.",
-          },
-          vocab: [
-            { term: "<em>radical candour</em>", def: "caring about someone while being direct with them." },
-            { term: "to <em>address an issue</em>", def: "to deal with a problem openly." },
-            { term: "<em>to beat around the bush</em>", def: "to avoid saying something directly." },
-          ],
-        },
-        {
-          skill: "Strategic Trade-offs",
-          title: "Scope vs. deadline",
-          text: "Leadership wants the full feature set AND the original ship date. Engineering says you can realistically have one, not both.",
-          options: [
-            { t: "Promise both and push the team to crunch indefinitely.", q: "poor" },
-            { t: "Present the trade-off with options and a clear recommendation, then align upward.", q: "best" },
-            { t: "Silently cut quality to hit both and hope it holds.", q: "ok" },
-          ],
-          why: {
-            best: "Strong leadership. You <b>manage up</b> with honest trade-offs and a recommendation — protecting the team while serving the business.",
-            ok: "Cutting quality silently creates <b>technical debt</b> and a bigger crisis later.",
-            poor: "Endless crunch burns out your best people and rarely delivers quality.",
-          },
-          vocab: [
-            { term: "<em>trade-off</em>", def: "giving up one thing to gain another." },
-            { term: "to <em>manage up</em>", def: "to communicate effectively with your own boss." },
-            { term: "<em>scope</em>", def: "the full set of work included in a project." },
-          ],
-        },
-        {
-          skill: "Building Trust",
-          title: "Inheriting a wary team",
-          text: "You've just been hired to lead a team that has been through three managers in two years. They're skeptical and guarded.",
-          options: [
-            { t: "Announce a bold reorg in week one to show you're in charge.", q: "poor" },
-            { t: "Listen first: one-on-ones, learn their pain points, deliver one quick win.", q: "best" },
-            { t: "Keep your distance and let results speak for themselves.", q: "ok" },
-          ],
-          why: {
-            best: "Exactly right. With a burned team you <b>earn trust</b> by listening and delivering a visible quick win before making big moves.",
-            ok: "Staying distant with an already-skeptical team reads as cold and prolongs the doubt.",
-            poor: "A big reorg before you understand the team destroys the little trust that's left.",
-          },
-          vocab: [
-            { term: "to <em>earn trust</em>", def: "to gain confidence through consistent actions." },
-            { term: "<em>quick win</em>", def: "a small, fast result that builds momentum." },
-            { term: "<em>pain point</em>", def: "a specific problem people struggle with." },
-          ],
-        },
-        {
-          skill: "Ethical Courage",
-          title: "Pressure to cut corners",
-          text: "Your boss pressures you to ship a product you know has a safety issue, to hit the quarterly numbers.",
-          options: [
-            { t: "Comply quietly — they outrank you.", q: "poor" },
-            { t: "Raise the risk clearly in writing, propose a safe alternative, escalate if ignored.", q: "best" },
-            { t: "Refuse loudly in the open meeting to make a point.", q: "ok" },
-          ],
-          why: {
-            best: "Courageous and professional. You <b>put it on record</b>, offer a path forward, and escalate responsibly — protecting users and the company.",
-            ok: "Public refusal may feel righteous but a calmer, documented escalation is more effective and harder to dismiss.",
-            poor: "'Just following orders' on a safety issue is an ethical and legal failure.",
-          },
-          vocab: [
-            { term: "to <em>cut corners</em>", def: "to do something cheaply or carelessly to save time." },
-            { term: "to <em>escalate</em>", def: "to raise an issue to a higher level." },
-            { term: "to <em>put something on the record</em>", def: "to document it officially." },
-          ],
-        },
-        {
-          skill: "Change Management",
-          title: "Resistance to change",
-          text: "You're rolling out a tool the company needs, but a vocal group of veterans is openly resisting and influencing others.",
-          options: [
-            { t: "Mandate it and discipline anyone who pushes back.", q: "poor" },
-            { t: "Engage the skeptics, address concerns, turn a respected veteran into a champion.", q: "best" },
-            { t: "Quietly drop it to avoid the friction.", q: "ok" },
-          ],
-          why: {
-            best: "Masterful. Converting a respected skeptic into a <b>change champion</b> shifts the whole group far better than force.",
-            ok: "Dropping needed change to dodge friction means your decisions won't stick in future.",
-            poor: "Mandates breed malicious compliance; the change adopts on paper but fails in practice.",
-          },
-          vocab: [
-            { term: "to <em>roll out</em>", def: "to introduce something gradually." },
-            { term: "<em>change champion</em>", def: "a person who actively promotes a change." },
-            { term: "to <em>push back</em>", def: "to resist or disagree with something." },
-          ],
-        },
-        {
-          skill: "Developing People",
-          title: "Your star wants your job",
-          text: 'Your best performer, <span class="who">Aisha</span>, tells you she feels stuck and is thinking of leaving for a bigger role elsewhere.',
-          options: [
-            { t: "Discourage her ambition so you don't lose your top performer.", q: "poor" },
-            { t: "Map a growth path, give her stretch projects, advocate for her promotion.", q: "best" },
-            { t: "Give her a raise and hope money keeps her.", q: "ok" },
-          ],
-          why: {
-            best: "This is what great leaders do — <b>grow people even at your own cost</b>. Loyalty and reputation follow leaders who develop talent.",
-            ok: "Money rarely fixes a growth problem; she'll still feel stuck and leave later.",
-            poor: "Holding talent back is short-sighted; she'll leave anyway and resent you for it.",
-          },
-          vocab: [
-            { term: "<em>stretch project</em>", def: "a challenging task that grows someone's skills." },
-            { term: "to <em>advocate for someone</em>", def: "to support and promote them to others." },
-            { term: "<em>career path</em>", def: "the planned steps of someone's professional growth." },
-          ],
-        },
-        {
-          skill: "Leading Remotely",
-          title: "The invisible remote worker",
-          text: 'A remote team member, <span class="who">Carlos</span>, delivers good work but is silent in meetings and increasingly out of the loop.',
-          options: [
-            { t: "Assume he's fine since the work gets done.", q: "ok" },
-            { t: "Create space for him: ask his input directly, set async updates, a regular 1:1.", q: "best" },
-            { t: "Require everyone to be on camera and online 9–5.", q: "poor" },
-          ],
-          why: {
-            best: "Excellent remote leadership. You <b>create inclusion deliberately</b> — proximity bias hurts remote folks unless you design against it.",
-            ok: "'The work gets done' misses growing isolation that ends in a surprise resignation.",
-            poor: "Surveillance-style rules signal distrust and crush the autonomy remote workers value.",
-          },
-          vocab: [
-            { term: "<em>out of the loop</em>", def: "not informed about what's happening." },
-            { term: "<em>async (asynchronous)</em>", def: "communication that doesn't happen in real time." },
-            { term: "<em>proximity bias</em>", def: "favouring people who are physically present." },
-          ],
-        },
-      ],
+    /* ---------- difficulty config ---------- */
+    const DIFF={
+      intern:{weeks:14,focus:4,burn:5,startBudget:125,moraleDrift:4.2,energyDrift:12,gainMult:1.12,trustHarsh:9,label:"Calm Quarter"},
+      manager:{weeks:12,focus:3,burn:7,startBudget:106,moraleDrift:5.6,energyDrift:15,gainMult:1.0,trustHarsh:7,label:"Real World"},
+      founder:{weeks:10,focus:3,burn:9,startBudget:102,moraleDrift:7.2,energyDrift:17,gainMult:0.92,trustHarsh:6,label:"Crunch Mode"},
     };
+    const OUT_PER=3.5; // base passive output per member-week (NOT enough to ship alone — you must invest focus in progress)
 
-    const RANKS = [
-      { min: 0.0, name: "Aspiring Leader 🌱", msg: "A solid start. Every great leader began exactly here — keep practising." },
-      { min: 0.5, name: "Capable Manager 🧭", msg: "You handle people and pressure well. Refine the tough calls and you'll shine." },
-      { min: 0.75, name: "Trusted Leader ⭐", msg: "Strong judgement and clear communication. Your team would follow you." },
-      { min: 0.92, name: "Visionary Leader 🏆", msg: "Outstanding. Calm, fair and decisive — the kind of leader people remember." },
+    /* ---------- team templates ---------- */
+    const ROSTER=[
+      {name:"Maya",role:"Senior Engineer",ava:"👩‍💻",skill:78,morale:72,workload:62,trait:"Reliable but quietly overloaded",secret:"morale_fragile"},
+      {name:"Tom",role:"Junior Engineer",ava:"🧑‍💻",skill:42,morale:80,workload:55,trait:"Eager, needs mentoring to grow",secret:"high_growth"},
+      {name:"Priya",role:"Designer",ava:"🧑‍🎨",skill:70,morale:66,workload:58,trait:"Sharp ideas, feels unheard",secret:"wants_voice"},
+      {name:"Carlos",role:"Remote Engineer",ava:"🧑‍🔧",skill:64,morale:60,workload:50,trait:"Strong work, drifting out of the loop",secret:"isolation"},
     ];
 
-    const POINTS = { best: 100, ok: 50, poor: 0 };
+    /* ---------- vocabulary helper ---------- */
+    function learn(list){ list.forEach(v=>S.vocab.set(v.term.replace(/<\/?em>/g,""),v)); }
 
-    // --- State ---
-    let level = "easy";
-    let deck = [];
-    let idx = 0;
-    let score = 0;
-    let streak = 0;
-    let answered = false;
-    const learnedWords = new Set();
-    let breakdown = { best: 0, ok: 0, poor: 0 };
+    /* ---------- state ---------- */
+    let S=null, cfg=null;
 
-    // --- Helpers ---
-    const $ = (id) => document.getElementById(id);
-    const show = (id) => {
-      document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
-      $(id).classList.add("active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-    const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-
-    function updateHUD() {
-      $("hudScore").textContent = score;
-      $("hudStreak").textContent = streak;
-      const pct = ((idx) / deck.length) * 100;
-      $("progressBar").style.width = pct + "%";
+    function newGame(level){
+      cfg=DIFF[level];
+      S={
+        level, week:1, focusLeft:cfg.focus, usedActions:{}, pending:[], firedOnce:{},
+        m:{progress:0,morale:70,quality:78,trust:60,budget:cfg.startBudget,energy:100,english:32},
+        prev:null,
+        team:ROSTER.map(t=>({...t})),
+        vocab:new Map(),
+        flags:{},
+        history:[],
+      };
+      // first week always opens with an onboarding event
+      queueEvent(EVENTS.find(e=>e.id==="kickoff"));
+      render();
     }
 
-    // --- Level selection ---
-    document.querySelectorAll(".level-card").forEach((card) => {
-      card.addEventListener("click", () => {
-        document.querySelectorAll(".level-card").forEach((c) => c.classList.remove("selected"));
-        card.classList.add("selected");
-        level = card.dataset.level;
-      });
-    });
+    /* ---------- metric definitions ---------- */
+    const MET=[
+      {k:"progress",lab:"Progress",fmt:v=>round(v)+"%",col:v=>grad(v)},
+      {k:"morale",lab:"Team morale",fmt:v=>round(v),col:v=>grad(v)},
+      {k:"trust",lab:"Stakeholder trust",fmt:v=>round(v),col:v=>grad(v)},
+      {k:"quality",lab:"Quality",fmt:v=>round(v),col:v=>grad(v)},
+      {k:"budget",lab:"Budget ($k)",fmt:v=>round(v),col:v=>grad(clamp(v/ (cfg.startBudget)*100))},
+      {k:"energy",lab:"Your energy",fmt:v=>round(v),col:v=>grad(v)},
+    ];
+    function grad(v){ if(v>=66) return "linear-gradient(90deg,#22c55e,#34d399)"; if(v>=33) return "linear-gradient(90deg,#f59e0b,#fbbf24)"; return "linear-gradient(90deg,#ef4444,#fb7185)"; }
 
-    // --- Start ---
-    function startGame() {
-      deck = shuffle([...SCENARIOS[level]]).map((s) => {
-        const opts = s.options.map((o, i) => ({ ...o, _orig: i }));
-        return { ...s, options: shuffle(opts) };
+    /* ---------- render ---------- */
+    function render(){
+      $("hudWeek").textContent=`Week ${S.week} / ${cfg.weeks}`;
+      $("hudGoal").textContent=cfg.label;
+      const remaining=cfg.weeks-S.week;
+      const expected=100*S.week/cfg.weeks;
+      $("deadlineNote").innerHTML = `${remaining} week${remaining===1?"":"s"} left · target ≈ <b style="color:var(--text)">${round(expected)}%</b>`;
+      // focus dots
+      const dots=$("focusDots"); dots.innerHTML="";
+      for(let i=0;i<cfg.focus;i++){const d=document.createElement("span");d.className="dot"+(i<S.focusLeft?" on":"");dots.appendChild(d);}
+      // metrics
+      const mm=$("metrics"); mm.innerHTML="";
+      MET.forEach(def=>{
+        const v=S.m[def.k];
+        const pct = def.k==="budget" ? clamp(v/cfg.startBudget*100) : clamp(v);
+        let deltaHtml="";
+        if(S.prev){
+          const dv=S.m[def.k]-S.prev[def.k];
+          if(Math.abs(dv)>=0.8){ deltaHtml=`<span class="delta ${dv>0?'up':'down'}">${dv>0?'▲':'▼'}${Math.abs(round(dv))}</span>`; }
+        }
+        const el=document.createElement("div"); el.className="metric";
+        el.innerHTML=`<div class="top"><span class="lab">${def.lab}</span><span class="val">${def.fmt(v)}${deltaHtml}</span></div>
+          <div class="bar"><i style="width:${pct}%;background:${def.col(v)}"></i></div>`;
+        mm.appendChild(el);
       });
-      idx = 0; score = 0; streak = 0;
-      learnedWords.clear();
-      breakdown = { best: 0, ok: 0, poor: 0 };
-      $("hud").style.visibility = "visible";
-      $("progressWrap").style.visibility = "visible";
-      show("screen-game");
-      renderQuestion();
+      // team
+      const tm=$("team"); tm.innerHTML="";
+      S.team.forEach(t=>{
+        const el=document.createElement("div"); el.className="member"+(t.gone?" gone":"");
+        const note = t.gone ? `<span class="badge note">Left the team</span>`
+          : (t.surfaced ? `<span class="badge note" title="${t.trait}">⚠ needs attention</span>` : "");
+        el.innerHTML=`<div class="ava">${t.ava}</div>
+          <div class="info"><div style="display:flex;justify-content:space-between;gap:6px;align-items:center">
+            <div><div class="nm">${t.name}</div><div class="ro">${t.role}</div></div>${note}</div>
+            <div class="mini">
+              <div class="m"><div class="ml">Skill</div><div class="mbar"><i style="width:${clamp(t.skill)}%;background:${grad(t.skill)}"></i></div></div>
+              <div class="m"><div class="ml">Morale</div><div class="mbar"><i style="width:${clamp(t.morale)}%;background:${grad(t.morale)}"></i></div></div>
+              <div class="m"><div class="ml">Load</div><div class="mbar"><i style="width:${clamp(t.workload)}%;background:${t.workload>80?'linear-gradient(90deg,#ef4444,#fb7185)':t.workload>65?'linear-gradient(90deg,#f59e0b,#fbbf24)':'linear-gradient(90deg,#22c55e,#34d399)'}"></i></div></div>
+            </div></div>`;
+        tm.appendChild(el);
+      });
+      // events vs actions
+      renderEventSlot();
     }
 
-    function renderQuestion() {
-      answered = false;
-      const s = deck[idx];
-      $("qCount").textContent = `Scenario ${idx + 1} of ${deck.length}`;
-      $("qSkill").textContent = s.skill;
-      $("qTitle").textContent = s.title;
-      $("qScenario").innerHTML = s.text;
-
-      const wrap = $("qOptions");
-      wrap.innerHTML = "";
-      const keys = ["A", "B", "C", "D"];
-      s.options.forEach((o, i) => {
-        const btn = document.createElement("button");
-        btn.className = "option";
-        btn.innerHTML = `<span class="key">${keys[i]}</span><span>${o.t}</span>`;
-        btn.addEventListener("click", () => choose(i, btn));
-        wrap.appendChild(btn);
-      });
-
-      $("qFeedback").classList.remove("show");
-      $("btnNext").style.display = "none";
-      $("btnNext").textContent = idx === deck.length - 1 ? "See results 🏁" : "Next ▶";
-      updateHUD();
+    function renderEventSlot(){
+      const slot=$("eventSlot"); slot.innerHTML="";
+      if(S.pending.length){
+        $("actionCard").style.display="none";
+        const ev=S.pending[0];
+        const c=document.createElement("div"); c.className="card event";
+        c.innerHTML=`<span class="tag" style="color:var(--pur);background:rgba(192,132,252,.12);border-color:rgba(192,132,252,.3)">${ev.kind||"Situation"}</span>
+          <h2>${ev.title}</h2><div class="scenario">${ev.text}</div><div class="amenu" style="margin-top:12px" id="evOpts"></div>`;
+        slot.appendChild(c);
+        const keys=["A","B","C","D"];
+        ev.options.forEach((o,i)=>{
+          const b=document.createElement("button"); b.className="opt";
+          b.innerHTML=`<span class="k">${keys[i]}</span><span>${o.t}</span>${o.cost?`<span class="cost">🎯 ${o.cost}</span>`:""}`;
+          b.disabled = o.cost && o.cost>S.focusLeft;
+          b.onclick=()=>chooseEvent(ev,o);
+          $("evOpts") ? $("evOpts").appendChild(b) : c.querySelector("#evOpts").appendChild(b);
+        });
+      } else {
+        $("actionCard").style.display="block";
+        renderActions();
+      }
     }
 
-    function choose(i, btn) {
-      if (answered) return;
-      answered = true;
-      const s = deck[idx];
-      const opt = s.options[i];
-      const gained = POINTS[opt.q];
-      score += gained;
-      breakdown[opt.q]++;
+    /* ---------- ACTIONS ---------- */
+    const ACTIONS=[
+      {id:"oneonone",ic:"☕",ttl:"Hold a 1-on-1",ds:"Reconnect with one person. Lifts their morale, may surface hidden issues.",cost:1,target:true,run:doOneOnOne},
+      {id:"mentor",ic:"🧑‍🏫",ttl:"Mentor / pair up",ds:"Coach a teammate. Grows their skill, costs your energy.",cost:1,target:true,run:doMentor},
+      {id:"shield",ic:"🛡️",ttl:"Shield deep work",ds:"Block distractions so the team ships. +Progress, +morale, −your energy.",cost:1,run:doShield},
+      {id:"plan",ic:"🗂️",ttl:"Plan & prioritise",ds:"Tighten scope and quality. Boosts next week's output and quality.",cost:1,run:doPlan},
+      {id:"sync",ic:"📣",ttl:"Stakeholder sync",ds:"Update your boss in English. Done well, it earns real trust.",cost:1,run:doSync},
+      {id:"rebalance",ic:"⚖️",ttl:"Rebalance workload",ds:"Move work off whoever is overloaded. Protects morale.",cost:1,target:true,run:doRebalance},
+      {id:"debt",ic:"🧹",ttl:"Pay down tech debt",ds:"Invest in quality now to avoid bugs later. Slight progress cost.",cost:1,run:doDebt},
+      {id:"team",ic:"🎉",ttl:"Team morale boost",ds:"A team lunch / offsite. Lifts everyone, spends budget.",cost:1,run:doTeam},
+      {id:"rest",ic:"🌙",ttl:"Recharge yourself",ds:"Step back and recover energy. Burnt-out leaders sink teams.",cost:1,run:doRest},
+    ];
 
-      if (opt.q === "best") streak++; else streak = 0;
+    function renderActions(){
+      const m=$("amenu"); m.innerHTML="";
+      $("actHead").textContent = S.focusLeft>0 ? `Spend your focus · ${S.focusLeft} left` : "Out of focus — advance the week";
+      ACTIONS.forEach(a=>{
+        const used=S.usedActions[a.id]||0;
+        const b=document.createElement("button"); b.className="act";
+        b.disabled = S.focusLeft<a.cost;
+        b.innerHTML=`<span class="ic">${a.ic}</span><span style="flex:1"><span class="ttl">${a.ttl}${used?` <span style="color:var(--muted);font-weight:600">×${used}</span>`:""}</span><span class="ds">${a.ds}</span></span><span class="fc">🎯 ${a.cost}</span>`;
+        b.onclick=()=>{ if(S.focusLeft<a.cost) return; a.run(a); };
+        m.appendChild(b);
+      });
+      const hint=$("actHint");
+      const exp=100*S.week/cfg.weeks;
+      if(S.m.energy<30) hint.innerHTML="⚠ You're running on empty. A burnt-out leader drags the whole team down — consider <b>Recharge</b>.";
+      else if(S.m.progress < exp-12) hint.innerHTML="⏰ You're behind the target pace. Shielding deep work and good planning compound over time.";
+      else if(S.m.trust<35) hint.innerHTML="📉 Your stakeholder is losing confidence. A strong <b>sync</b> in clear English buys you room.";
+      else if(S.team.some(t=>!t.gone&&t.morale<35)) hint.innerHTML="💛 Someone's morale is low. Unaddressed, low morale becomes attrition.";
+      else hint.innerHTML="Tip: you rarely have focus for everything. Protect your highest-leverage lever each week.";
+    }
 
-      // mark options
-      const buttons = $("qOptions").querySelectorAll(".option");
-      buttons.forEach((b, bi) => {
-        b.disabled = true;
-        const bq = s.options[bi].q;
-        if (bi === i) {
-          if (opt.q === "best") b.classList.add("correct");
-          else if (opt.q === "poor") b.classList.add("wrong");
-          else { b.style.borderColor = "var(--warn)"; b.style.background = "rgba(251,191,36,.12)"; }
-        } else if (bq === "best") {
-          b.classList.add("correct"); // reveal the best answer
-        } else {
-          b.classList.add("dim");
+    function spend(cost){ S.focusLeft-=cost; }
+
+    /* ---------- generic modal ---------- */
+    function modal(html){ $("sheet").innerHTML=html; $("scrim").classList.add("show"); }
+    function closeModal(){ $("scrim").classList.remove("show"); }
+    $("scrim").addEventListener("click",e=>{ if(e.target===$("scrim")) closeModal(); });
+
+    function effsHtml(effs){
+      if(!effs||!effs.length) return "";
+      return `<div class="effs">${effs.map(e=>`<span class="eff ${e.v>0?'up':'down'}">${e.l} ${e.v>0?'+':''}${e.v}</span>`).join("")}</div>`;
+    }
+    function vocabHtml(list){
+      if(!list||!list.length) return "";
+      return `<div class="vocab"><h3>📘 English in context</h3><dl>${list.map(v=>`<div><div class="term">${v.term}</div><div class="def">${v.def}</div></div>`).join("")}</dl></div>`;
+    }
+    // result modal with verdict + effects + vocab, single Continue
+    function showResult({title,verdict,vclass,why,effs,vocab,onClose}){
+      modal(`<h2>${title}</h2>
+        <div class="fb"><div class="v ${vclass||''}">${verdict||""}</div><div class="why">${why||""}</div>${effsHtml(effs)}</div>
+        ${vocabHtml(vocab)}
+        <div class="actions"><button class="btn" id="mOk">Continue</button></div>`);
+      $("mOk").onclick=()=>{ closeModal(); if(onClose)onClose(); render(); };
+    }
+    // pick a team member (non-gone), returns via callback
+    function pickMember(prompt,filterFn,cb){
+      const elig=S.team.filter(t=>!t.gone && (!filterFn||filterFn(t)));
+      if(!elig.length){ toast("No one available for that."); return; }
+      modal(`<h2>${prompt}</h2><div class="pickgrid" id="pg"></div>
+        <div class="actions"><button class="btn ghost" id="pgCancel">Cancel</button></div>`);
+      elig.forEach(t=>{
+        const b=document.createElement("button"); b.className="act";
+        b.innerHTML=`<span class="ava">${t.ava}</span><span style="flex:1"><span class="ttl">${t.name}</span><span class="ds">${t.role} · morale ${round(t.morale)} · load ${round(t.workload)}</span></span>`;
+        b.onclick=()=>{ closeModal(); cb(t); };
+        $("pg").appendChild(b);
+      });
+      $("pgCancel").onclick=closeModal;
+    }
+    // English phrasing mini-choice. opts:[{t,quality:'best'|'ok'|'poor'}]
+    function englishChoice({title,setup,opts,onResolve,vocab}){
+      modal(`<h2>${title}</h2><div class="scenario">${setup}</div>
+        <div class="amenu" id="ecOpts" style="margin-top:12px"></div>`);
+      const keys=["A","B","C"];
+      shuffle(opts).forEach((o,i)=>{
+        const b=document.createElement("button"); b.className="opt";
+        b.innerHTML=`<span class="k">${keys[i]}</span><span>“${o.t}”</span>`;
+        b.onclick=()=>{ closeModal(); if(vocab)learn(vocab); onResolve(o,vocab); };
+        $("ecOpts").appendChild(b);
+      });
+    }
+
+    /* ---------- action implementations ---------- */
+    function doOneOnOne(a){
+      pickMember("Who do you sit down with?",null,(t)=>{
+        spend(a.cost); bump("usedActions",a.id);
+        // english micro-moment
+        englishChoice({
+          title:`1-on-1 with ${t.name}`,
+          setup:`${t.name} seems a little off. You want to open the door without putting them on the spot. How do you start?`,
+          opts:[
+            {t:"How are you really doing lately? I've noticed you've been quieter.",quality:"best"},
+            {t:"Is something wrong? You need to be more engaged.",quality:"poor"},
+            {t:"Anything you want to talk about? No pressure at all.",quality:"ok"},
+          ],
+          vocab:[
+            {term:"to <em>check in</em> with someone",def:"to ask sincerely how they're doing."},
+            {term:"<em>no pressure</em>",def:"a phrase that signals the other person is free to decline."},
+            {term:"to <em>put someone on the spot</em>",def:"to force them to respond before they're ready."},
+          ],
+          onResolve:(o,vocab)=>{
+            let mb=8, em=2; let why, vclass, verdict;
+            if(o.quality==="best"){mb=14;em=4;verdict="✓ A genuine, specific opening.";vclass="good";why="Naming what you noticed — without judgement — makes people feel <b>seen</b>. "+t.name+" opens up.";}
+            else if(o.quality==="ok"){mb=8;em=2;verdict="~ Warm, if a little vague.";vclass="mid";why="Kind, but a general opener gets a general answer. Still, the gesture lands.";}
+            else {mb=2;em=1;verdict="✗ That reads as a reprimand.";vclass="bad";why="'You need to be more engaged' frames a feeling as a performance problem and makes people defensive.";}
+            t.morale=clamp(t.morale+mb); S.m.english=clamp(S.m.english+em); S.m.morale=clamp(S.m.morale+mb*0.3);
+            // surface secret
+            let reveal="";
+            if(t.secret && !t.surfacedDone && o.quality!=="poor"){
+              t.surfaced=true; t.surfacedDone=true; reveal=" "+secretText(t);
+            }
+            showResult({title:`1-on-1 with ${t.name}`,verdict,vclass,why:why+reveal,
+              effs:[{l:t.name+" morale",v:mb},{l:"English",v:em}],vocab,
+              onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+          }
+        });
+      });
+    }
+    function secretText(t){
+      const map={
+        morale_fragile:`You learn ${t.name} has been silently absorbing extra work to look reliable — and is close to burning out.`,
+        high_growth:`You discover ${t.name} learns fast and is hungry for bigger challenges — mentoring will pay off hugely.`,
+        wants_voice:`${t.name} reveals they feel their ideas get overlooked in meetings. They want a real seat at the table.`,
+        isolation:`${t.name} admits that working remotely, they often feel <em>out of the loop</em> and disconnected from decisions.`,
+      };
+      return map[t.secret]||"";
+    }
+
+    function doMentor(a){
+      pickMember("Who do you coach this week?",null,(t)=>{
+        spend(a.cost); bump("usedActions",a.id);
+        const growth = t.secret==="high_growth"?rnd(7,11):rnd(3,6);
+        t.skill=clamp(t.skill+growth); t.morale=clamp(t.morale+5);
+        S.m.energy=clamp(S.m.energy-12);
+        showResult({title:`Mentoring ${t.name}`,verdict:"You invest in your people.",vclass:"good",
+          why:`You pair up with ${t.name} and work through a hard problem together. ${t.secret==="high_growth"?"They soak it up fast — a great bet.":"Their skill ticks up and they feel supported."} Developing people is the highest-leverage thing a leader does — it just costs you energy now.`,
+          effs:[{l:t.name+" skill",v:round(growth)},{l:t.name+" morale",v:5},{l:"Your energy",v:-12}],
+          vocab:[{term:"to <em>pair up</em>",def:"to work together on the same task to learn faster."},
+                 {term:"<em>high-leverage</em>",def:"giving a large result for the effort invested."}],
+          onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+      });
+    }
+
+    function doShield(a){
+      spend(a.cost); bump("usedActions",a.id);
+      // direct progress lever — scales with how healthy/large the team is
+      const live=S.team.filter(t=>!t.gone);
+      const moraleAvg=live.length?live.reduce((s,t)=>s+t.morale,0)/live.length:0;
+      const prog=round(rnd(4,6)*(0.6+0.4*moraleAvg/100)*(live.length/4)*cfg.gainMult + 2);
+      S.m.progress=clamp(S.m.progress+prog);
+      S.m.energy=clamp(S.m.energy-10); S.m.morale=clamp(S.m.morale+3);
+      S.team.forEach(t=>{ if(!t.gone) t.morale=clamp(t.morale+3); });
+      showResult({title:"Shielding deep work",verdict:"You absorb the chaos so they can build.",vclass:"good",
+        why:"You deflect meetings, pings and last-minute asks. The team gets real <b>focus time</b> and ships a meaningful chunk this week — though playing goalkeeper drains you.",
+        effs:[{l:"Progress",v:prog},{l:"Team morale",v:3},{l:"Your energy",v:-10}],
+        vocab:[{term:"to <em>shield the team</em>",def:"to protect them from distractions and noise."},
+               {term:"<em>focus time</em>",def:"uninterrupted time for deep work."}],
+        onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+    }
+
+    function doPlan(a){
+      spend(a.cost); bump("usedActions",a.id);
+      S.flags.planned=true; S.m.quality=clamp(S.m.quality+5);
+      showResult({title:"Planning & prioritising",verdict:"You cut the noise and aim the team.",vclass:"good",
+        why:"You ruthlessly prioritise, clarify the goal and trim low-value work. Next week's output gets a real multiplier and quality improves. Leaders create clarity.",
+        effs:[{l:"Next week output",v:+30},{l:"Quality",v:5}],
+        vocab:[{term:"to <em>prioritise</em>",def:"to decide what matters most and do it first."},
+               {term:"to <em>cut scope</em>",def:"to remove lower-value work to hit a goal."}],
+        onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+    }
+
+    function doSync(a){
+      spend(a.cost); bump("usedActions",a.id);
+      const behind = S.m.progress < 100*S.week/cfg.weeks - 8;
+      englishChoice({
+        title:"Stakeholder sync",
+        setup:`Your boss asks for a status update.${behind?" You're a bit behind schedule and they look concerned." : " Things are roughly on track."} How do you frame it?`,
+        opts: behind ? [
+          {t:"We're slightly behind, here's exactly why and the two things I'm doing to recover.",quality:"best"},
+          {t:"Everything's totally fine, no problems at all.",quality:"poor"},
+          {t:"It's been tough, but we're trying our best.",quality:"ok"},
+        ] : [
+          {t:"We're on track. Here are this week's wins and the one risk I'm watching.",quality:"best"},
+          {t:"Yeah, it's going okay I think.",quality:"ok"},
+          {t:"Honestly I'm not totally sure where we stand.",quality:"poor"},
+        ],
+        vocab:[
+          {term:"to <em>be on track</em>",def:"to be progressing as planned."},
+          {term:"to <em>flag a risk</em>",def:"to point out a possible problem early."},
+          {term:"<em>here's what I'm doing about it</em>",def:"pairing a problem with a plan — what leaders do."},
+        ],
+        onResolve:(o)=>{
+          let tr, em, verdict, vclass, why;
+          if(o.quality==="best"){tr=12;em=4;verdict="✓ Calm, honest, and solution-focused.";vclass="good";why="You pair the truth with a plan. Stakeholders forgive problems — they don't forgive surprises. Trust goes <b>up</b> even when the news isn't perfect.";}
+          else if(o.quality==="ok"){tr=2;em=2;verdict="~ Vague and a little anxious.";vclass="mid";why="Hedging ('trying our best', 'going okay') leaves your boss uncertain. Not damaging, but it doesn't build confidence.";}
+          else {tr=-10;em=1;verdict="✗ That will come back to bite you.";vclass="bad";why=behind?"Claiming everything's fine while you're behind destroys credibility the moment reality shows — the cardinal sin of managing up.":"Admitting you don't know where you stand makes your boss wonder if you're in control.";}
+          S.m.trust=clamp(S.m.trust+tr); S.m.english=clamp(S.m.english+em);
+          learn([{term:"to <em>manage up</em>",def:"to communicate effectively with your own boss."}]);
+          showResult({title:"Stakeholder sync",verdict,vclass,why,
+            effs:[{l:"Trust",v:tr},{l:"English",v:em}],
+            vocab:[{term:"to <em>manage up</em>",def:"to communicate effectively with your own boss."}],
+            onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
         }
       });
-
-      // feedback
-      const verdict = $("fbVerdict");
-      if (opt.q === "best") { verdict.textContent = `✓ Best choice  ·  +${gained}`; verdict.className = "verdict good"; }
-      else if (opt.q === "ok") { verdict.textContent = `~ Not bad  ·  +${gained}`; verdict.className = "verdict partial"; }
-      else { verdict.textContent = `✗ Risky choice  ·  +${gained}`; verdict.className = "verdict bad"; }
-      $("fbWhy").innerHTML = s.why[opt.q];
-
-      // vocab
-      const list = $("fbVocabList");
-      list.innerHTML = "";
-      s.vocab.forEach((v) => {
-        learnedWords.add(v.term.replace(/<\/?em>/g, ""));
-        const div = document.createElement("div");
-        div.innerHTML = `<div class="term">${v.term}</div><div class="def">${v.def}</div>`;
-        list.appendChild(div);
-      });
-
-      $("qFeedback").classList.add("show");
-      $("btnNext").style.display = "block";
-      updateHUD();
     }
 
-    function next() {
-      if (idx < deck.length - 1) { idx++; renderQuestion(); $("qFeedback").classList.remove("show"); }
-      else endGame();
+    function doRebalance(a){
+      const overloaded=S.team.filter(t=>!t.gone&&t.workload>62).sort((x,y)=>y.workload-x.workload);
+      if(!overloaded.length){ toast("Nobody is overloaded right now."); return; }
+      pickMember("Whose load do you lighten?",(t)=>t.workload>55,(t)=>{
+        spend(a.cost); bump("usedActions",a.id);
+        const moved=Math.min(18,t.workload-45);
+        t.workload=clamp(t.workload-moved,0,100); t.morale=clamp(t.morale+7);
+        // redistribute a little to others (trade-off)
+        const others=S.team.filter(o=>!o.gone&&o!==t);
+        others.forEach(o=>o.workload=clamp(o.workload+moved/Math.max(1,others.length)*0.6));
+        showResult({title:`Rebalancing ${t.name}`,verdict:"You catch a burnout before it happens.",vclass:"good",
+          why:`You move work off ${t.name}'s plate. Their morale recovers — but some of it has to land on others, so spread it wisely. Sustainable pace beats heroics.`,
+          effs:[{l:t.name+" load",v:-round(moved)},{l:t.name+" morale",v:7}],
+          vocab:[{term:"to <em>take something off someone's plate</em>",def:"to reduce their workload."},
+                 {term:"<em>sustainable pace</em>",def:"a workload people can keep up long-term."}],
+          onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+      });
     }
 
-    function endGame() {
-      $("progressBar").style.width = "100%";
-      const max = deck.length * POINTS.best;
-      const pct = max ? score / max : 0;
-      $("endScore").textContent = score;
-      $("endMax").textContent = max;
-      $("endPct").textContent = Math.round(pct * 100) + "% leadership rating";
+    function doDebt(a){
+      spend(a.cost); bump("usedActions",a.id);
+      S.m.quality=clamp(S.m.quality+14); S.flags.debtPenalty=true;
+      showResult({title:"Paying down tech debt",verdict:"You slow down to speed up.",vclass:"good",
+        why:"You invest in cleanup and tests. Progress dips slightly this week, but quality jumps — and high quality means fewer nasty <b>bugs</b> and rework later.",
+        effs:[{l:"Quality",v:14},{l:"Progress (this week)",v:-4}],
+        vocab:[{term:"<em>tech debt</em>",def:"shortcuts taken now that cost more to fix later."},
+               {term:"to <em>slow down to speed up</em>",def:"investing in quality to go faster overall."}],
+        onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+    }
 
-      let rank = RANKS[0];
-      RANKS.forEach((r) => { if (pct >= r.min) rank = r; });
-      $("endRank").textContent = rank.name;
-      $("endMsg").textContent = rank.msg;
+    function doTeam(a){
+      if(S.m.budget<10){ toast("Not enough budget for that."); return; }
+      spend(a.cost); bump("usedActions",a.id);
+      S.m.budget=clamp(S.m.budget-10,0,9999); S.m.morale=clamp(S.m.morale+9);
+      S.team.forEach(t=>{ if(!t.gone) t.morale=clamp(t.morale+8); });
+      showResult({title:"Team morale boost",verdict:"You invest in the humans.",vclass:"good",
+        why:"A shared meal and some genuine appreciation. Morale lifts across the board. It costs budget, but a connected team outperforms a tired one.",
+        effs:[{l:"Team morale",v:8},{l:"Budget",v:-10}],
+        vocab:[{term:"to <em>recognise someone's work</em>",def:"to notice and praise it."},
+               {term:"<em>to boost morale</em>",def:"to raise the team's spirits."}],
+        onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+    }
 
-      $("endBreakdown").innerHTML = `
-        <div class="brk"><span>✓ Best decisions</span><b>${breakdown.best}</b></div>
-        <div class="brk"><span>~ Acceptable decisions</span><b>${breakdown.ok}</b></div>
-        <div class="brk"><span>✗ Risky decisions</span><b>${breakdown.poor}</b></div>
-        <div class="brk"><span>📚 English terms learned</span><b>${learnedWords.size}</b></div>`;
+    function doRest(a){
+      spend(a.cost); bump("usedActions",a.id);
+      S.m.energy=clamp(S.m.energy+34);
+      showResult({title:"Recharging",verdict:"You put on your own oxygen mask first.",vclass:"good",
+        why:"You step back, switch off and recover. It feels indulgent, but a depleted leader makes poor calls and infects the team with stress. Energy restored.",
+        effs:[{l:"Your energy",v:34}],
+        vocab:[{term:"<em>burnout</em>",def:"exhaustion from prolonged stress."},
+               {term:"to <em>recharge</em>",def:"to rest and regain energy."}],
+        onClose:()=>{ if(S.focusLeft<=0) maybePromptAdvance(); }});
+    }
 
-      const wb = $("endWords");
-      wb.innerHTML = "";
-      [...learnedWords].forEach((w) => {
-        const c = document.createElement("span");
-        c.className = "chip";
-        c.innerHTML = w;
-        wb.appendChild(c);
+    function bump(obj,key){ S[obj][key]=(S[obj][key]||0)+1; }
+
+    function maybePromptAdvance(){
+      toast("Out of focus — advance the week ▶");
+    }
+
+    /* ---------- EVENTS ---------- */
+    function queueEvent(ev){ if(ev) S.pending.push({...ev, options: shuffle(ev.options.slice())}); }
+    function chooseEvent(ev,opt){
+      // apply effects
+      const effs=[];
+      if(opt.cost){ spend(opt.cost); }
+      if(opt.apply){ opt.apply(S,effs); }
+      if(opt.vocab) learn(opt.vocab);
+      S.pending.shift();
+      if(ev.once) S.firedOnce[ev.id]=true;
+      showResult({title:ev.title,verdict:opt.verdict||"",vclass:opt.vclass||"",why:opt.why||"",
+        effs, vocab:opt.vocab, onClose:()=>{}});
+    }
+
+    // helper apply funcs build effect chips
+    const ap=(effs,label,key,delta)=>{ S.m[key]=clamp(S.m[key]+delta, key==="budget"?0:0, key==="budget"?99999:100); effs.push({l:label,v:round(delta)}); };
+    const apT=(effs,t,label,key,delta)=>{ t[key]=clamp(t[key]+delta); effs.push({l:t.name+" "+label,v:round(delta)}); };
+
+    const EVENTS=[
+      {id:"kickoff",once:true,kind:"Day one",title:"Your first week",
+        text:`You inherit the team mid-project. They've had two managers in a year and they're <span class="who">wary</span>. Everyone's watching what you do first.`,
+        options:[
+          {t:"Spend the week listening — 1-on-1s before any changes.",verdict:"✓ You earn the right to lead.",vclass:"good",
+            why:"With a burned team, trust is everything. Listening first beats a flashy reorg. Everyone's morale lifts a little.",
+            apply:(S,e)=>{S.team.forEach(t=>{if(!t.gone)apT(e,t,"morale","morale",6)});},
+            vocab:[{term:"to <em>earn trust</em>",def:"to gain confidence through consistent action."},{term:"<em>wary</em>",def:"cautious and not yet trusting."}]},
+          {t:"Announce a bold reorg to show you're in charge.",verdict:"✗ Too much, too soon.",vclass:"bad",
+            why:"Big changes before you understand the team read as ego. Morale and trust dip.",
+            apply:(S,e)=>{S.team.forEach(t=>{if(!t.gone)apT(e,t,"morale","morale",-7)});ap(e,"Trust","trust",-6);},
+            vocab:[{term:"<em>reorg</em>",def:"reorganising a team or company structure."}]},
+          {t:"Keep your head down and just push the work.",verdict:"~ A missed opportunity.",vclass:"mid",
+            why:"Not harmful, but you skip the chance to build the relationships you'll need when things get hard.",
+            apply:(S,e)=>{ap(e,"Progress","progress",2);}},
+        ]},
+      {id:"scope",kind:"Stakeholder",title:"Scope creep",
+        text:`Your boss casually adds a 'small' new feature — <span class="who">due the same deadline</span>. The team is already stretched.`,
+        options:[
+          {t:"Negotiate: 'Happy to add it — what should we drop or delay?'",verdict:"✓ You protect the team and the plan.",vclass:"good",
+            why:"You treat scope, time and people as a <b>trade-off</b>, not magic. Trust rises because you sound credible.",
+            apply:(S,e)=>{ap(e,"Trust","trust",8);ap(e,"Quality","quality",3);},
+            vocab:[{term:"<em>scope creep</em>",def:"work quietly expanding beyond the original plan."},{term:"<em>trade-off</em>",def:"giving up one thing to gain another."}]},
+          {t:"Just say yes and have everyone work weekends.",verdict:"✗ Heroics now, collapse later.",vclass:"bad",
+            why:"Saying yes to everything overloads the team and burns morale. The bill comes due.",
+            apply:(S,e)=>{S.team.forEach(t=>{if(!t.gone){apT(e,t,"load","workload",12);apT(e,t,"morale","morale",-9);}});}},
+          {t:"Flatly refuse without explanation.",verdict:"~ Right instinct, wrong delivery.",vclass:"mid",
+            why:"Protecting the team is good; a blunt 'no' with no alternative costs you trust.",
+            apply:(S,e)=>{ap(e,"Trust","trust",-5);}},
+        ]},
+      {id:"poach",kind:"People",title:"A recruiter comes calling",
+        text:`Your strongest engineer mentions, half-joking, that <span class="who">another company offered them more money</span>. They feel a bit stuck.`,
+        options:[
+          {t:"Map a growth path and give them a stretch project.",verdict:"✓ You grow them on purpose.",vclass:"good",
+            why:"People rarely leave for money alone — they leave when they stop growing. You re-engage your best person.",
+            apply:(S,e)=>{const t=S.team.filter(x=>!x.gone).sort((a,b)=>b.skill-a.skill)[0]; if(t){apT(e,t,"morale","morale",14);apT(e,t,"skill","skill",4);}},
+            vocab:[{term:"<em>stretch project</em>",def:"a challenging task that grows someone's skills."},{term:"to <em>feel stuck</em>",def:"to feel you aren't progressing."}]},
+          {t:"Quietly throw money at them and hope it sticks.",verdict:"~ A short-term patch.",vclass:"mid",
+            why:"A raise buys a little time, but the 'stuck' feeling remains. And it dents the budget.",
+            apply:(S,e)=>{ap(e,"Budget","budget",-12);const t=S.team.filter(x=>!x.gone).sort((a,b)=>b.skill-a.skill)[0]; if(t)apT(e,t,"morale","morale",5);}},
+          {t:"Assume they're bluffing and ignore it.",verdict:"✗ A risky gamble.",vclass:"bad",
+            why:"Ignoring a flight risk is how you lose your best people without warning.",
+            apply:(S,e)=>{const t=S.team.filter(x=>!x.gone).sort((a,b)=>b.skill-a.skill)[0]; if(t)apT(e,t,"morale","morale",-10);}},
+        ]},
+      {id:"outage",kind:"Crisis",title:"Production is down",
+        text:`A live incident hits during the day. Customers are affected and the team is <span class="who">scrambling</span>.`,
+        options:[
+          {t:"Stay calm, assign clear roles, communicate status openly.",verdict:"✓ Calm is contagious.",vclass:"good",
+            why:"In a crisis the team mirrors your composure. Clear roles + honest comms contains the damage and even builds trust.",
+            apply:(S,e)=>{ap(e,"Trust","trust",5);S.team.forEach(t=>{if(!t.gone)apT(e,t,"morale","morale",2)});},
+            vocab:[{term:"to <em>keep a cool head</em>",def:"to stay calm under pressure."},{term:"<em>incident</em>",def:"an unplanned outage or failure."}]},
+          {t:"Panic and start barking orders.",verdict:"✗ You amplify the chaos.",vclass:"bad",
+            why:"A frantic leader spreads stress. The fix takes longer and morale takes a hit.",
+            apply:(S,e)=>{ap(e,"Progress","progress",-4);S.team.forEach(t=>{if(!t.gone)apT(e,t,"morale","morale",-6)});}},
+        ],
+        when:(S)=>S.m.quality<60},
+      {id:"conflict",kind:"Conflict",title:"Two teammates clash",
+        text:`<span class="who">Priya</span> and <span class="who">Carlos</span> keep talking over each other in reviews. Tension is rising and others are uncomfortable.`,
+        options:[
+          {t:"Mediate privately, hear both sides, find common ground.",verdict:"✓ You de-escalate.",vclass:"good",
+            why:"Staying neutral and seeking common ground keeps both people's respect and clears the air.",
+            apply:(S,e)=>{S.team.forEach(t=>{if(!t.gone)apT(e,t,"morale","morale",4)});},
+            vocab:[{term:"<em>common ground</em>",def:"things both sides agree on."},{term:"to <em>de-escalate</em>",def:"to calm a tense situation."}]},
+          {t:"Pick the more senior person's side to end it fast.",verdict:"✗ You create a rivalry.",vclass:"bad",
+            why:"Taking sides quickly turns a disagreement into a lasting grudge.",
+            apply:(S,e)=>{const p=S.team.find(t=>t.name==="Priya"); if(p&&!p.gone)apT(e,p,"morale","morale",-10);}},
+          {t:"Ignore it and hope it blows over.",verdict:"~ It rarely does.",vclass:"mid",
+            why:"Unaddressed conflict festers and quietly drags down the whole room.",
+            apply:(S,e)=>{S.team.forEach(t=>{if(!t.gone)apT(e,t,"morale","morale",-3)});}},
+        ]},
+      {id:"shortcut",kind:"Ethics",title:"Pressure to ship a known bug",
+        text:`To hit the date, you could ship with a bug you know could hurt some users. Your boss is <span class="who">hinting strongly</span> that you should.`,
+        options:[
+          {t:"Flag the risk in writing and propose a safe fast-follow.",verdict:"✓ Courage with a plan.",vclass:"good",
+            why:"You put the risk on the record and offer a path forward — protecting users and yourself. Quality and trust hold.",
+            apply:(S,e)=>{ap(e,"Quality","quality",6);ap(e,"Trust","trust",4);},
+            vocab:[{term:"to <em>cut corners</em>",def:"to do something carelessly to save time."},{term:"to <em>put it on the record</em>",def:"to document something officially."}]},
+          {t:"Ship it quietly and hope nobody notices.",verdict:"✗ A debt that compounds.",vclass:"bad",
+            why:"Shipping known harm trades a little time now for a much bigger crisis (and quality hit) later.",
+            apply:(S,e)=>{ap(e,"Progress","progress",6);ap(e,"Quality","quality",-16);}},
+        ],
+        when:(S)=>S.week>=Math.floor(cfg.weeks/2)},
+      {id:"sick",kind:"People",title:"Someone's out sick",
+        text:`A teammate is out for the week. Their work needs covering and the others are already busy.`,
+        options:[
+          {t:"Re-plan calmly and absorb the slip; protect the rest.",verdict:"✓ Realistic and humane.",vclass:"good",
+            why:"You accept a small slip rather than crushing everyone. Morale holds; you stay credible.",
+            apply:(S,e)=>{ap(e,"Progress","progress",-3);}},
+          {t:"Pile their work onto the others to stay on schedule.",verdict:"✗ The team pays for the date.",vclass:"bad",
+            why:"Overloading the rest to avoid any slip is how a single sick day snowballs into burnout.",
+            apply:(S,e)=>{S.team.forEach(t=>{if(!t.gone){apT(e,t,"load","workload",10);apT(e,t,"morale","morale",-6);}});}},
+        ]},
+    ];
+
+    function generateEvents(){
+      // 0-2 events per week, weighted; respect once + when()
+      const n = Math.random()<0.55?1:(Math.random()<0.5?2:0);
+      const pool=EVENTS.filter(ev=>ev.id!=="kickoff" && !(ev.once&&S.firedOnce[ev.id]) && (!ev.when||ev.when(S)));
+      shuffle(pool);
+      for(let i=0;i<Math.min(n,pool.length);i++) queueEvent(pool[i]);
+    }
+
+    /* ---------- WEEK ADVANCE / SIMULATION ---------- */
+    $("btnAdvance").onclick=()=>{
+      if(S.pending.length){ toast("Resolve the situation first."); return; }
+      advanceWeek();
+    };
+    $("btnQuitSim").onclick=()=>{
+      modal(`<h2>Resign?</h2><p class="lead">Walking away ends the quarter now. Are you sure?</p>
+        <div class="actions"><button class="btn secondary" id="rYes">Yes, I resign</button><button class="btn ghost" id="rNo">Keep leading</button></div>`);
+      $("rYes").onclick=()=>{closeModal();endGame("resigned");};
+      $("rNo").onclick=closeModal;
+    };
+
+    function advanceWeek(){
+      S.prev={...S.m};
+      const m=S.m;
+      const results=[];
+
+      // 1) team output -> progress
+      let gain=0, active=0;
+      S.team.forEach(t=>{ if(t.gone)return; active++;
+        const moraleF=0.35+0.65*(t.morale/100);
+        const loadF=0.55+0.55*Math.min(t.workload,100)/100;
+        gain += (t.skill/100)*moraleF*loadF*OUT_PER;
+      });
+      if(S.flags.planned) gain*=1.30;
+      gain*=(0.62+0.38*(m.quality/100));         // poor quality => rework
+      gain*=(0.72+0.28*(m.energy/100));          // your energy matters
+      gain*=cfg.gainMult;
+      if(S.flags.debtPenalty) gain-=4;
+      gain=Math.max(0,gain);
+      m.progress=clamp(m.progress+gain);
+      results.push(`The team shipped <b>+${round(gain)}%</b> of progress.`);
+
+      // 2) drift: morale, skill, workload creep
+      S.team.forEach(t=>{ if(t.gone)return;
+        let d=-cfg.moraleDrift;
+        if(t.workload>72) d-=(t.workload-72)/4;
+        if(m.quality<45) d-=2;
+        if(t.secret==="morale_fragile") d-=1.2;
+        t.morale=clamp(t.morale+d);
+        t.skill=clamp(t.skill+0.6);
+        t.workload=clamp(t.workload+rnd(1,4)); // work piles up
       });
 
-      $("hud").style.visibility = "hidden";
-      $("progressWrap").style.visibility = "hidden";
+      // 3) your energy, budget
+      m.energy=clamp(m.energy-cfg.energyDrift);
+      m.budget=clamp(m.budget-cfg.burn,0,99999);
+
+      // 4) quality decay
+      m.quality=clamp(m.quality-2);
+
+      // 5) team morale aggregate mirrors members
+      const liveM=S.team.filter(t=>!t.gone);
+      if(liveM.length) m.morale=clamp(Math.round(liveM.reduce((s,t)=>s+t.morale,0)/liveM.length));
+
+      // 6) trust vs expectation
+      const expected=100*S.week/cfg.weeks;
+      if(m.progress>=expected){ m.trust=clamp(m.trust+3); }
+      else { m.trust=clamp(m.trust-((expected-m.progress)/cfg.trustHarsh)-1.5); }
+
+      // 7) low energy backlash
+      if(m.energy<20){ results.push("⚠ You're badly burnt out — your judgement and the team are suffering."); m.morale=clamp(m.morale-3); }
+
+      // 8) attrition check
+      S.team.forEach(t=>{ if(t.gone)return;
+        if(t.morale<=9){ t.gone=true; results.push(`💔 <b>${t.name} resigned.</b> Sustained low morale finally pushed them out.`); }
+      });
+      // bug event from low quality
+      if(m.quality<35 && Math.random()<0.5){ const hit=round(rnd(3,7)); m.progress=clamp(m.progress-hit); results.push(`🐞 A nasty bug from low quality cost you <b>−${hit}%</b> progress in rework.`); }
+
+      // reset weekly flags
+      S.flags.planned=false; S.flags.shield=0; S.flags.debtPenalty=false;
+
+      // record history
+      S.history.push({week:S.week,progress:round(m.progress),morale:round(m.morale),trust:round(m.trust)});
+
+      // 9) check terminal conditions BEFORE incrementing
+      if(m.progress>=100){ weeklyReport(results,true); return; }
+      if(m.budget<=0){ weeklyReport(results,"bankrupt"); return; }
+      if(m.trust<=0){ weeklyReport(results,"fired"); return; }
+      if(S.team.every(t=>t.gone)){ weeklyReport(results,"mutiny"); return; }
+      if(S.week>=cfg.weeks){ weeklyReport(results,"deadline"); return; }
+
+      // 10) next week
+      S.week++; S.focusLeft=cfg.focus; S.usedActions={}; S.team.forEach(t=>t.surfaced=false);
+      generateEvents();
+      weeklyReport(results,false);
+    }
+
+    function weeklyReport(results,terminal){
+      const m=S.m;
+      const expected=100*(terminal?S.week:S.week-1)/cfg.weeks;
+      const pace = m.progress>=expected ? `<span style="color:var(--good)">on pace</span>` : `<span style="color:var(--warn)">behind pace</span>`;
+      let html=`<span class="tag">Week ${terminal?S.week:S.week-1} review</span><h2>How the week went</h2>
+        <div class="fb"><div class="why">${results.map(r=>"• "+r).join("<br>")}<br>• Progress is <b>${round(m.progress)}%</b> — ${pace} (target ${round(expected)}%).</div></div>`;
+      modal(html+`<div class="actions"><button class="btn" id="wkOk">${terminal?"See the outcome ▶":"Start next week ▶"}</button></div>`);
+      $("wkOk").onclick=()=>{ closeModal(); if(terminal){ endGame(terminal); } else { render(); window.scrollTo({top:0,behavior:"smooth"}); } };
+    }
+
+    /* ---------- ENDINGS / SCORE ---------- */
+    function endGame(reason){
+      const m=S.m;
+      // composite score
+      const moraleAvg=m.morale;
+      let score = m.progress*0.42 + moraleAvg*0.16 + m.trust*0.16 + (m.budget/cfg.startBudget*100)*0.08 + m.quality*0.10 + m.english*0.08;
+      // bonuses / penalties for terminal reason
+      let tag,headline,msg,shipped=false;
+      const teamLeft=S.team.filter(t=>t.gone).length;
+      if(reason===true){ shipped=true; const early=cfg.weeks-S.week; tag="🚀 Shipped!"; headline="You shipped the project"; msg=early>0?`Delivered with ${early} week${early===1?"":"s"} to spare — and a team that's still standing.`:"Delivered right on the wire.";
+        score+=8+early*2; }
+      else if(reason==="deadline"){ tag = m.progress>=100?"🚀 Shipped!":"🏁 Quarter over"; headline = m.progress>=92?"You shipped — just in time":"The quarter ended"; shipped=m.progress>=100; msg = m.progress>=92?"Right to the deadline, but you got there.":`You reached ${round(m.progress)}%. Not done, but the post-mortem will be honest.`; if(m.progress<100)score-=6; }
+      else if(reason==="bankrupt"){ tag="💸 Out of budget"; headline="You ran out of money"; msg="The project stalled when the budget hit zero. Runway is a resource you must manage like any other."; score=Math.min(score,42); }
+      else if(reason==="fired"){ tag="📉 Let go"; headline="You lost your stakeholders"; msg="Trust fell to zero and you were taken off the project. Managing up is not optional."; score=Math.min(score,40); }
+      else if(reason==="mutiny"){ tag="🚪 Team gone"; headline="Your whole team left"; msg="Every person resigned. No leader ships anything alone — people come first."; score=Math.min(score,30); }
+      else if(reason==="resigned"){ tag="🏳️ Resigned"; headline="You stepped down"; msg="Sometimes walking away is the call — but the project was left unfinished."; score=Math.min(score,Math.max(20,m.progress*0.5)); }
+      score=Math.max(0,Math.min(100,Math.round(score)));
+
+      let rank;
+      if(!shipped && (reason==="bankrupt"||reason==="fired"||reason==="mutiny")) rank="Hard Lessons 📓";
+      else if(score>=88) rank="Visionary Leader 🏆";
+      else if(score>=72) rank="Trusted Leader ⭐";
+      else if(score>=55) rank="Capable Manager 🧭";
+      else if(score>=38) rank="Developing Leader 🌱";
+      else rank="Back to the Drawing Board 📓";
+
+      $("endTag").textContent=tag;
+      $("endScore").textContent=score;
+      $("endSub").textContent=headline;
+      $("endRank").textContent=rank;
+      $("endMsg").textContent=msg;
+      $("endGrid").innerHTML=`
+        <div class="ec"><b>${round(m.progress)}%</b><span>Project shipped</span></div>
+        <div class="ec"><b>${round(m.morale)}</b><span>Final morale</span></div>
+        <div class="ec"><b>${round(m.trust)}</b><span>Stakeholder trust</span></div>
+        <div class="ec"><b>$${round(m.budget)}k</b><span>Budget left</span></div>
+        <div class="ec"><b>${round(m.quality)}</b><span>Quality</span></div>
+        <div class="ec"><b>${4-teamLeft}/4</b><span>Team retained</span></div>
+        <div class="ec"><b>+${round(m.english-32)}</b><span>English gained</span></div>
+        <div class="ec"><b>${S.vocab.size}</b><span>Phrases learned</span></div>`;
+      const wb=$("endWords"); wb.innerHTML="";
+      [...S.vocab.values()].forEach(v=>{ const c=document.createElement("span"); c.className="chip"; c.innerHTML=v.term; wb.appendChild(c); });
+      if(!S.vocab.size){ wb.innerHTML=`<span class="lead" style="font-size:13px">Try syncs and 1-on-1s next run to practise English in context.</span>`; }
       show("screen-end");
     }
 
-    // --- Wire up ---
-    $("btnStart").addEventListener("click", startGame);
-    $("btnNext").addEventListener("click", next);
-    $("btnAgain").addEventListener("click", startGame);
-    $("btnHome").addEventListener("click", () => show("screen-start"));
+    /* ---------- nav / misc ---------- */
+    function show(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); $(id).classList.add("active"); window.scrollTo({top:0,behavior:"smooth"}); }
+    let toastT;
+    function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),1900); }
+
+    let level="manager";
+    document.querySelectorAll(".level-card").forEach(c=>c.onclick=()=>{
+      document.querySelectorAll(".level-card").forEach(x=>x.classList.remove("selected"));
+      c.classList.add("selected"); level=c.dataset.level;
+    });
+    $("btnStart").onclick=()=>{ newGame(level); show("screen-sim"); };
+    $("btnAgain").onclick=()=>{ newGame(level); show("screen-sim"); };
+    $("btnHome").onclick=()=>show("screen-start");
   })();
   </script>
 </body>
