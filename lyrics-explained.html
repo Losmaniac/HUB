@@ -80,7 +80,33 @@
   footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px;line-height:1.6}
   footer a{color:var(--accent)}
   .hidden{display:none!important}
-  @media(max-width:560px){.line .head{padding:11px 12px}.body .inner{padding:10px 12px 13px}}
+  /* ---- song menu ---- */
+  .menuTitle{margin:2px 0 4px;font-size:22px}
+  .menuSub{color:var(--muted);font-size:13.5px;margin:0 0 16px;line-height:1.6}
+  .songgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .songcard{text-align:left;cursor:pointer;border:1px solid var(--line);border-radius:16px;
+    background:var(--panel2);padding:0;overflow:hidden;display:flex;flex-direction:column;
+    transition:transform .08s,border-color .15s,box-shadow .15s}
+  .songcard:hover{transform:translateY(-2px);border-color:#3a4170;box-shadow:var(--shadow)}
+  .songcard .cover{height:96px;display:flex;align-items:center;justify-content:center;font-size:42px;
+    background:linear-gradient(135deg,var(--c1,#6c8cff),var(--c2,#34d0a8))}
+  .songcard .info{padding:13px 15px 15px}
+  .songcard .st{font-size:17px;font-weight:700;margin:0;line-height:1.25}
+  .songcard .sa{color:var(--muted);font-size:12.5px;margin:3px 0 9px}
+  .songcard .tagline{font-size:13px;line-height:1.5;margin:0 0 11px}
+  .songcard .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .songcard .tags span{font-size:11px;padding:3px 9px;border-radius:999px;background:var(--panel);
+    border:1px solid var(--line);color:var(--muted)}
+  .songcard .go{margin-top:11px;font-size:12.5px;font-weight:600;color:var(--accent2)}
+  .ghostbtn{background:transparent}
+  /* ---- live full lyrics (Lyrics.ovh) ---- */
+  #fullLyrics{white-space:pre-line;background:var(--panel);border:1px solid var(--line);
+    border-radius:16px;padding:18px 20px;margin-top:4px;font-size:15px;line-height:1.7;
+    color:var(--text);box-shadow:var(--shadow)}
+  #fullLyrics .lyr-err{display:block;color:var(--warn);font-weight:700;margin-bottom:4px}
+  #fullLyrics .lyr-note{display:block;color:var(--muted);font-size:13px}
+  @media(max-width:560px){.line .head{padding:11px 12px}.body .inner{padding:10px 12px 13px}
+    .songgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -93,33 +119,49 @@
     </div>
   </header>
 
-  <div class="card">
-    <div class="toolbar">
-      <div class="left">
-        <label class="pill" for="songSel" style="cursor:pointer">Song</label>
-        <select id="songSel" aria-label="Choose a song"></select>
-      </div>
-      <div class="left">
-        <button id="btnSpeakLine" title="Read each lyric aloud as you open it">🔊 Speak: <span id="speakState">on</span></button>
-        <button id="btnExpand">Expand all</button>
-        <button id="btnCollapse">Collapse all</button>
-      </div>
-    </div>
-    <div class="songmeta">
-      <h2 id="songTitle">—</h2>
-      <span class="by" id="songBy"></span>
-    </div>
-    <div class="intro" id="songIntro"></div>
-    <div class="legend">
-      <span class="pill"><span style="color:var(--slang)">●</span> slang</span>
-      <span class="pill"><span style="color:var(--good)">●</span> idiom</span>
-      <span class="pill"><span style="color:var(--warn)">●</span> reference</span>
-      <span class="pill"><span style="color:var(--accent)">●</span> grammar</span>
-      <span class="count" id="lineCount"></span>
+  <!-- ===== MENU: pick a song ===== -->
+  <div id="menuView">
+    <div class="card">
+      <h2 class="menuTitle">Pick a song to learn today 🎧</h2>
+      <p class="menuSub">Choose one Eminem track. Each line comes with a plain-English meaning plus slang, idiom, reference &amp; grammar notes.</p>
+      <div class="songgrid" id="songGrid"></div>
     </div>
   </div>
 
-  <div id="lyrics"></div>
+  <!-- ===== STUDY: one song, line by line ===== -->
+  <div id="studyView" class="hidden">
+    <div class="card">
+      <div class="toolbar">
+        <div class="left">
+          <button id="btnBack" class="ghostbtn">← Songs</button>
+          <label class="pill" for="songSel" style="cursor:pointer">Switch</label>
+          <select id="songSel" aria-label="Choose a song"></select>
+        </div>
+        <div class="left">
+          <button id="btnSpeakLine" title="Read each lyric aloud as you open it">🔊 Speak: <span id="speakState">on</span></button>
+          <button id="btnExpand">Expand all</button>
+          <button id="btnCollapse">Collapse all</button>
+          <button id="btnFull" title="Fetch the complete lyrics from the live Lyrics.ovh API">📜 Full lyrics</button>
+        </div>
+      </div>
+      <div class="songmeta">
+        <h2 id="songTitle">—</h2>
+        <span class="by" id="songBy"></span>
+      </div>
+      <div class="intro" id="songIntro"></div>
+      <div class="legend">
+        <span class="pill"><span style="color:var(--slang)">●</span> slang</span>
+        <span class="pill"><span style="color:var(--good)">●</span> idiom</span>
+        <span class="pill"><span style="color:var(--warn)">●</span> reference</span>
+        <span class="pill"><span style="color:var(--accent)">●</span> grammar</span>
+        <span class="count" id="lineCount"></span>
+      </div>
+    </div>
+
+    <div id="lyrics"></div>
+
+    <div id="fullLyrics" class="hidden" aria-live="polite"></div>
+  </div>
 
   <footer>
     Tip: tap any line to reveal a plain-English explanation. <span style="color:var(--slang)">Purple words</span> are slang — hover or tap to learn them.<br/>
@@ -163,6 +205,9 @@ const SONGS = {
     title: "Sing for the Moment",
     artist: "Eminem",
     album: "The Eminem Show (2002)",
+    emoji: "🎤", colors:["#6c8cff","#c98cff"],
+    tagline: "Rap as a voice for troubled kids — and a clap-back at the critics.",
+    tags: ["street slang", "dropped 'g'", "AAVE grammar"],
     intro: "A song about how rap music gives a voice to troubled, ignored kids — and Eminem's defense against critics who blamed his music for youth violence. It samples Aerosmith's \"Dream On\" (Steven Tyler sings the chorus). Great for learning Detroit/hip-hop slang, dropped 'g' endings (talkin', walkin'), and street idioms.",
     sections: [
       { type:"verse", label:"Verse 1", lines:[
@@ -453,6 +498,144 @@ const SONGS = {
           notes:[] },
       ]},
     ]
+  },
+
+  "lose-yourself": {
+    title: "Lose Yourself",
+    artist: "Eminem",
+    album: "8 Mile soundtrack (2002)",
+    emoji: "🔥", colors:["#ffb454","#ff6b6b"],
+    tagline: "One shot at your dream — do you capture it or let it slip?",
+    tags: ["motivation idioms", "body-language phrases", "carpe diem"],
+    intro: "Eminem's Oscar-winning anthem about seizing your one big chance. Packed with everyday idioms about nerves, opportunity, and never giving up — some of the most useful figurative English a learner can know. (Selected verses & hook, annotated for study.)",
+    sections: [
+      { type:"verse", label:"Verse 1 (opening)", lines:[
+        { text:"His palms are sweaty, knees weak, arms are heavy",
+          meaning:"His body shows pure stage-fright: sweating hands, shaky legs, tense arms.",
+          notes:[
+            {type:"idiom", term:"palms are sweaty", explain:"\"sweaty palms\" = a classic physical sign of nervousness/anxiety."},
+            {type:"idiom", term:"knees weak", explain:"\"weak in the knees\" = so nervous or overwhelmed your legs feel unsteady."}] },
+        { text:"There's vomit on his sweater already, mom's spaghetti",
+          meaning:"He's so nervous he's already thrown up the spaghetti his mom made.",
+          notes:[{type:"ref", term:"mom's spaghetti", explain:"a now-famous meme line; spaghetti is cheap home food — a sign of his poor background."}] },
+        { text:"He's nervous, but on the surface, he looks calm and ready",
+          meaning:"Inside he's terrified, but outwardly he appears cool and prepared.",
+          notes:[{type:"idiom", term:"on the surface", explain:"\"on the surface\" = on the outside / how things appear, vs. the hidden reality."}] },
+        { text:"To drop bombs, but he keeps on forgettin'",
+          meaning:"He's ready to deliver killer rap verses, but his memory keeps failing.",
+          notes:[{type:"slang", term:"drop bombs", explain:"\"to drop bombs\" = to deliver powerful, impressive lines/verses in rap."}] },
+        { text:"What he wrote down, the whole crowd goes so loud",
+          meaning:"He blanks on his written lyrics as the audience roars.",
+          notes:[{type:"slang", term:"crowd goes so loud", explain:"\"the crowd goes wild/loud\" = the audience reacts with huge excitement."}] },
+        { text:"He opens his mouth, but the words won't come out",
+          meaning:"He tries to rap but freezes — nothing comes.",
+          notes:[{type:"idiom", term:"words won't come out", explain:"to be unable to speak from fear/shock; a common way to describe choking up."}] },
+        { text:"He's chokin', how? Everybody's jokin' now",
+          meaning:"He's failing under pressure while the crowd starts mocking him.",
+          notes:[{type:"idiom", term:"chokin'", explain:"\"to choke\" = to fail at the critical moment because of pressure/nerves."}] },
+        { text:"The clock's run out, time's up, over, blaow!",
+          meaning:"His time on stage is finished — it's all over.",
+          notes:[{type:"idiom", term:"time's up", explain:"\"time's up\" = the allotted time has ended; no more chances."}] },
+      ]},
+      { type:"chorus", label:"Chorus (hook)", lines:[
+        { text:"You better lose yourself in the music, the moment",
+          meaning:"Give yourself completely to the music and the present moment.",
+          notes:[
+            {type:"idiom", term:"lose yourself", explain:"\"to lose yourself in something\" = to become so absorbed you forget everything else."},
+            {type:"gram", term:"You better", explain:"casual for \"you had better\" = strong advice/warning: you should, or else."}] },
+        { text:"You own it, you better never let it go",
+          meaning:"Seize the opportunity and never give it up.",
+          notes:[{type:"idiom", term:"let it go", explain:"\"to let something go\" = to release it / give it up. Here: don't waste the chance."}] },
+        { text:"You only get one shot, do not miss your chance to blow",
+          meaning:"You get just one opportunity — don't waste your chance to succeed.",
+          notes:[
+            {type:"idiom", term:"one shot", explain:"\"one shot\" = a single chance/opportunity to do something."},
+            {type:"slang", term:"chance to blow", explain:"\"to blow (up)\" = to suddenly become hugely successful/famous."}] },
+        { text:"This opportunity comes once in a lifetime",
+          meaning:"A chance this good will never come again.",
+          notes:[{type:"idiom", term:"once in a lifetime", explain:"\"once-in-a-lifetime\" = extremely rare; happening only once ever."}] },
+      ]},
+      { type:"verse", label:"Verse 2 (highlights)", lines:[
+        { text:"The soul's escaping, through this hole that it's gaping",
+          meaning:"He feels his spirit slipping away through an open wound/emptiness.",
+          notes:[{type:"gram", term:"gaping", explain:"\"gaping\" = wide open (usually a hole or wound)."}] },
+        { text:"This world is mine for the taking",
+          meaning:"Success is right there for him to grab.",
+          notes:[{type:"idiom", term:"mine for the taking", explain:"\"there for the taking\" = easily available to whoever grabs it."}] },
+        { text:"Make me king, as we move toward a new world order",
+          meaning:"This success could crown him as a leader of a changing world.",
+          notes:[{type:"ref", term:"new world order", explain:"a loaded political phrase for a major global power shift — used here for ambition."}] },
+        { text:"You can do anything you set your mind to, man",
+          meaning:"With determination, you can achieve whatever you decide to.",
+          notes:[{type:"idiom", term:"set your mind to", explain:"\"to set your mind to something\" = to decide firmly to do it and focus fully."}] },
+      ]},
+    ]
+  },
+
+  "mockingbird": {
+    title: "Mockingbird",
+    artist: "Eminem",
+    album: "Encore (2004)",
+    emoji: "🕊️", colors:["#6c8cff","#34d0a8"],
+    tagline: "A tender letter to his daughter through tough times.",
+    tags: ["family idioms", "everyday English", "gentler language"],
+    intro: "A heartfelt song to his daughter Hailie about hard years when money and his marriage were falling apart. The language is gentler and the idioms are everyday-life ones — ideal for learners who want natural, emotional English. (Selected verses & hook, annotated for study.)",
+    sections: [
+      { type:"verse", label:"Verse 1 (highlights)", lines:[
+        { text:"I know sometimes things may not always make sense to you right now",
+          meaning:"He tells his daughter that life may feel confusing to her at the moment.",
+          notes:[{type:"idiom", term:"make sense to you", explain:"\"to make sense to someone\" = to be understandable/clear to them."}] },
+        { text:"But hey, what'd Daddy always tell you?",
+          meaning:"He reminds her of the lesson he always repeats.",
+          notes:[{type:"gram", term:"what'd Daddy", explain:"\"what'd\" = \"what did\"; \"Daddy\" = an affectionate child's word for father."}] },
+        { text:"Straighten up, little soldier, stiffen up that upper lip",
+          meaning:"Be brave and stay strong; don't cry — hold it together.",
+          notes:[
+            {type:"idiom", term:"Straighten up", explain:"\"straighten up\" = to behave better / pull yourself together and be strong."},
+            {type:"idiom", term:"stiffen up that upper lip", explain:"from \"keep a stiff upper lip\" = stay calm and brave, hide your distress."}] },
+        { text:"What you crying about? You got me",
+          meaning:"There's no need to cry, because she still has her dad.",
+          notes:[{type:"idiom", term:"You got me", explain:"\"you've got me\" = you can rely on me; I'm here for you."}] },
+        { text:"And I can't blame you, 'cause at the time I never knew",
+          meaning:"He doesn't fault her for being upset, since back then he didn't realize things either.",
+          notes:[{type:"idiom", term:"can't blame you", explain:"\"I can't blame you\" = your reaction is understandable; it's not your fault."}] },
+        { text:"Times have changed, 'cause every day I grow",
+          meaning:"Life is different now; he keeps maturing.",
+          notes:[{type:"idiom", term:"Times have changed", explain:"\"times have changed\" = things are different now than before."}] },
+      ]},
+      { type:"chorus", label:"Chorus (hook)", lines:[
+        { text:"Now hush, little baby, don't you cry",
+          meaning:"A soothing line telling the child to be quiet and stop crying.",
+          notes:[{type:"ref", term:"hush, little baby", explain:"borrows the famous American lullaby \"Hush, Little Baby\" (the 'mockingbird' song)."}] },
+        { text:"Everything's gonna be alright",
+          meaning:"A reassurance that things will turn out okay.",
+          notes:[{type:"idiom", term:"gonna be alright", explain:"\"gonna\" = \"going to\"; \"be alright\" = turn out fine. A classic comforting phrase."}] },
+        { text:"Stiffen that upper lip up, little lady, I told you",
+          meaning:"Again: be brave, don't cry — as he keeps reminding her.",
+          notes:[{type:"idiom", term:"little lady", explain:"\"little lady\" = an affectionate way to address a young girl."}] },
+        { text:"Daddy's here to hold you through the night",
+          meaning:"He promises to comfort and protect her all night.",
+          notes:[{type:"idiom", term:"hold you through the night", explain:"\"to hold someone through the night\" = to comfort/stay with them until morning."}] },
+      ]},
+      { type:"verse", label:"Verse 2 (highlights)", lines:[
+        { text:"It's funny, I remember back one year when Daddy had no money",
+          meaning:"He recalls a year when he was broke.",
+          notes:[{type:"idiom", term:"had no money", explain:"\"to have no money\" = to be broke/poor. Casual: \"I'm broke.\""}] },
+        { text:"Mommy wrapped the Christmas presents up and stuck 'em under the tree",
+          meaning:"Despite being poor, her mom still wrapped gifts and put them under the Christmas tree.",
+          notes:[
+            {type:"slang", term:"stuck 'em", explain:"\"'em\" = casual spelling of \"them\"; \"stuck them\" = put/placed them."},
+            {type:"ref", term:"under the tree", explain:"American tradition: gifts are placed under the Christmas tree to open on Christmas."}] },
+        { text:"And finally got a tree, this Christmas we had a hard time",
+          meaning:"They barely managed to get a tree; that Christmas was financially tough.",
+          notes:[{type:"idiom", term:"had a hard time", explain:"\"to have a hard time\" = to go through a difficult period."}] },
+        { text:"And I was gone, on tour, but I sware on everything",
+          meaning:"He was away performing, but he promises sincerely (about what follows).",
+          notes:[
+            {type:"idiom", term:"on tour", explain:"\"on tour\" = traveling to perform shows in many cities."},
+            {type:"slang", term:"sware on everything", explain:"\"I swear on everything\" = a strong promise that you're telling the truth (spelled phonetically here)."}] },
+      ]},
+    ]
   }
 };
 
@@ -520,6 +703,9 @@ function renderSong(id){
   }).join("");
   $("lyrics").innerHTML = html;
   $("lineCount").textContent = `· ${lineTotal} lines annotated`;
+  const fl = $("fullLyrics");                 // reset live-lyrics panel for the new song
+  fl.classList.add("hidden");
+  fl.textContent = "";
   wireLines();
 }
 
@@ -550,12 +736,55 @@ function wireLines(){
   });
 }
 
+function countLines(song){
+  return song.sections.reduce((n, s) => n + s.lines.length, 0);
+}
+
 function buildSongSelector(){
   const sel = $("songSel");
   sel.innerHTML = Object.entries(SONGS)
     .map(([id, s]) => `<option value="${esc(id)}">${esc(s.title)} — ${esc(s.artist)}</option>`)
     .join("");
-  sel.addEventListener("change", () => renderSong(sel.value));
+  sel.addEventListener("change", () => openSong(sel.value));
+}
+
+// Build the song-picker menu (cards).
+function buildMenu(){
+  const grid = $("songGrid");
+  grid.innerHTML = Object.entries(SONGS).map(([id, s]) => {
+    const [c1, c2] = s.colors || ["#6c8cff", "#34d0a8"];
+    const tags = (s.tags || []).map(t => `<span>${esc(t)}</span>`).join("");
+    return `<button class="songcard" data-id="${esc(id)}" style="--c1:${esc(c1)};--c2:${esc(c2)}">
+      <div class="cover">${s.emoji || "🎵"}</div>
+      <div class="info">
+        <p class="st">${esc(s.title)}</p>
+        <p class="sa">${esc(s.artist)} · ${esc(s.album)} · ${countLines(s)} lines</p>
+        <p class="tagline">${esc(s.tagline || "")}</p>
+        <div class="tags">${tags}</div>
+        <div class="go">Learn this one →</div>
+      </div>
+    </button>`;
+  }).join("");
+  grid.querySelectorAll(".songcard").forEach(card =>
+    card.addEventListener("click", () => openSong(card.getAttribute("data-id"))));
+}
+
+// Switch into the study view for a song.
+function openSong(id){
+  if (!SONGS[id]) return;
+  renderSong(id);
+  $("songSel").value = id;
+  $("menuView").classList.add("hidden");
+  $("studyView").classList.remove("hidden");
+  window.scrollTo({ top: 0 });
+}
+
+// Return to the song-picker menu.
+function showMenu(){
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  $("studyView").classList.add("hidden");
+  $("menuView").classList.remove("hidden");
+  window.scrollTo({ top: 0 });
 }
 
 /* Optional: load extra songs from external JSON so the app scales without
@@ -572,13 +801,46 @@ async function loadExternalSongs(manifest = []){
   }
 }
 
+/* ---- Full lyrics via the Lyrics.ovh public API (https://api.lyrics.ovh/v1) ---- */
+async function fetchLyrics(artist, title){
+  // Route: https://api.lyrics.ovh/v1/{artist}/{title} — inputs URL-encoded.
+  const url = `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);          // e.g. 404 = missing
+  const data = await res.json();
+  if (!data || data.error || !data.lyrics) {                   // API signals misses via an "error" key
+    throw new Error(data && data.error ? data.error : "No lyrics returned");
+  }
+  return data.lyrics;
+}
+
+async function loadFullLyrics(){
+  const song = SONGS[$("songSel").value];
+  if (!song) return;
+  const box = $("fullLyrics");
+  const btn = $("btnFull");
+  box.classList.remove("hidden");
+  box.textContent = "Loading full lyrics…";
+  btn.disabled = true;
+  try {
+    const lyrics = await fetchLyrics(song.artist, song.title);
+    box.textContent = lyrics.trim();                           // \n renders via white-space:pre-line
+  } catch (e) {
+    box.innerHTML = `<span class="lyr-err">Lyrics not found.</span>` +
+      `<span class="lyr-note">The live lyric service couldn't return this song. The annotated lines above still work offline.</span>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 (async function init(){
   // await loadExternalSongs(["songs/lose-yourself.json"]); // example, optional
   buildSongSelector();
-  const first = Object.keys(SONGS)[0];
-  $("songSel").value = first;
-  renderSong(first);
+  buildMenu();
+  // Start on the menu so the user picks a song to learn today.
 
+  $("btnBack").addEventListener("click", showMenu);
+  $("btnFull").addEventListener("click", loadFullLyrics);
   $("btnExpand").addEventListener("click", () =>
     document.querySelectorAll(".line").forEach(l => l.classList.add("open")));
   $("btnCollapse").addEventListener("click", () =>
