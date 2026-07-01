@@ -1,9 +1,9 @@
 name: market-intel-collect
 
 # Automated public-data collection for the Michelin x Inter Cars CEE/SEE
-# market-intelligence system. Runs the free (no-key) collectors on a schedule and
-# commits the refreshed observation CSVs. Keyed sources activate automatically when
-# their secrets are present (they skip cleanly otherwise).
+# market-intelligence system. Every collector uses a free, no-key public source
+# (ECB/Frankfurter, Eurostat, EU Oil Bulletin, Open-Meteo, Wikimedia), so this
+# workflow needs no secrets. It runs on a schedule and commits refreshed CSVs.
 
 on:
   schedule:
@@ -32,15 +32,8 @@ jobs:
       - name: Install optional extras (best-effort)
         run: pip install -r market-intel/collectors/requirements.txt || true
 
-      - name: Run collectors
+      - name: Run collectors (free sources only — no secrets required)
         working-directory: market-intel/collectors
-        env:
-          OPENWEATHER_KEY: ${{ secrets.OPENWEATHER_KEY }}
-          METEOSTAT_KEY:   ${{ secrets.METEOSTAT_KEY }}
-          TOMTOM_KEY:      ${{ secrets.TOMTOM_KEY }}
-          SIMILARWEB_KEY:  ${{ secrets.SIMILARWEB_KEY }}
-          SEMRUSH_KEY:     ${{ secrets.SEMRUSH_KEY }}
-          AHREFS_KEY:      ${{ secrets.AHREFS_KEY }}
         run: python3 run_all.py
 
       - name: Upload observations artifact

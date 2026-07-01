@@ -668,14 +668,14 @@ function renderMethod(){
      ${srcRow("1 · Macroeconomic","Eurostat, ECB, OECD, IMF WEO, national central banks, EU Weekly Oil Bulletin","Daily–Monthly","No*")}
      ${srcRow("2 · Automotive market","ACEA, JATO, EAFO, national registration authorities","Monthly / Annual","Mixed")}
      ${srcRow("3 · Tire-demand search","Google Trends","Weekly","No")}
-     ${srcRow("4 · Weather signals","OpenWeather, Meteostat","Daily","Yes")}
-     ${srcRow("5 · Mobility","TomTom Traffic Index, Eurostat, national road authorities","Weekly / Monthly","Mixed")}
-     ${srcRow("6 · EV transition","EAFO, ACEA, JATO","Monthly","Mixed")}
-     ${srcRow("7 · Competitive intel","Google Trends, SimilarWeb, Semrush, Ahrefs","Weekly","Yes")}
+     ${srcRow("4 · Weather signals","Open-Meteo forecast + ERA5 archive","Daily","No")}
+     ${srcRow("5 · Mobility","Eurostat (tourism, air pax, freight); TomTom optional","Weekly / Monthly","No")}
+     ${srcRow("6 · EV transition","EAFO, ACEA","Monthly","No")}
+     ${srcRow("7 · Competitive intel","Google Trends + Wikimedia Pageviews (SimilarWeb/Semrush/Ahrefs optional)","Weekly","No")}
      ${srcRow("8 · Pricing intel","Oponeo, eMAG, Alza, Pneuboss & local e-tailers","Weekly","No (scrape)")}
      ${srcRow("9 · Regulatory","European Commission, national ministries, ACEA","Event-driven","No")}
    </tbody></table></div>
-   <p class="src">*Free / no-key today: Eurostat, ECB, IMF, EU Oil Bulletin, EAFO, Google Trends, ACEA press. Require API keys: OpenWeather, Meteostat, TomTom, SimilarWeb, Semrush, Ahrefs.</p>
+   <p class="src">*Every implemented collector uses a free, no-key public source: ECB/Frankfurter, Eurostat, EU Oil Bulletin, Open-Meteo, Wikimedia Pageviews (plus free pointers to Google Trends, EAFO, ACEA press). No API keys or secrets are required anywhere. Optional paid upgrades (not required): TomTom congestion; SimilarWeb / Semrush / Ahrefs web-traffic & SEO.</p>
 
    <h3 style="margin:14px 0 6px">Storage schema</h3>
    <p class="src">All collectors write to one long/tidy observation table so any metric is query-able the same way:</p>

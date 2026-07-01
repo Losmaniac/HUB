@@ -8,19 +8,21 @@ macro,consumer_confidence,EC Business & Consumer Survey,ec.europa.eu/economy-fin
 macro,business_confidence,EC Business & Consumer Survey,ec.europa.eu/economy-finance/bcs,monthly,no,partial
 macro,interest_rate_policy,ECB / national central banks,ECB SDW + NCB sites,event,no,partial
 macro,fuel_petrol_diesel,EU Weekly Oil Bulletin,energy.ec.europa.eu/.../weekly-oil-bulletin,weekly,no,pointer
-automotive,car_registrations,ACEA,acea.auto press releases + national authorities,monthly,mixed,pointer
-automotive,lcv_truck_bus_reg,ACEA,acea.auto commercial-vehicle releases,monthly,mixed,pointer
-automotive,segment_mix,JATO,jato.com (commercial),monthly,yes,pointer
+automotive,car_registrations,ACEA,acea.auto press releases + national authorities,monthly,no,pointer
+automotive,lcv_truck_bus_reg,ACEA,acea.auto commercial-vehicle releases,monthly,no,pointer
+automotive,segment_mix,ACEA / EAFO / national authorities,acea.auto + eafo.eu (free open data),monthly,no,pointer
 automotive,parc_age_density,Eurostat / ACEA,road_eqs_carage + ACEA parc report,annual,no,partial
 search,tire_demand_terms,Google Trends,trends.google.com (pytrends),weekly,no,pointer
-weather,temp_snow_frost,OpenWeather,api.openweathermap.org,daily,yes,stub
-weather,history_anomaly,Meteostat,meteostat.net / RapidAPI,daily,yes,stub
-mobility,congestion,TomTom Traffic Index,developer.tomtom.com,weekly,yes,stub
-mobility,tourism_airport_freight,Eurostat,tour_occ + avia_paoc + road_go,monthly,no,partial
-ev,bev_phev_share_stock,EAFO,eafo.eu,monthly,no,pointer
-ev,charging_stations,EAFO,eafo.eu,monthly,no,pointer
+weather,temp_snow_frost,Open-Meteo,https://api.open-meteo.com/v1/forecast (free/no-key),daily,no,yes
+weather,history_anomaly,Open-Meteo Archive (ERA5),https://archive-api.open-meteo.com/v1/archive,daily,no,yes
+mobility,tourism_nights,Eurostat,tour_occ_nim,monthly,no,yes
+mobility,airport_passengers,Eurostat,avia_paoc,monthly,no,yes
+mobility,road_freight,Eurostat,road_go_ta_tott,quarterly,no,partial
+mobility,congestion,TomTom Traffic Index,developer.tomtom.com (no free API — optional upgrade),weekly,yes,optional
+ev,bev_phev_share_stock,EAFO,eafo.eu (free open data),monthly,no,pointer
+ev,charging_stations,EAFO,eafo.eu (free open data),monthly,no,pointer
 competitive,brand_search_share,Google Trends,trends.google.com (pytrends),weekly,no,pointer
-competitive,web_traffic,SimilarWeb,api.similarweb.com,weekly,yes,stub
-competitive,seo_sov,Semrush / Ahrefs,api.semrush.com / ahrefs.com/api,weekly,yes,stub
+competitive,brand_attention_sov,Wikimedia Pageviews,https://wikimedia.org/api/rest_v1/metrics/pageviews (free/no-key),monthly,no,yes
+competitive,web_traffic_seo,SimilarWeb / Semrush / Ahrefs,commercial APIs (no free tier — optional upgrade),weekly,yes,optional
 pricing,tire_prices,Oponeo/eMAG/Alza/Pneuboss,retailer product pages,weekly,no,scrape-stub
 regulatory,winter_law_ev_tariff,European Commission / ministries / ACEA,eur-lex + national ministries,event,no,manual

@@ -10,13 +10,17 @@ cleanly when their API key env var is absent, so this always completes.
 from __future__ import annotations
 import csv, os
 from _common import OUT_DIR, FIELDS
-import collect_fx, collect_eurostat, collect_fuel, collect_keyed_stubs
+import collect_fx, collect_eurostat, collect_fuel
+import collect_weather, collect_mobility, collect_wikipedia
 
+# Every collector below uses a free, no-key public source.
 COLLECTORS = [
     ("FX rates (ECB/Frankfurter)", collect_fx.run),
     ("HICP inflation (Eurostat)",  collect_eurostat.run),
     ("Fuel prices (EU Oil Bulletin)", collect_fuel.run),
-    ("Keyed sources (weather/mobility/web)", collect_keyed_stubs.run),
+    ("Weather forecast + anomaly (Open-Meteo)", collect_weather.run),
+    ("Mobility: tourism + air pax (Eurostat)", collect_mobility.run),
+    ("Brand attention / SoV (Wikimedia)", collect_wikipedia.run),
 ]
 
 

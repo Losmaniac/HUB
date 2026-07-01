@@ -63,17 +63,21 @@ Actions pipeline is what turns the seeded snapshot into a nightly-refreshed data
 | 1 | Macroeconomic | GDP fc, CPI, consumer & business confidence, industrial production, retail sales, fuel & diesel price, interest rate, EUR FX | Eurostat, ECB, OECD, IMF WEO, national central banks, **EU Weekly Oil Bulletin**, Trading Economics | Daily–Monthly | **No** |
 | 2 | Automotive market | PC / LCV / truck / bus regs, EV/PHEV/HEV/SUV/premium/Chinese-OEM regs; parc, avg age, cars/1000 | ACEA, JATO, EAFO, national reg authorities | Monthly / Annual | Mixed |
 | 3 | Tire-demand search | winter/summer/all-season/tire-change + brand + competitor terms | Google Trends | Weekly | **No** |
-| 4 | Weather | avg temp, anomaly, snowfall fc, snow depth, first frost, snow days, rainfall, heatwave days | OpenWeather, Meteostat | Daily | Yes |
-| 5 | Mobility | congestion, commute time, VKT, freight & truck traffic, border crossings, tourism, airport pax | TomTom Traffic Index, Eurostat, national road authorities | Weekly / Monthly | Mixed |
-| 6 | EV transition | BEV/PHEV share, charging stations (+growth), EV stock, Tesla & Chinese-EV regs | EAFO, ACEA, JATO | Monthly | Mixed |
-| 7 | Competitive intel | brand search share; web traffic, sources, geo split; organic/paid traffic, keyword rank, SoV | Google Trends, SimilarWeb, Semrush, Ahrefs | Weekly | Yes |
+| 4 | Weather | avg temp, anomaly, snowfall fc, snow depth, first frost, snow days, rainfall, heatwave days | **Open-Meteo** (forecast + ERA5 archive) | Daily | **No** |
+| 5 | Mobility | congestion, commute time, VKT, freight & truck traffic, border crossings, tourism, airport pax | **Eurostat** (tourism, air pax, freight); TomTom optional for congestion | Weekly / Monthly | **No** for the free stack |
+| 6 | EV transition | BEV/PHEV share, charging stations (+growth), EV stock, Tesla & Chinese-EV regs | EAFO, ACEA | Monthly | **No** |
+| 7 | Competitive intel | brand search share; brand attention / SoV; web traffic, keyword rank | **Google Trends + Wikimedia Pageviews** (SimilarWeb/Semrush/Ahrefs optional) | Weekly | **No** for the free stack |
 | 8 | Pricing intel | prices for key sizes (205/55R16, 225/45R17, 225/40R18, 235/55R19) across 9 brands; ASP, discount depth, promo freq, gap vs Michelin | Oponeo, eMAG, Alza, Pneuboss, local e-tailers | Weekly | No (scrape) |
 | 9 | Regulatory | winter-tire law, EV incentives, fleet tax, Chinese-tire tariffs, labeling, environmental | European Commission, national ministries, ACEA | Event-driven | **No** |
 
-**Free / no-key today** (implemented in `collectors/`): Eurostat, ECB, IMF, EU Oil
-Bulletin, EAFO, Google Trends, ACEA press releases.
-**Require API keys** (stubs + notes provided): OpenWeather, Meteostat, TomTom,
-SimilarWeb, Semrush, Ahrefs.
+**Every implemented collector uses a free, no-key public source** — ECB/Frankfurter,
+Eurostat, EU Oil Bulletin, **Open-Meteo**, **Wikimedia Pageviews**. No API keys or
+secrets are required anywhere in the pipeline. Google Trends, EAFO and ACEA press
+releases are also free and wired as documented pointers.
+
+*Optional paid upgrades* (not required — the free stack already covers the category):
+TomTom for a true congestion index; SimilarWeb / Semrush / Ahrefs for exact web-traffic
+and SEO figures.
 
 ---
 
@@ -134,15 +138,17 @@ Free sources need only Python 3.9+ (standard library — no pip install required
 
 ```bash
 cd market-intel/collectors
-python3 collect_fx.py        # ECB/Frankfurter EUR rates + YoY  → data/out/fx.csv
-python3 collect_eurostat.py  # HICP inflation + more            → data/out/eurostat.csv
-python3 collect_fuel.py      # EU Weekly Oil Bulletin pointer    → data/out/fuel.csv
-python3 run_all.py           # runs every free collector, merges → data/out/observations.csv
+python3 collect_fx.py        # ECB/Frankfurter EUR rates + YoY   → data/out/fx.csv
+python3 collect_eurostat.py  # HICP inflation (Eurostat)         → data/out/eurostat.csv
+python3 collect_fuel.py      # EU Weekly Oil Bulletin            → data/out/fuel.csv
+python3 collect_weather.py   # temp/snow forecast + anomaly (Open-Meteo) → data/out/weather.csv
+python3 collect_mobility.py  # tourism + air pax (Eurostat)      → data/out/mobility.csv
+python3 collect_wikipedia.py # brand attention / SoV (Wikimedia) → data/out/wikipedia.csv
+python3 run_all.py           # runs every collector, merges      → data/out/observations.csv
 ```
 
-Keyed collectors read their key from an environment variable and skip cleanly if it is
-absent (`OPENWEATHER_KEY`, `METEOSTAT_KEY`, `TOMTOM_KEY`, `SIMILARWEB_KEY`,
-`SEMRUSH_KEY`, `AHREFS_KEY`). See `collectors/README.md`.
+No API keys or secrets are needed — every collector uses a free public source. See
+`collectors/README.md`.
 
 ---
 

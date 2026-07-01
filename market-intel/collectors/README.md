@@ -16,6 +16,9 @@ Or individually:
 python3 collect_fx.py         # EUR rates + YoY (ECB via Frankfurter)   -> fx.csv
 python3 collect_eurostat.py   # HICP inflation (Eurostat prc_hicp_manr) -> eurostat.csv
 python3 collect_fuel.py       # petrol/diesel (EU Weekly Oil Bulletin)  -> fuel.csv
+python3 collect_weather.py    # temp/snow forecast + anomaly (Open-Meteo) -> weather.csv
+python3 collect_mobility.py   # tourism + air passengers (Eurostat)     -> mobility.csv
+python3 collect_wikipedia.py  # brand attention / SoV (Wikimedia)       -> wikipedia.csv
 ```
 
 ## Output shape
@@ -35,23 +38,29 @@ sqlite3 mi.db < ../data/schema.sql
 sqlite3 mi.db ".mode csv" ".import --skip 1 ../data/out/observations.csv observations"
 ```
 
-## Keyed sources
+## Sources
 
-`collect_keyed_stubs.py` covers the sources that need an API key. It reads each key from
-an environment variable and **skips cleanly if absent**, so the free pipeline never
-breaks:
+Every collector uses a **free, no-key** public source — nothing needs a secret:
 
-| Env var | Source | Category |
-|---------|--------|----------|
-| `OPENWEATHER_KEY` | OpenWeather | 4 · weather |
-| `METEOSTAT_KEY` | Meteostat | 4 · weather history |
-| `TOMTOM_KEY` | TomTom Traffic Index | 5 · mobility |
-| `SIMILARWEB_KEY` | SimilarWeb | 7 · web traffic |
-| `SEMRUSH_KEY` | Semrush | 7 · SEO / SoV |
-| `AHREFS_KEY` | Ahrefs | 7 · backlinks |
+| Collector | Source | Category | Key? |
+|-----------|--------|----------|:---:|
+| `collect_fx` | ECB reference rates (Frankfurter) | 1 · macro | No |
+| `collect_eurostat` | Eurostat `prc_hicp_manr` | 1 · macro | No |
+| `collect_fuel` | EU Weekly Oil Bulletin | 1 · macro | No |
+| `collect_weather` | Open-Meteo (forecast + ERA5 archive) | 4 · weather | No |
+| `collect_mobility` | Eurostat `tour_occ_nim`, `avia_paoc` | 5 · mobility | No |
+| `collect_wikipedia` | Wikimedia Pageviews | 7 · competitive | No |
 
-Set them as GitHub Actions secrets to activate in CI (see
-`../../.github/workflows/market-intel.yml`).
+Google Trends (categories 3 & 7), EAFO (category 6) and ACEA press (category 2) are also
+free and documented as pointers.
+
+**Optional paid upgrades** (not required — the free stack already covers the category):
+TomTom (true congestion index) and SimilarWeb / Semrush / Ahrefs (exact web-traffic & SEO).
+No secrets are configured in the workflow; add them only if you later choose to wire an
+upgrade.
+
+The Wikimedia API rate-limits shared IPs (HTTP 429); `collect_wikipedia` retries and skips
+cleanly, so the pipeline never breaks — it runs fine from a normal IP / GitHub Actions.
 
 ## Environments behind a proxy
 
