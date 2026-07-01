@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Michelin × Inter Cars — CEE/SEE Aftermarket Market Intelligence</title>
+<style>
+  :root{
+    --bg:#0e1220; --panel:#161c2e; --panel2:#1d2540; --line:#28304d;
+    --ink:#eaeefb; --mut:#93a0c4; --acc:#ffd23f; --acc2:#4f8cff;
+    --good:#25c281; --warn:#ffb020; --bad:#ff5d6c; --chip:#222b47;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0f1c,#0e1220 240px);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:1.45}
+  a{color:var(--acc2)}
+  header{padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+    background:rgba(11,15,28,.92);backdrop-filter:blur(8px)}
+  .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .brand h1{font-size:18px;margin:0;letter-spacing:.2px}
+  .brand .tag{font-size:11px;color:#0e1220;background:var(--acc);padding:2px 8px;border-radius:999px;font-weight:800}
+  .sub{color:var(--mut);font-size:12px;margin-top:4px}
+  .ticker{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .tk{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:12px}
+  .tk b{color:var(--acc)}
+  nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  nav button{background:var(--panel);color:var(--mut);border:1px solid var(--line);border-radius:9px;
+    padding:8px 12px;cursor:pointer;font-size:13px;font-weight:600}
+  nav button:hover{background:var(--panel2);color:var(--ink)}
+  nav button.on{background:var(--acc);color:#0e1220;border-color:var(--acc)}
+  main{padding:20px 22px 80px;max-width:1320px;margin:0 auto}
+  .cadence{display:flex;gap:6px;align-items:center;margin:0 0 16px;flex-wrap:wrap}
+  .cadence span{color:var(--mut);font-size:12px;margin-right:4px}
+  .cadence button{background:var(--panel);border:1px solid var(--line);color:var(--mut);border-radius:999px;
+    padding:5px 12px;cursor:pointer;font-size:12px}
+  .cadence button.on{background:var(--acc2);color:#fff;border-color:var(--acc2)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 18px}
+  .panel h2{margin:0 0 4px;font-size:16px}
+  .panel .note{color:var(--mut);font-size:12px;margin:0 0 14px}
+  .grid{display:grid;gap:14px}
+  .cards{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .kpi .lab{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .kpi .val{font-size:22px;font-weight:800;margin-top:4px}
+  .kpi .d{font-size:12px;margin-top:2px}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--panel)}
+  thead th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;user-select:none}
+  thead th:hover{color:var(--ink)}
+  tbody tr:hover{background:var(--panel2)}
+  .scroll{overflow-x:auto;border-radius:10px}
+  .cell{display:inline-block;min-width:34px;padding:3px 6px;border-radius:6px;font-weight:700;color:#0b0f1c}
+  .rankpill{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;
+    background:var(--chip);font-weight:800;font-size:12px}
+  .flag{margin-right:6px}
+  .bar{height:8px;border-radius:6px;background:var(--chip);overflow:hidden;min-width:60px}
+  .bar>i{display:block;height:100%}
+  .alert{border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:10px 12px;margin:0 0 10px;background:var(--panel2)}
+  .alert.crit{border-left-color:var(--bad)}
+  .alert.high{border-left-color:var(--warn)}
+  .alert.info{border-left-color:var(--acc2)}
+  .alert .t{font-weight:700}
+  .alert .m{color:var(--mut);font-size:12px;margin-top:2px}
+  .sev{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px}
+  .sev.crit{background:rgba(255,93,108,.18);color:var(--bad)}
+  .sev.high{background:rgba(255,176,32,.18);color:var(--warn)}
+  .sev.info{background:rgba(79,140,255,.18);color:var(--acc2)}
+  .country-act{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 12px}
+  .country-act h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .country-act ul{margin:6px 0 0;padding-left:18px}
+  .country-act li{margin:4px 0}
+  .badges{display:flex;gap:6px;flex-wrap:wrap}
+  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--mut);border:1px solid var(--line)}
+  .badge.g{color:var(--good);border-color:rgba(37,194,129,.4)}
+  .badge.w{color:var(--warn);border-color:rgba(255,176,32,.4)}
+  .badge.b{color:var(--bad);border-color:rgba(255,93,108,.4)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:12px;margin-top:8px;align-items:center}
+  .swatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  details{margin:8px 0}
+  summary{cursor:pointer;color:var(--acc2);font-size:13px}
+  .src{font-size:11px;color:var(--mut)}
+  code{background:#0c1120;border:1px solid var(--line);padding:1px 6px;border-radius:6px;font-size:12px}
+  .foot{color:var(--mut);font-size:11px;text-align:center;margin-top:26px;line-height:1.7}
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--mut)}
+  .status-dot.live{background:var(--good);box-shadow:0 0 8px var(--good)}
+  @media(max-width:640px){.brand h1{font-size:15px}main{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="tag">MICHELIN × INTER CARS</span>
+    <h1>CEE / SEE Aftermarket Market-Intelligence Dashboard</h1>
+  </div>
+  <div class="sub">
+    Leading-indicator system across 15 markets — predicts tire demand, premiumization &amp; competitive moves
+    <b>3–6 months ahead</b> of sell-in / sell-out. <span id="asof"></span>
+  </div>
+  <div class="ticker" id="ticker">
+    <div class="tk"><span class="status-dot" id="fxdot"></span><span id="fxstatus">Connecting live FX…</span></div>
+  </div>
+  <nav id="nav"></nav>
+</header>
+
+<main>
+  <div class="cadence" id="cadence">
+    <span>Reporting cadence:</span>
+    <button data-c="daily">Daily</button>
+    <button data-c="weekly" class="on">Weekly</button>
+    <button data-c="monthly">Monthly</button>
+    <button data-c="quarterly">Quarterly</button>
+  </div>
+  <div id="view"></div>
+</main>
+
+<script>
+/* ============================================================================
+   MICHELIN × INTER CARS — CEE/SEE AFTERMARKET MARKET INTELLIGENCE
+   ----------------------------------------------------------------------------
+   Publicly-sourced leading indicators only. No internal Michelin/Inter Cars
+   sell-in, sell-out, margin, revenue, stock or CRM data is used.
+
+   DATA LAYERS
+   - LIVE  : EUR exchange rates fetched client-side from Frankfurter (ECB data).
+   - SEED  : Representative baselines (mid-2026) compiled from public releases
+             (Eurostat, EC Spring 2026 forecast, ACEA, EAFO, EU Weekly Oil
+             Bulletin, Google Trends, national registration authorities).
+             In production these cells are overwritten nightly by the collector
+             pipeline in /market-intel/ (see the "Sources & Method" tab).
+   All seeded figures are decision-support estimates, not official statistics.
+============================================================================ */
+
+const ASOF = "2026-07-01";
+
+/* ---- 15 markets. Fields are documented in market-intel/README.md ---------- */
+const C = [
+  // code,name,flag,ccy,euro
+  {code:"PL",name:"Poland",flag:"🇵🇱",ccy:"PLN",euro:false,
+   gdp:3.3,cpi:4.2,conf:-12,biz:-3,ip:2.6,retail:3.9,rate:5.25,petrol:1.42,diesel:1.47,fxYoY:1.2,
+   reg:8.0,lcv:5.0,truck:-3.0,ev:5.5,phev:3.0,hev:12,suv:52,premium:11,chinaOEM:6.5,parc:27.5,age:15.0,per1000:690,
+   winterYoY:12,summerYoY:18,tireChange:96,michelinYoY:6,competitorYoY:14,chinaTireYoY:28,mShare:20,cShare:18,gShare:12,bShare:10,
+   tAnom:1.1,snowDays:28,snowVsAvg:-8,heatDays:16,winterLaw:"recommended",frost:"late Oct",
+   congestion:118,vktYoY:3.2,freightYoY:2.1,tourismYoY:6,
+   asp:96,discount:18,promoFreq:3,gapVsM:34,
+   chinaTariff:true,evIncentive:"medium",
+   evRegYoY:24,premiumRegYoY:4,fuelYoY:12},
+
+  {code:"CZ",name:"Czechia",flag:"🇨🇿",ccy:"CZK",euro:false,
+   gdp:2.2,cpi:3.1,conf:-9,biz:-2,ip:1.4,retail:2.6,rate:3.5,petrol:1.72,diesel:1.58,fxYoY:-1.7,
+   reg:3.0,lcv:1.5,truck:-5.0,ev:4.2,phev:2.4,hev:14,suv:50,premium:16,chinaOEM:4.5,parc:6.6,age:15.6,per1000:620,
+   winterYoY:8,summerYoY:12,tireChange:104,michelinYoY:4,competitorYoY:9,chinaTireYoY:19,mShare:22,cShare:21,gShare:11,bShare:9,
+   tAnom:0.9,snowDays:34,snowVsAvg:-5,heatDays:12,winterLaw:"conditional",frost:"mid Oct",
+   congestion:112,vktYoY:1.8,freightYoY:1.2,tourismYoY:5,
+   asp:102,discount:15,promoFreq:2,gapVsM:31,
+   chinaTariff:true,evIncentive:"low",
+   evRegYoY:16,premiumRegYoY:2,fuelYoY:8},
+
+  {code:"SK",name:"Slovakia",flag:"🇸🇰",ccy:"EUR",euro:true,
+   gdp:2.0,cpi:3.4,conf:-14,biz:-5,ip:0.9,retail:1.8,rate:2.15,petrol:1.60,diesel:1.55,fxYoY:0,
+   reg:1.5,lcv:0.5,truck:-6.0,ev:3.4,phev:2.0,hev:11,suv:49,premium:12,chinaOEM:5.0,parc:2.7,age:14.8,per1000:500,
+   winterYoY:9,summerYoY:11,tireChange:101,michelinYoY:3,competitorYoY:10,chinaTireYoY:22,mShare:19,cShare:19,gShare:11,bShare:9,
+   tAnom:0.8,snowDays:38,snowVsAvg:0,heatDays:11,winterLaw:"conditional",frost:"mid Oct",
+   congestion:108,vktYoY:1.4,freightYoY:0.8,tourismYoY:4,
+   asp:99,discount:16,promoFreq:2,gapVsM:33,
+   chinaTariff:true,evIncentive:"low",
+   evRegYoY:14,premiumRegYoY:1,fuelYoY:7},
+
+  {code:"HU",name:"Hungary",flag:"🇭🇺",ccy:"HUF",euro:false,
+   gdp:1.7,cpi:4.6,conf:-16,biz:-6,ip:0.5,retail:1.2,rate:6.5,petrol:1.55,diesel:1.60,fxYoY:-10.9,
+   reg:2.5,lcv:1.0,truck:-4.0,ev:7.5,phev:3.6,hev:15,suv:48,premium:10,chinaOEM:9.0,parc:4.2,age:15.2,per1000:430,
+   winterYoY:7,summerYoY:10,tireChange:93,michelinYoY:1,competitorYoY:12,chinaTireYoY:33,mShare:17,cShare:18,gShare:10,bShare:9,
+   tAnom:1.2,snowDays:22,snowVsAvg:-10,heatDays:20,winterLaw:"none",frost:"late Oct",
+   congestion:114,vktYoY:1.1,freightYoY:1.6,tourismYoY:7,
+   asp:94,discount:20,promoFreq:3,gapVsM:37,
+   chinaTariff:true,evIncentive:"high",
+   evRegYoY:31,premiumRegYoY:-2,fuelYoY:9},
+
+  {code:"RO",name:"Romania",flag:"🇷🇴",ccy:"RON",euro:false,
+   gdp:2.6,cpi:5.1,conf:-15,biz:-4,ip:0.7,retail:4.2,rate:6.5,petrol:1.50,diesel:1.55,fxYoY:3.2,
+   reg:9.0,lcv:6.0,truck:-2.0,ev:6.0,phev:2.8,hev:13,suv:47,premium:8,chinaOEM:7.5,parc:8.9,age:16.2,per1000:410,
+   winterYoY:14,summerYoY:16,tireChange:90,michelinYoY:5,competitorYoY:13,chinaTireYoY:30,mShare:18,cShare:17,gShare:10,bShare:9,
+   tAnom:1.0,snowDays:26,snowVsAvg:-6,heatDays:22,winterLaw:"conditional",frost:"late Oct",
+   congestion:120,vktYoY:3.6,freightYoY:2.8,tourismYoY:8,
+   asp:92,discount:21,promoFreq:3,gapVsM:38,
+   chinaTariff:true,evIncentive:"medium",
+   evRegYoY:28,premiumRegYoY:3,fuelYoY:11},
+
+  {code:"BG",name:"Bulgaria",flag:"🇧🇬",ccy:"EUR",euro:true,
+   gdp:2.9,cpi:3.8,conf:-13,biz:-3,ip:0.4,retail:3.4,rate:2.15,petrol:1.53,diesel:1.71,fxYoY:0,
+   reg:6.0,lcv:4.0,truck:-2.0,ev:4.5,phev:2.0,hev:9,suv:45,premium:7,chinaOEM:8.5,parc:3.4,age:17.8,per1000:520,
+   winterYoY:11,summerYoY:13,tireChange:88,michelinYoY:2,competitorYoY:11,chinaTireYoY:35,mShare:15,cShare:16,gShare:9,bShare:8,
+   tAnom:0.9,snowDays:24,snowVsAvg:-4,heatDays:24,winterLaw:"mandatory",frost:"early Nov",
+   congestion:110,vktYoY:2.4,freightYoY:2.0,tourismYoY:9,
+   asp:89,discount:23,promoFreq:4,gapVsM:41,
+   chinaTariff:true,evIncentive:"low",
+   evRegYoY:22,premiumRegYoY:1,fuelYoY:10},
+
+  {code:"HR",name:"Croatia",flag:"🇭🇷",ccy:"EUR",euro:true,
+   gdp:3.0,cpi:3.5,conf:-8,biz:-1,ip:1.6,retail:4.6,rate:2.15,petrol:1.63,diesel:1.60,fxYoY:0,
+   reg:5.0,lcv:3.5,truck:-1.0,ev:5.0,phev:2.6,hev:12,suv:44,premium:11,chinaOEM:5.5,parc:2.0,age:14.5,per1000:480,
+   winterYoY:9,summerYoY:15,tireChange:98,michelinYoY:5,competitorYoY:9,chinaTireYoY:20,mShare:20,cShare:18,gShare:11,bShare:9,
+   tAnom:0.7,snowDays:16,snowVsAvg:-3,heatDays:28,winterLaw:"conditional",frost:"mid Nov",
+   congestion:106,vktYoY:2.8,freightYoY:1.9,tourismYoY:11,
+   asp:100,discount:15,promoFreq:2,gapVsM:32,
+   chinaTariff:true,evIncentive:"medium",
+   evRegYoY:20,premiumRegYoY:4,fuelYoY:9},
+
+  {code:"SI",name:"Slovenia",flag:"🇸🇮",ccy:"EUR",euro:true,
+   gdp:2.3,cpi:3.2,conf:-7,biz:0,ip:1.9,retail:3.1,rate:2.15,petrol:1.58,diesel:1.56,fxYoY:0,
+   reg:3.5,lcv:2.5,truck:-2.0,ev:6.5,phev:3.2,hev:13,suv:46,premium:14,chinaOEM:4.0,parc:1.2,age:11.6,per1000:590,
+   winterYoY:10,summerYoY:12,tireChange:106,michelinYoY:6,competitorYoY:8,chinaTireYoY:17,mShare:23,cShare:20,gShare:11,bShare:9,
+   tAnom:0.6,snowDays:44,snowVsAvg:4,heatDays:14,winterLaw:"mandatory",frost:"early Oct",
+   congestion:104,vktYoY:2.2,freightYoY:2.4,tourismYoY:8,
+   asp:104,discount:13,promoFreq:2,gapVsM:29,
+   chinaTariff:true,evIncentive:"medium",
+   evRegYoY:19,premiumRegYoY:5,fuelYoY:8},
+
+  {code:"GR",name:"Greece",flag:"🇬🇷",ccy:"EUR",euro:true,
+   gdp:2.0,cpi:3.0,conf:-11,biz:-2,ip:1.1,retail:2.4,rate:2.15,petrol:1.79,diesel:1.68,fxYoY:0,
+   reg:4.0,lcv:2.0,truck:-1.0,ev:4.0,phev:2.2,hev:16,suv:43,premium:9,chinaOEM:6.0,parc:5.6,age:16.9,per1000:520,
+   winterYoY:5,summerYoY:14,tireChange:84,michelinYoY:3,competitorYoY:10,chinaTireYoY:24,mShare:17,cShare:16,gShare:12,bShare:9,
+   tAnom:1.3,snowDays:6,snowVsAvg:-2,heatDays:42,winterLaw:"none",frost:"late Nov",
+   congestion:116,vktYoY:2.6,freightYoY:1.7,tourismYoY:12,
+   asp:97,discount:17,promoFreq:3,gapVsM:35,
+   chinaTariff:true,evIncentive:"medium",
+   evRegYoY:18,premiumRegYoY:2,fuelYoY:10},
+
+  {code:"BA",name:"Bosnia & Herz.",flag:"🇧🇦",ccy:"BAM",euro:false,
+   gdp:2.7,cpi:3.6,conf:-17,biz:-6,ip:0.3,retail:2.8,rate:0,petrol:1.32,diesel:1.34,fxYoY:0,
+   reg:4.5,lcv:3.0,truck:-1.0,ev:1.6,phev:1.2,hev:7,suv:42,premium:6,chinaOEM:7.0,parc:1.3,age:17.4,per1000:340,
+   winterYoY:13,summerYoY:12,tireChange:86,michelinYoY:1,competitorYoY:11,chinaTireYoY:34,mShare:14,cShare:15,gShare:9,bShare:8,
+   tAnom:0.5,snowDays:40,snowVsAvg:3,heatDays:20,winterLaw:"mandatory",frost:"mid Oct",
+   congestion:100,vktYoY:2.0,freightYoY:1.5,tourismYoY:10,
+   asp:87,discount:24,promoFreq:4,gapVsM:43,
+   chinaTariff:false,evIncentive:"none",
+   evRegYoY:12,premiumRegYoY:0,fuelYoY:9},
+
+  {code:"RS",name:"Serbia",flag:"🇷🇸",ccy:"RSD",euro:false,
+   gdp:3.4,cpi:4.4,conf:-14,biz:-4,ip:1.2,retail:4.0,rate:5.75,petrol:1.55,diesel:1.58,fxYoY:0.3,
+   reg:6.5,lcv:4.5,truck:0.0,ev:2.4,phev:1.6,hev:9,suv:43,premium:8,chinaOEM:9.5,parc:2.3,age:16.8,per1000:330,
+   winterYoY:12,summerYoY:13,tireChange:89,michelinYoY:2,competitorYoY:12,chinaTireYoY:37,mShare:15,cShare:16,gShare:9,bShare:8,
+   tAnom:1.0,snowDays:28,snowVsAvg:-4,heatDays:24,winterLaw:"mandatory",frost:"late Oct",
+   congestion:112,vktYoY:3.0,freightYoY:2.6,tourismYoY:9,
+   asp:88,discount:23,promoFreq:4,gapVsM:42,
+   chinaTariff:false,evIncentive:"low",
+   evRegYoY:26,premiumRegYoY:2,fuelYoY:10},
+
+  {code:"MD",name:"Moldova",flag:"🇲🇩",ccy:"MDL",euro:false,
+   gdp:2.8,cpi:6.2,conf:-19,biz:-7,ip:-0.5,retail:2.2,rate:6.0,petrol:1.48,diesel:1.52,fxYoY:2.0,
+   reg:5.0,lcv:3.5,truck:0.5,ev:1.2,phev:0.8,hev:6,suv:40,premium:5,chinaOEM:8.0,parc:0.9,age:18.6,per1000:300,
+   winterYoY:12,summerYoY:11,tireChange:85,michelinYoY:0,competitorYoY:10,chinaTireYoY:38,mShare:12,cShare:14,gShare:8,bShare:7,
+   tAnom:0.9,snowDays:30,snowVsAvg:-5,heatDays:26,winterLaw:"mandatory",frost:"late Oct",
+   congestion:104,vktYoY:2.4,freightYoY:2.2,tourismYoY:6,
+   asp:84,discount:26,promoFreq:5,gapVsM:46,
+   chinaTariff:false,evIncentive:"none",
+   evRegYoY:15,premiumRegYoY:-1,fuelYoY:12},
+
+  {code:"LT",name:"Lithuania",flag:"🇱🇹",ccy:"EUR",euro:true,
+   gdp:3.1,cpi:3.3,conf:-6,biz:1,ip:2.2,retail:4.4,rate:2.15,petrol:1.56,diesel:1.52,fxYoY:0,
+   reg:5.5,lcv:4.0,truck:1.0,ev:5.8,phev:3.0,hev:12,suv:47,premium:10,chinaOEM:6.0,parc:1.6,age:15.3,per1000:560,
+   winterYoY:11,summerYoY:12,tireChange:103,michelinYoY:5,competitorYoY:9,chinaTireYoY:23,mShare:19,cShare:18,gShare:11,bShare:9,
+   tAnom:0.8,snowDays:46,snowVsAvg:2,heatDays:8,winterLaw:"mandatory",frost:"mid Oct",
+   congestion:102,vktYoY:2.9,freightYoY:3.2,tourismYoY:7,
+   asp:98,discount:15,promoFreq:2,gapVsM:31,
+   chinaTariff:true,evIncentive:"medium",
+   evRegYoY:23,premiumRegYoY:4,fuelYoY:9},
+
+  {code:"LV",name:"Latvia",flag:"🇱🇻",ccy:"EUR",euro:true,
+   gdp:2.5,cpi:3.4,conf:-8,biz:-1,ip:1.5,retail:3.2,rate:2.15,petrol:1.61,diesel:1.55,fxYoY:0,
+   reg:4.0,lcv:3.0,truck:0.5,ev:4.6,phev:2.4,hev:11,suv:46,premium:9,chinaOEM:6.5,parc:0.9,age:15.9,per1000:490,
+   winterYoY:11,summerYoY:11,tireChange:101,michelinYoY:4,competitorYoY:9,chinaTireYoY:24,mShare:18,cShare:18,gShare:10,bShare:9,
+   tAnom:0.7,snowDays:48,snowVsAvg:3,heatDays:7,winterLaw:"mandatory",frost:"mid Oct",
+   congestion:100,vktYoY:2.5,freightYoY:2.8,tourismYoY:6,
+   asp:96,discount:16,promoFreq:2,gapVsM:33,
+   chinaTariff:true,evIncentive:"low",
+   evRegYoY:19,premiumRegYoY:2,fuelYoY:9},
+
+  {code:"EE",name:"Estonia",flag:"🇪🇪",ccy:"EUR",euro:true,
+   gdp:2.6,cpi:3.1,conf:-5,biz:2,ip:2.4,retail:3.6,rate:2.15,petrol:1.64,diesel:1.57,fxYoY:0,
+   reg:4.5,lcv:3.5,truck:1.0,ev:8.5,phev:3.4,hev:13,suv:47,premium:12,chinaOEM:5.0,parc:0.85,age:14.9,per1000:600,
+   winterYoY:12,summerYoY:12,tireChange:105,michelinYoY:6,competitorYoY:8,chinaTireYoY:21,mShare:21,cShare:19,gShare:11,bShare:9,
+   tAnom:0.6,snowDays:50,snowVsAvg:4,heatDays:6,winterLaw:"mandatory",frost:"early Oct",
+   congestion:98,vktYoY:2.7,freightYoY:2.5,tourismYoY:5,
+   asp:100,discount:14,promoFreq:2,gapVsM:30,
+   chinaTariff:true,evIncentive:"high",
+   evRegYoY:27,premiumRegYoY:5,fuelYoY:8},
+];
+
+/* ---------------------------------------------------------------- helpers -- */
+const clamp=(x,a=0,b=100)=>Math.max(a,Math.min(b,x));
+const norm=(v,lo,hi)=>clamp(((v-lo)/(hi-lo))*100);      // linear map -> 0..100
+const inv =(v,lo,hi)=>clamp(100-norm(v,lo,hi));         // inverted
+const r0=n=>Math.round(n), r1=n=>Math.round(n*10)/10;
+const lawScore={mandatory:100,conditional:65,recommended:40,none:10};
+
+/* ---------------------------------------------------- index computations --- */
+function indices(c){
+  // Winter Severity Index — colder anomaly + more snow days + snowfall vs avg + law
+  const cold=inv(c.tAnom,-2.5,2.5);
+  const snowD=norm(c.snowDays,4,52);
+  const snowA=norm(c.snowVsAvg,-15,15);
+  const WSI=0.35*cold+0.30*snowD+0.20*snowA+0.15*lawScore[c.winterLaw];
+
+  // Tire Demand Index — search momentum + replacement pressure + mobility + winter
+  const winSearch=norm(c.winterYoY,-15,40);
+  const sumSearch=norm(c.summerYoY,-10,30);
+  const change=norm(c.tireChange,75,130);
+  const replace=norm(c.age,11,19);                       // older parc => more replacement
+  const mob=norm(c.vktYoY,-2,5);
+  const TDI=0.22*winSearch+0.15*sumSearch+0.18*change+0.15*replace+0.12*mob+0.18*WSI;
+
+  // Premiumization Index — premium+SUV mix + confidence + ASP + GDP + premium search
+  const prem=norm(c.premium,4,20);
+  const suv=norm(c.suv,38,58);
+  const conf=norm(c.conf,-22,0);
+  const asp=norm(c.asp,82,110);
+  const gdp=norm(c.gdp,0.5,4);
+  const mShare=norm(c.mShare,10,26);
+  const PZI=0.26*prem+0.17*suv+0.17*conf+0.15*asp+0.13*gdp+0.12*mShare;
+
+  // EV Opportunity Index — BEV+PHEV share + EV reg growth + Estonia-style readiness
+  const evS=norm(c.ev,1,10);
+  const phS=norm(c.phev,0.5,4);
+  const evG=norm(c.evRegYoY,10,32);
+  const inc={high:100,medium:65,low:35,none:10}[c.evIncentive];
+  const EVI=0.42*evS+0.18*phS+0.25*evG+0.15*inc;
+
+  // Competitive Pressure Index (higher = tougher for Michelin)
+  const compSearch=norm(c.competitorYoY,5,18);
+  const compShare=norm(c.cShare+c.gShare+c.bShare,30,50);
+  const disc=norm(c.discount,12,28);
+  const CPI=0.40*compSearch+0.30*compShare+0.30*disc;
+
+  // Chinese Brand Threat Index (higher = bigger budget-tier threat)
+  const cnSearch=norm(c.chinaTireYoY,15,40);
+  const cnOEM=norm(c.chinaOEM,3,10);
+  const gap=norm(c.gapVsM,28,48);
+  const tariff=c.chinaTariff?30:90;                      // EU anti-dumping duties blunt threat
+  const CBTI=0.34*cnSearch+0.28*cnOEM+0.22*gap+0.16*tariff;
+
+  // Market Growth Score
+  const regS=norm(c.reg,-4,10);
+  const gdpS=norm(c.gdp,0.5,4);
+  const retS=norm(c.retail,1,5);
+  const ipS=norm(c.ip,-1,3);
+  const MGS=0.35*regS+0.28*gdpS+0.22*retS+0.15*ipS;
+
+  // Country Opportunity Score — leading-indicator weighted, premium-defensible demand
+  const COS=0.22*TDI+0.20*PZI+0.18*MGS+0.15*EVI+0.15*WSI+0.10*(100-CBTI);
+
+  return {WSI,TDI,PZI,EVI,CPI,CBTI,MGS,COS};
+}
+C.forEach(c=>c.ix=indices(c));
+
+/* ---------------------------------------------------- early-warning rules -- */
+const RULES=[
+  {k:"winterYoY", sev:"high", op:">", th:30, dir:1, t:c=>`Winter-tire searches +${c.winterYoY}%`, m:"Demand pull-forward; secure winter allocation & retail stock."},
+  {k:"snowVsAvg", sev:"high", op:">", th:0,  dir:1, t:c=>`Snowfall forecast +${c.snowVsAvg}% vs seasonal avg`, m:"Above-average snow → winter/all-season upside; brief field teams."},
+  {k:"michelinYoY",sev:"crit",op:"<", th:-20,dir:-1,t:c=>`Michelin search ${c.michelinYoY}% YoY`, m:"Brand demand erosion — review media weight & share of voice."},
+  {k:"competitorYoY",sev:"high",op:">",th:20, dir:1, t:c=>`Competitor search +${c.competitorYoY}%`, m:"Rival campaign live — check pricing & POS visibility."},
+  {k:"chinaTireYoY",sev:"crit",op:">",th:25, dir:1, t:c=>`Chinese-brand search +${c.chinaTireYoY}%`, m:"Budget-tier acceleration — defend value line on TCO & safety."},
+  {k:"fuelYoY",   sev:"info", op:">", th:10, dir:1, t:c=>`Fuel prices +${c.fuelYoY}% YoY`, m:"Cost pressure lifts fuel-efficiency & long-life messaging (e.max range)."},
+  {k:"evRegYoY",  sev:"info", op:">", th:20, dir:1, t:c=>`EV registrations +${c.evRegYoY}%`, m:"EV fleet growth — push EV-ready fitments 3–6m ahead of first replacement."},
+  {k:"premiumRegYoY",sev:"high",op:"<",th:-15,dir:-1,t:c=>`Premium-vehicle registrations ${c.premiumRegYoY}%`, m:"Premium demand softening — protect premium tire mix / trade-down risk."},
+];
+function alertsFor(c){
+  const out=[];
+  for(const r of RULES){
+    const v=c[r.k];
+    if(r.op===">"&&v>r.th) out.push({c,r});
+    if(r.op==="<"&&v<r.th) out.push({c,r});
+  }
+  return out;
+}
+const ALL_ALERTS=C.flatMap(alertsFor);
+
+/* ---------------------------------------------------------------- colours -- */
+function heat(score){ // 0..100 -> red..green
+  const h=clamp(score,0,100)*1.2; // 0=red,120=green
+  return `hsl(${h} 70% 46%)`;
+}
+function heatInv(score){ return heat(100-score); }
+
+/* -------------------------------------------------------------- rendering -- */
+const view=document.getElementById("view");
+let TAB="overview", CADENCE="weekly", SORT={key:"COS",dir:-1};
+
+const TABS=[
+  ["overview","Country Ranking"],
+  ["indices","Leading Indicators"],
+  ["warning","Early Warning"],
+  ["competitive","Competitive Threat"],
+  ["premium","Premium Opportunity"],
+  ["actions","Recommended Actions"],
+  ["method","Sources & Method"],
+];
+
+function buildNav(){
+  const nav=document.getElementById("nav");
+  nav.innerHTML="";
+  TABS.forEach(([k,label])=>{
+    const b=document.createElement("button");
+    b.textContent=label; b.dataset.k=k;
+    if(k===TAB) b.className="on";
+    b.onclick=()=>{TAB=k;buildNav();render();window.scrollTo({top:0});};
+    nav.appendChild(b);
+  });
+}
+
+/* ---- cadence focus copy ---- */
+const CADENCE_FOCUS={
+  daily:"Daily pulse — live FX, fuel deltas, weather anomalies & spiking search terms. Watch for early-warning triggers.",
+  weekly:"Weekly view — Google-Trends momentum, price-index moves and the rolling early-warning board.",
+  monthly:"Monthly view — registrations, EV/premium mix, macro prints and the full country ranking refresh.",
+  quarterly:"Quarterly strategy review — index trajectories, parc dynamics, regulatory shifts and country prioritisation.",
+};
+
+/* ==== TAB: OVERVIEW / RANKING ============================================== */
+function renderOverview(){
+  const rows=[...C].sort((a,b)=>b.ix.COS-a.ix.COS);
+  const top=rows[0], avgCOS=r0(C.reduce((s,c)=>s+c.ix.COS,0)/C.length);
+  const crit=ALL_ALERTS.filter(a=>a.r.sev==="crit").length;
+  const hotEV=[...C].sort((a,b)=>b.ix.EVI-a.ix.EVI)[0];
+
+  let h=`<div class="panel"><h2>Executive summary</h2>
+    <p class="note">${CADENCE_FOCUS[CADENCE]}</p>
+    <div class="grid cards">
+      ${kpi("Top opportunity",top.flag+" "+top.name,`Score ${r0(top.ix.COS)}/100`,"good")}
+      ${kpi("Avg opportunity",avgCOS+"/100","15-market mean","")}
+      ${kpi("Critical alerts",crit,"active early-warnings",crit>0?"bad":"good")}
+      ${kpi("EV-tire leader",hotEV.flag+" "+hotEV.name,`EVI ${r0(hotEV.ix.EVI)}`,"info")}
+    </div></div>`;
+
+  // ranking table
+  h+=`<div class="panel"><h2>Country attractiveness ranking</h2>
+    <p class="note">Country Opportunity Score = 0.22·TDI + 0.20·Premiumization + 0.18·Market-Growth + 0.15·EV + 0.15·Winter-Severity + 0.10·(100−Chinese-Threat). Click a header to sort.</p>
+    <div class="scroll"><table><thead><tr>
+      ${th("#","rank")}${th("Market","name")}${th("Opportunity","COS")}${th("Tire Demand","TDI")}
+      ${th("Premium","PZI")}${th("Growth","MGS")}${th("EV","EVI")}${th("Winter","WSI")}
+      ${th("Comp. Pressure","CPI")}${th("China Threat","CBTI")}${th("Alerts","alerts")}
+    </tr></thead><tbody>`;
+  const sorted=sortRows(rows);
+  sorted.forEach((c,i)=>{
+    const a=alertsFor(c);
+    h+=`<tr><td><span class="rankpill">${rank(c,rows)}</span></td>
+      <td><span class="flag">${c.flag}</span>${c.name} <span class="src">${c.ccy}</span></td>
+      ${hcell(c.ix.COS)}${hcell(c.ix.TDI)}${hcell(c.ix.PZI)}${hcell(c.ix.MGS)}
+      ${hcell(c.ix.EVI)}${hcell(c.ix.WSI)}${hcell(c.ix.CPI,true)}${hcell(c.ix.CBTI,true)}
+      <td>${a.length?`<span class="sev ${topSev(a)}">${a.length}</span>`:"—"}</td></tr>`;
+  });
+  h+=`</tbody></table></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:${heat(85)}"></span>High opportunity / low threat</span>
+      <span><span class="swatch" style="background:${heat(50)}"></span>Moderate</span>
+      <span><span class="swatch" style="background:${heat(15)}"></span>Low opportunity / high threat</span>
+      <span class="src">Threat/pressure columns are inverted (green = favourable for Michelin).</span>
+    </div></div>`;
+
+  // opportunity heatmap
+  h+=heatmapPanel();
+  view.innerHTML=h;
+  wireSort();
+}
+
+function heatmapPanel(){
+  const metrics=[["TDI","Tire Demand"],["PZI","Premium"],["MGS","Growth"],["EVI","EV"],["WSI","Winter"],["CPI","Comp.Press*"],["CBTI","China Thr.*"],["COS","Opportunity"]];
+  const rows=[...C].sort((a,b)=>b.ix.COS-a.ix.COS);
+  let h=`<div class="panel"><h2>Market-opportunity heatmap</h2>
+   <p class="note">All eight indices per market, 0–100. Columns marked * are risk indices — shown inverted so green is always the favourable direction.</p>
+   <div class="scroll"><table><thead><tr><th>Market</th>`;
+  metrics.forEach(m=>h+=`<th>${m[1]}</th>`);
+  h+=`</tr></thead><tbody>`;
+  rows.forEach(c=>{
+    h+=`<tr><td><span class="flag">${c.flag}</span>${c.name}</td>`;
+    metrics.forEach(m=>{
+      const inverted=(m[0]==="CPI"||m[0]==="CBTI");
+      h+=hcell(c.ix[m[0]],inverted);
+    });
+    h+=`</tr>`;
+  });
+  h+=`</tbody></table></div></div>`;
+  return h;
+}
+
+/* ==== TAB: INDICES ======================================================== */
+function renderIndices(){
+  let h=`<div class="panel"><h2>Leading-indicator library</h2>
+   <p class="note">Eight composite indices computed from public leading indicators. Each is transparent and reproducible — formula shown per card.</p></div>`;
+
+  const defs=[
+    ["TDI","Tire Demand Index","Winter+summer search momentum, tire-change search, parc replacement pressure, mobility (VKT) and winter severity.","0.22 winter-search + 0.15 summer-search + 0.18 tire-change + 0.15 replacement(age) + 0.12 VKT + 0.18 WSI"],
+    ["PZI","Premiumization Index","Premium & SUV registration mix, consumer confidence, ASP trend, GDP and Michelin search share.","0.26 premium-share + 0.17 SUV + 0.17 confidence + 0.15 ASP + 0.13 GDP + 0.12 Michelin-share"],
+    ["EVI","EV Opportunity Index","BEV+PHEV share, EV registration growth and incentive strength — proxy for EV-fitment tire demand.","0.42 BEV-share + 0.18 PHEV + 0.25 EV-reg-growth + 0.15 incentive"],
+    ["WSI","Winter Severity Index","Temperature anomaly, snow days, snowfall vs seasonal average and winter-tire legislation.","0.35 cold-anomaly + 0.30 snow-days + 0.20 snowfall-vs-avg + 0.15 winter-law"],
+    ["MGS","Market Growth Score","Car registrations, GDP, retail sales and industrial production.","0.35 registrations + 0.28 GDP + 0.22 retail + 0.15 industrial-production"],
+    ["CPI","Competitive Pressure Index","Competitor search momentum, combined Conti/Goodyear/Bridgestone search share and market discount depth.","0.40 competitor-search + 0.30 competitor-share + 0.30 discount-depth"],
+    ["CBTI","Chinese Brand Threat Index","Chinese-brand search growth, Chinese-OEM registration share, price gap vs Michelin and anti-dumping tariff cover.","0.34 China-search + 0.28 China-OEM + 0.22 price-gap + 0.16 tariff-exposure"],
+    ["COS","Country Opportunity Score","Blended, leading-indicator weighted attractiveness for premium tire demand.","0.22 TDI + 0.20 PZI + 0.18 MGS + 0.15 EVI + 0.15 WSI + 0.10 (100−CBTI)"],
+  ];
+  defs.forEach(([k,name,desc,formula])=>{
+    const rows=[...C].sort((a,b)=>b.ix[k]-a.ix[k]);
+    const risk=(k==="CPI"||k==="CBTI");
+    h+=`<div class="panel"><h2>${name} <span class="src">(${k})${risk?" · risk index — lower is better for Michelin":""}</span></h2>
+      <p class="note">${desc}</p>
+      <div class="scroll"><table><tbody>`;
+    rows.forEach(c=>{
+      const s=c.ix[k];
+      h+=`<tr><td style="min-width:170px"><span class="flag">${c.flag}</span>${c.name}</td>
+        <td style="text-align:left;width:100%"><div class="bar"><i style="width:${r0(s)}%;background:${risk?heatInv(s):heat(s)}"></i></div></td>
+        <td>${r0(s)}</td></tr>`;
+    });
+    h+=`</tbody></table></div>
+      <details><summary>Formula</summary><p class="src"><code>${formula}</code> — all inputs normalised 0–100 before weighting.</p></details></div>`;
+  });
+  view.innerHTML=h;
+}
+
+/* ==== TAB: EARLY WARNING =================================================== */
+function renderWarning(){
+  const order={crit:0,high:1,info:2};
+  const alerts=[...ALL_ALERTS].sort((a,b)=>order[a.r.sev]-order[b.r.sev]);
+  const n=k=>alerts.filter(a=>a.r.sev===k).length;
+
+  let h=`<div class="panel"><h2>Early-warning system</h2>
+   <p class="note">Rule-based triggers on public leading indicators. Thresholds are fixed per the brief; each firing links a market to a recommended first action. ${alerts.length} active triggers.</p>
+   <div class="grid cards">
+     ${kpi("Critical",n("crit"),"brand / budget-tier risk",n("crit")?"bad":"good")}
+     ${kpi("High",n("high"),"demand & competitive",n("high")?"warn":"good")}
+     ${kpi("Info",n("info"),"macro / EV signals","info")}
+     ${kpi("Markets flagged",new Set(alerts.map(a=>a.c.code)).size,"of 15","")}
+   </div></div>`;
+
+  h+=`<div class="panel"><h2>Active triggers</h2>`;
+  const thresholds=[
+    "Winter-tire searches +>30%","Snowfall forecast > seasonal avg","Michelin search −>20%",
+    "Competitor search +>20%","Chinese-tire search +>25%","Fuel prices +>10%",
+    "EV registrations +>20%","Premium-vehicle registrations −>15%"];
+  h+=`<p class="note">Monitored: ${thresholds.map(t=>`<code>${t}</code>`).join(" ")}</p>`;
+  alerts.forEach(({c,r})=>{
+    h+=`<div class="alert ${r.sev}">
+      <div class="t"><span class="sev ${r.sev}">${r.sev}</span> ${c.flag} ${c.name} — ${r.t(c)}</div>
+      <div class="m">${r.m}</div></div>`;
+  });
+  if(!alerts.length) h+=`<p class="note">No triggers currently firing.</p>`;
+  h+=`</div>`;
+  view.innerHTML=h;
+}
+
+/* ==== TAB: COMPETITIVE ===================================================== */
+function renderCompetitive(){
+  const rows=[...C].sort((a,b)=>b.ix.CBTI-a.ix.CBTI);
+  let h=`<div class="panel"><h2>Competitive &amp; Chinese-brand threat map</h2>
+   <p class="note">Search share of voice (Google Trends proxy), competitor momentum, budget-tier pressure and pricing gap. Ranked by Chinese Brand Threat Index.</p>
+   <div class="scroll"><table><thead><tr>
+     <th>Market</th><th>Michelin SoV</th><th>Continental</th><th>Goodyear</th><th>Bridgestone</th>
+     <th>China search YoY</th><th>China OEM %</th><th>Price gap vs M.</th><th>Comp.Press.</th><th>China Threat</th>
+   </tr></thead><tbody>`;
+  rows.forEach(c=>{
+    const sov=c.mShare/(c.mShare+c.cShare+c.gShare+c.bShare)*100;
+    h+=`<tr><td><span class="flag">${c.flag}</span>${c.name}</td>
+      <td><b>${r0(sov)}%</b></td>
+      <td>${c.cShare}%</td><td>${c.gShare}%</td><td>${c.bShare}%</td>
+      <td style="color:${c.chinaTireYoY>25?'var(--bad)':'var(--ink)'}">+${c.chinaTireYoY}%</td>
+      <td>${c.chinaOEM}%</td>
+      <td>${c.gapVsM}%</td>
+      ${hcell(c.ix.CPI,true)}${hcell(c.ix.CBTI,true)}</tr>`;
+  });
+  h+=`</tbody></table></div>
+    <div class="legend"><span class="src">Michelin SoV = Michelin share of the five-brand search basket. Threat/pressure cells inverted (green = favourable). China-search cells in red exceed the +25% early-warning threshold.</span></div></div>`;
+
+  // share-of-voice bars
+  h+=`<div class="panel"><h2>Brand share of voice (search basket)</h2><p class="note">Relative Google-Trends interest, Michelin vs three premium rivals.</p>`;
+  [...C].sort((a,b)=>b.mShare-a.mShare).forEach(c=>{
+    const tot=c.mShare+c.cShare+c.gShare+c.bShare;
+    const seg=(v,col)=>`<i style="width:${v/tot*100}%;background:${col}"></i>`;
+    h+=`<div style="margin:8px 0"><div class="src" style="margin-bottom:3px">${c.flag} ${c.name}</div>
+      <div class="bar" style="display:flex">
+      ${seg(c.mShare,"var(--acc)")}${seg(c.cShare,"#ff8a3d")}${seg(c.gShare,"#4f8cff")}${seg(c.bShare,"#25c281")}
+      </div></div>`;
+  });
+  h+=`<div class="legend">
+    <span><span class="swatch" style="background:var(--acc)"></span>Michelin</span>
+    <span><span class="swatch" style="background:#ff8a3d"></span>Continental</span>
+    <span><span class="swatch" style="background:#4f8cff"></span>Goodyear</span>
+    <span><span class="swatch" style="background:#25c281"></span>Bridgestone</span></div></div>`;
+  view.innerHTML=h;
+}
+
+/* ==== TAB: PREMIUM ======================================================== */
+function renderPremium(){
+  const rows=[...C].sort((a,b)=>b.ix.PZI-a.ix.PZI);
+  let h=`<div class="panel"><h2>Premium tire opportunity ranking</h2>
+   <p class="note">Where premiumization signals point to upside for Pilot Sport, Primacy, CrossClimate and Alpin. Ranked by Premiumization Index.</p>
+   <div class="scroll"><table><thead><tr>
+     <th>Market</th><th>Premium mix</th><th>SUV mix</th><th>Consumer conf.</th><th>ASP index</th>
+     <th>Michelin SoV*</th><th>EV upside</th><th>Premiumization</th>
+   </tr></thead><tbody>`;
+  rows.forEach(c=>{
+    h+=`<tr><td><span class="flag">${c.flag}</span>${c.name}</td>
+      <td>${c.premium}%</td><td>${c.suv}%</td><td>${c.conf}</td><td>${c.asp}</td>
+      <td>${c.mShare}%</td>${hcell(c.ix.EVI)}${hcell(c.ix.PZI)}</tr>`;
+  });
+  h+=`</tbody></table></div><div class="legend"><span class="src">*Michelin share of five-brand search basket. EV upside = EV Opportunity Index (EV fitments skew premium: larger rims, EV-specific compounds, faster wear).</span></div></div>`;
+
+  // product-line pointers
+  h+=`<div class="panel"><h2>Range-to-signal mapping</h2><p class="note">Which Michelin lines the leading indicators favour, per market cluster.</p>`;
+  const cl=[
+    ["Winter / all-season core","CrossClimate 2, Alpin 6/7",[...C].filter(c=>c.ix.WSI>=60).map(c=>c.flag+c.code)],
+    ["Premium performance","Pilot Sport 5 / EV",[...C].filter(c=>c.ix.PZI>=55).map(c=>c.flag+c.code)],
+    ["Touring premium","Primacy 4+/5",[...C].filter(c=>c.premium>=11).map(c=>c.flag+c.code)],
+    ["EV-ready fitments","e.Primacy, Pilot Sport EV",[...C].filter(c=>c.ix.EVI>=55).map(c=>c.flag+c.code)],
+    ["Value-defence tier","Defend vs budget imports (TCO/safety)",[...C].filter(c=>c.ix.CBTI>=60).map(c=>c.flag+c.code)],
+  ];
+  cl.forEach(([seg,prod,mk])=>{
+    h+=`<div class="country-act"><h3>${seg} <span class="src">${prod}</span></h3>
+      <div class="badges">${mk.length?mk.map(m=>`<span class="badge g">${m}</span>`).join(""):'<span class="src">no market currently over threshold</span>'}</div></div>`;
+  });
+  h+=`</div>`;
+  view.innerHTML=h;
+}
+
+/* ==== TAB: ACTIONS ======================================================== */
+function recs(c){
+  const out=[];
+  if(c.ix.WSI>=60) out.push(`Pre-position <b>CrossClimate 2 / Alpin</b> and brief Inter Cars branches — high winter severity${c.winterLaw==="mandatory"?" + mandatory winter-tire law":""}. Launch winter-readiness push by early September.`);
+  if(c.ix.CBTI>=60) out.push(`<b>Defend the value tier:</b> Chinese-brand search +${c.chinaTireYoY}% and price gap ${c.gapVsM}%. Lead with total-cost-of-ownership, mileage warranty and wet-braking/safety proof points.`);
+  if(c.ix.PZI>=55) out.push(`<b>Premium push:</b> strong premiumization (index ${r0(c.ix.PZI)}) — weight Pilot Sport / Primacy and SUV fitments; support with premium retail POS.`);
+  if(c.ix.EVI>=55) out.push(`<b>EV pre-seeding:</b> EV growth (EVI ${r0(c.ix.EVI)}); position EV-ready range now — first OE-tire replacements land 3–6 months out.`);
+  if(c.competitorYoY>=12) out.push(`Rival search momentum +${c.competitorYoY}% — verify pricing parity and share of voice; consider defensive media weight.`);
+  if(c.fuelYoY>=10) out.push(`Fuel +${c.fuelYoY}% YoY — foreground fuel-efficiency & long-life messaging (rolling-resistance / e.max).`);
+  if(c.ix.MGS>=60) out.push(`<b>Invest for growth:</b> Market-Growth Score ${r0(c.ix.MGS)} — prioritise distribution depth and range availability with Inter Cars.`);
+  if(c.premiumRegYoY<0) out.push(`Premium registrations ${c.premiumRegYoY}% — monitor trade-down risk; protect premium mix with targeted offers, avoid broad discounting.`);
+  if(!out.length) out.push(`Hold position — no leading indicator over threshold this cycle. Maintain baseline SoV and monitor weekly.`);
+  return out;
+}
+function renderActions(){
+  const rows=[...C].sort((a,b)=>b.ix.COS-a.ix.COS);
+  let h=`<div class="panel"><h2>Recommended marketing actions by market</h2>
+   <p class="note">Rules fire off the leading indicators above — designed to act 3–6 months before movements reach sell-in / sell-out. Ordered by Country Opportunity Score.</p></div>`;
+  rows.forEach(c=>{
+    const badges=[];
+    if(c.ix.WSI>=60) badges.push(`<span class="badge w">Winter ${r0(c.ix.WSI)}</span>`);
+    if(c.ix.PZI>=55) badges.push(`<span class="badge g">Premium ${r0(c.ix.PZI)}</span>`);
+    if(c.ix.EVI>=55) badges.push(`<span class="badge g">EV ${r0(c.ix.EVI)}</span>`);
+    if(c.ix.CBTI>=60) badges.push(`<span class="badge b">China-threat ${r0(c.ix.CBTI)}</span>`);
+    if(c.ix.CPI>=60) badges.push(`<span class="badge b">Comp-pressure ${r0(c.ix.CPI)}</span>`);
+    h+=`<div class="country-act"><h3><span class="rankpill">${rank(c,rows)}</span> ${c.flag} ${c.name}
+        <span class="src">Opportunity ${r0(c.ix.COS)}/100</span> <span class="badges">${badges.join("")}</span></h3>
+      <ul>${recs(c).map(r=>`<li>${r}</li>`).join("")}</ul></div>`;
+  });
+  view.innerHTML=h;
+}
+
+/* ==== TAB: METHOD ========================================================= */
+function renderMethod(){
+  view.innerHTML=`<div class="panel"><h2>Data sources &amp; methodology</h2>
+   <p class="note">Publicly-sourced leading indicators only. No internal Michelin sell-in, Inter Cars sell-out, margin, revenue, stock or CRM data is used anywhere in this system.</p>
+
+   <h3 style="margin:14px 0 6px">Live layer (fetched now, in your browser)</h3>
+   <ul>
+     <li><b>EUR exchange rates</b> — <a href="https://www.frankfurter.app" target="_blank" rel="noopener">Frankfurter</a> (ECB reference rates). Live for PLN, CZK, HUF, RON; drives the currency / import-cost signal. Pegged (BAM) and euro markets are fixed.</li>
+   </ul>
+
+   <h3 style="margin:14px 0 6px">Automated collection layer (nightly pipeline — see repo)</h3>
+   <p class="src">The <code>market-intel/</code> folder contains runnable collectors and a scheduled GitHub Actions workflow that overwrite the seeded cells below with fresh public data. Category → source mapping:</p>
+   <div class="scroll"><table><thead><tr><th>Category</th><th>Primary public sources</th><th>Cadence</th><th>Key?</th></tr></thead><tbody>
+     ${srcRow("1 · Macroeconomic","Eurostat, ECB, OECD, IMF WEO, national central banks, EU Weekly Oil Bulletin","Daily–Monthly","No*")}
+     ${srcRow("2 · Automotive market","ACEA, JATO, EAFO, national registration authorities","Monthly / Annual","Mixed")}
+     ${srcRow("3 · Tire-demand search","Google Trends","Weekly","No")}
+     ${srcRow("4 · Weather signals","Open-Meteo forecast + ERA5 archive","Daily","No")}
+     ${srcRow("5 · Mobility","Eurostat (tourism, air pax, freight); TomTom optional","Weekly / Monthly","No")}
+     ${srcRow("6 · EV transition","EAFO, ACEA","Monthly","No")}
+     ${srcRow("7 · Competitive intel","Google Trends + Wikimedia Pageviews (SimilarWeb/Semrush/Ahrefs optional)","Weekly","No")}
+     ${srcRow("8 · Pricing intel","Oponeo, eMAG, Alza, Pneuboss & local e-tailers","Weekly","No (scrape)")}
+     ${srcRow("9 · Regulatory","European Commission, national ministries, ACEA","Event-driven","No")}
+   </tbody></table></div>
+   <p class="src">*Every implemented collector uses a free, no-key public source: ECB/Frankfurter, Eurostat, EU Oil Bulletin, Open-Meteo, Wikimedia Pageviews (plus free pointers to Google Trends, EAFO, ACEA press). No API keys or secrets are required anywhere. Optional paid upgrades (not required): TomTom congestion; SimilarWeb / Semrush / Ahrefs web-traffic & SEO.</p>
+
+   <h3 style="margin:14px 0 6px">Storage schema</h3>
+   <p class="src">All collectors write to one long/tidy observation table so any metric is query-able the same way:</p>
+   <p><code>observations(country, date, category, metric, value, unit, source, ingested_at)</code></p>
+
+   <h3 style="margin:14px 0 6px">Leading vs lagging</h3>
+   <p class="note">Weighting deliberately favours <b>leading</b> indicators (search momentum, weather anomalies, registrations mix, EV growth, macro confidence) over lagging ones, so the composite scores move 3–6 months before sell-in / sell-out. Every index formula is shown on the <b>Leading Indicators</b> tab.</p>
+
+   <h3 style="margin:14px 0 6px">Data status</h3>
+   <p class="note"><span class="status-dot live"></span>Live: EUR FX. &nbsp; Seeded (mid-2026 public baselines, refreshed by pipeline): all other cells — anchored to EC Spring-2026 forecast, ACEA 2026 YTD registrations, EU Weekly Oil Bulletin (Jun 2026) and Google Trends. Treat seeded values as decision-support estimates, not official statistics.</p>
+  </div>`;
+}
+function srcRow(cat,src,cad,key){return `<tr><td>${cat}</td><td style="text-align:left;white-space:normal">${src}</td><td>${cad}</td><td>${key}</td></tr>`;}
+
+/* ---------------------------------------------------------- small helpers -- */
+function kpi(lab,val,d,cls){return `<div class="kpi"><div class="lab">${lab}</div><div class="val">${val}</div><div class="d ${cls}" style="color:${cls==='good'?'var(--good)':cls==='bad'?'var(--bad)':cls==='warn'?'var(--warn)':cls==='info'?'var(--acc2)':'var(--mut)'}">${d}</div></div>`;}
+function hcell(s,inverted){const col=inverted?heatInv(s):heat(s);return `<td><span class="cell" style="background:${col}">${r0(s)}</span></td>`;}
+function th(label,key){return `<th data-sort="${key}">${label}</th>`;}
+function rank(c,rows){return rows.findIndex(x=>x.code===c.code)+1;}
+function topSev(a){if(a.some(x=>x.r.sev==="crit"))return"crit";if(a.some(x=>x.r.sev==="high"))return"high";return"info";}
+function sortRows(rows){
+  const k=SORT.key;
+  const val=c=>{
+    if(k==="rank"||k==="COS")return c.ix.COS;
+    if(k==="name")return c.name;
+    if(k==="alerts")return alertsFor(c).length;
+    if(c.ix[k]!==undefined)return c.ix[k];
+    return c[k]||0;
+  };
+  const arr=[...rows].sort((a,b)=>{const va=val(a),vb=val(b);
+    if(typeof va==="string")return SORT.dir*va.localeCompare(vb);
+    return SORT.dir*(va-vb);});
+  return arr;
+}
+function wireSort(){
+  document.querySelectorAll("th[data-sort]").forEach(t=>{
+    t.onclick=()=>{const k=t.dataset.sort;
+      if(SORT.key===k)SORT.dir*=-1;else{SORT.key=k;SORT.dir=(k==="name")?1:-1;}
+      render();};
+  });
+}
+
+/* ------------------------------------------------------------------ render */
+function render(){
+  if(TAB==="overview")renderOverview();
+  else if(TAB==="indices")renderIndices();
+  else if(TAB==="warning")renderWarning();
+  else if(TAB==="competitive")renderCompetitive();
+  else if(TAB==="premium")renderPremium();
+  else if(TAB==="actions")renderActions();
+  else if(TAB==="method")renderMethod();
+}
+
+/* ---- cadence wiring ---- */
+document.getElementById("cadence").querySelectorAll("button").forEach(b=>{
+  b.onclick=()=>{CADENCE=b.dataset.c;
+    document.querySelectorAll("#cadence button").forEach(x=>x.classList.toggle("on",x===b));
+    render();};
+});
+
+/* ---- header as-of ---- */
+document.getElementById("asof").textContent="As of "+new Date(ASOF).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})+".";
+
+/* ---- live FX overlay (Frankfurter / ECB) --------------------------------- */
+async function loadFX(){
+  const dot=document.getElementById("fxdot"), st=document.getElementById("fxstatus"), tk=document.getElementById("ticker");
+  try{
+    const syms="PLN,CZK,HUF,RON";
+    const [latest,ago]=await Promise.all([
+      fetch(`https://api.frankfurter.dev/v1/latest?base=EUR&symbols=${syms}`).then(r=>r.json()),
+      fetch(`https://api.frankfurter.dev/v1/${lastYear()}?base=EUR&symbols=${syms}`).then(r=>r.json()),
+    ]);
+    const map={PL:"PLN",CZ:"CZK",HU:"HUF",RO:"RON"};
+    Object.entries(map).forEach(([cc,sym])=>{
+      const now=latest.rates[sym], then=ago.rates[sym];
+      if(Number.isFinite(now)&&Number.isFinite(then)){
+        const yoy=(now/then-1)*100;               // + => local currency weaker vs EUR
+        const c=C.find(x=>x.code===cc);
+        c.fxYoY=r1(yoy); c.fxLive=now;
+        c.ix=indices(c);                            // recompute (FX feeds import-cost narrative)
+      }
+    });
+    dot.className="status-dot live";
+    st.innerHTML="Live FX (ECB via Frankfurter)";
+    tk.querySelectorAll(".tk.fx").forEach(n=>n.remove());
+    Object.entries(map).forEach(([cc,sym])=>{
+      const c=C.find(x=>x.code===cc);
+      const el=document.createElement("div"); el.className="tk fx";
+      const arrow=c.fxYoY>0?"▲":c.fxYoY<0?"▼":"–";
+      el.innerHTML=`EUR/${sym} <b>${(c.fxLive||0).toFixed(sym==="HUF"?1:3)}</b> `+
+        `<span style="color:${c.fxYoY>0?'var(--bad)':'var(--good)'}">${arrow}${Math.abs(c.fxYoY)}% YoY</span>`;
+      tk.appendChild(el);
+    });
+    render();
+  }catch(e){
+    dot.className="status-dot";
+    st.textContent="Live FX unavailable — using seeded baselines";
+  }
+}
+function lastYear(){const d=new Date(ASOF);d.setFullYear(d.getFullYear()-1);return d.toISOString().slice(0,10);}
+
+/* ------------------------------------------------------------------- boot */
+buildNav();
+render();
+loadFX();
+</script>
+<footer style="padding:0 22px 30px">
+  <div class="foot">
+    Michelin Customer Marketing · Inter Cars account · CEE/SEE aftermarket intelligence — decision-support tool built on public data only.<br>
+    Poland · Czechia · Slovakia · Hungary · Romania · Bulgaria · Croatia · Slovenia · Greece · Bosnia &amp; Herzegovina · Serbia · Moldova · Lithuania · Latvia · Estonia.<br>
+    Seeded baselines are estimates for demonstration; wire the <code>market-intel/</code> collector pipeline for production-grade values.
+  </div>
+</footer>
+</body>
+</html>
