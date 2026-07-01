@@ -1,0 +1,7 @@
+# Free collectors (collect_fx, collect_eurostat, collect_fuel, run_all) use the
+# Python standard library only — nothing to install.
+#
+# Optional, to enable the fuller collectors noted in the code:
+#   pytrends       # Google Trends (categories 3 & 7)
+#   openpyxl       # parse the EU Weekly Oil Bulletin .xlsx live (category 1)
+#   requests       # nicer HTTP for keyed sources (optional; stdlib urllib works)

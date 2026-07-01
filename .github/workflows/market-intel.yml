@@ -1,0 +1,62 @@
+name: market-intel-collect
+
+# Automated public-data collection for the Michelin x Inter Cars CEE/SEE
+# market-intelligence system. Runs the free (no-key) collectors on a schedule and
+# commits the refreshed observation CSVs. Keyed sources activate automatically when
+# their secrets are present (they skip cleanly otherwise).
+
+on:
+  schedule:
+    - cron: "17 4 * * *"      # daily 04:17 UTC — macro/FX/fuel refresh
+    - cron: "17 5 * * 1"      # weekly Monday — search/pricing cadence
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-intel-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Free collectors are stdlib-only; requirements.txt lists optional extras.
+      - name: Install optional extras (best-effort)
+        run: pip install -r market-intel/collectors/requirements.txt || true
+
+      - name: Run collectors
+        working-directory: market-intel/collectors
+        env:
+          OPENWEATHER_KEY: ${{ secrets.OPENWEATHER_KEY }}
+          METEOSTAT_KEY:   ${{ secrets.METEOSTAT_KEY }}
+          TOMTOM_KEY:      ${{ secrets.TOMTOM_KEY }}
+          SIMILARWEB_KEY:  ${{ secrets.SIMILARWEB_KEY }}
+          SEMRUSH_KEY:     ${{ secrets.SEMRUSH_KEY }}
+          AHREFS_KEY:      ${{ secrets.AHREFS_KEY }}
+        run: python3 run_all.py
+
+      - name: Upload observations artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: observations
+          path: market-intel/data/out/*.csv
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name  "market-intel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add market-intel/data/out/*.csv
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+          else
+            git commit -m "chore(market-intel): refresh public-data observations [skip ci]"
+            git push
+          fi
