@@ -56,7 +56,8 @@ window.MichelinAcademy.registerModule("cz", {
           { who: "seller", text: "Dobrý postřeh — v jedné disciplíně může vyhrát kdokoli. Podívejte se ale na celkové pořadí a hlavně na životnost: pneumatika, která vyhraje na sněhu, ale sjede se za dvě sezóny, vás nakonec stojí víc. Michelin míří na nejlepší celkový výsledek po celou životnost — a testy se dělají na nových gumách, takže rozdíl u sjetých v nich vůbec nevidíte." }
         ] },
         { type: "keypoints", title: "Fér argumentace = dlouhodobá důvěra", items: [
-          "Používejte oficiální zdroje: EU štítek, nezávislé testy, technické listy.",
+          "Používejte oficiální zdroje: EU štítek, nezávislé testy, technický katalog Michelin.",
+          "Studie CBM 2021 (z katalogu): zákazníci nejvíc chtějí životnost, nízkou spotřebu a brzdění na mokru — a stálé výkony bez kompromisů. Životnost přitom na štítku není: vysvětlit ji je vaše role.",
           "Přiznejte, když je konkurent v dílčí disciplíně dobrý — a vraťte pozornost k celku a životnosti.",
           "Neslibujte konkrétní kilometry ani výsledky; mluvte o principech a doložených datech.",
           "Váš cíl není vyhrát hádku, ale aby se zákazník vrátil."

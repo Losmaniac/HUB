@@ -1,5 +1,7 @@
 /* ============================================================
    Modul 1 — Proč Michelin (značka a prémiová hodnota)
+   Zdroj: Technický katalog Michelin B2C 2024–2025 (CZ)
+   a michelin.cz.
    ============================================================ */
 
 window.MichelinAcademy.registerModule("cz", {
@@ -7,7 +9,7 @@ window.MichelinAcademy.registerModule("cz", {
   order: 1,
   icon: "🏆",
   title: "Proč Michelin",
-  description: "Co stojí za prémiovou pozicí značky Michelin a jak z ní udělat prodejní argument.",
+  description: "Co stojí za prémiovou pozicí značky Michelin a jak z ní udělat prodejní argument podložený oficiálními daty.",
   intro: "Zákazník neplatí za jméno — platí za technologii, životnost a bezpečnost. V tomto modulu se naučíte, co za značkou Michelin skutečně stojí a jak to srozumitelně vysvětlit u pultu.",
 
   lessons: [
@@ -16,37 +18,33 @@ window.MichelinAcademy.registerModule("cz", {
       title: "Příběh značky a co znamená prémiovost",
       minutes: 8,
       blocks: [
-        { type: "p", text: "Michelin je jedním z největších výrobců pneumatik na světě a značka s více než 130letou historií inovací. Pro vás jako prodejce je důležité jedno: **za prémiovou cenou stojí měřitelné rozdíly**, ne jen logo." },
+        { type: "p", text: "Michelin je **specialista na pneumatiky od roku 1889** a jedna z nejcennějších značek oboru. Pro vás jako prodejce je důležité jedno: **za prémiovou cenou stojí měřitelné rozdíly**, ne jen logo." },
         { type: "h", text: "Milníky, které se hodí znát" },
         { type: "list", items: [
           "**1889** — bratři André a Édouard Michelinovi zakládají firmu v Clermont-Ferrand ve Francii.",
           "**1891** — první rozebíratelná pneumatika pro jízdní kola: oprava defektu za minuty místo hodin.",
-          "**1946** — Michelin patentuje **radiální pneumatiku** — dnes celosvětový standard konstrukce. Jedna z nejvýznamnějších inovací v historii oboru.",
-          "**1992** — první „zelená“ pneumatika se sníženým valivým odporem (úspora paliva).",
-          "Dnes — vývoj pneumatik pro elektromobily, letadla, Formuli 1 (MotoGP, Le Mans) i pro kosmické projekty."
+          "**1946** — Michelin patentuje **radiální pneumatiku** — dnes celosvětový standard konstrukce a jedna z nejvýznamnějších inovací v historii oboru.",
+          "**Před 30 lety** — Michelin jako první uvedl energeticky účinnou „zelenou“ pneumatiku se sníženým valivým odporem; od té doby valivý odpor svých pneumatik snížil na polovinu.",
+          "Dnes — pneumatiky pro elektromobily, letadla i motorsport (Le Mans, MotoGP, rally) a průkopnické technologie jako MICHELIN Acoustic či Selfseal."
         ] },
-        { type: "p", text: "Motorsport není jen marketing: technologie odzkoušené v závodech (směsi, konstrukce, odvod tepla) se přenášejí do běžných pneumatik, například do řady Pilot Sport." },
+        { type: "p", text: "Motorsport není jen marketing: směsi, konstrukce a odvod tepla odzkoušené v závodech se přenášejí do sériových pneumatik, například do řady Pilot Sport." },
         { type: "keypoints", title: "Co si odnést", items: [
-          "Michelin = vynálezce radiální pneumatiky, technologický lídr oboru.",
+          "Michelin = vynálezce radiální pneumatiky a technologický lídr oboru od roku 1889.",
           "Prémiovost znamená měřitelný rozdíl: delší životnost, kratší brzdná dráha, nižší spotřeba.",
           "Příběh značky pomáhá budovat důvěru — zákazník kupuje jistotu."
         ] },
-        { type: "tip", text: "Neprodávejte historii, prodávejte důsledek: „Michelin vymyslel radiální pneumatiku, kterou dnes jezdí celý svět. Tahle technologická převaha je i v pneumatice, kterou vám nabízím.“" }
+        { type: "tip", text: "Neprodávejte historii, prodávejte důsledek: „Michelin vymyslel radiální pneumatiku, kterou dnes jezdí celý svět. Stejná technologická převaha je i v pneumatice, kterou vám nabízím.“" }
       ]
     },
     {
-      id: "total-performance",
-      title: "Výkon, který vydrží: dlouhá životnost bez kompromisů",
+      id: "dlouhotrvajici-vykony",
+      title: "Dlouhotrvající výkony: bezpečná od prvního do posledního kilometru",
       minutes: 10,
       blocks: [
-        { type: "p", text: "Základní filozofií značky je **kombinace výkonů bez kompromisů** (Michelin Total Performance): pneumatika nesmí být jen dobrá v jedné disciplíně na úkor ostatních. Brzdná dráha, životnost, spotřeba a komfort musí fungovat **současně**." },
-        { type: "h", text: "Bezpečná i sjetá — nejsilnější argument" },
-        { type: "p", text: "Michelin navrhuje pneumatiky tak, aby podávaly vysoký výkon **od prvního do posledního kilometru** — tedy i těsně nad zákonným limitem hloubky dezénu. Mnoho pneumatik je skvělých nových, ale výrazně ztrácí výkon opotřebením. Michelin cíleně konstruuje dezén a směs tak, aby si pneumatika držela přilnavost za mokra i sjetá." },
-        { type: "keypoints", title: "Proč je to důležité pro zákazníka", items: [
-          "Nemusí měnit pneumatiky „preventivně“ ve 3 mm — může bezpečně dojezdit dezén blíže k zákonnému limitu.",
-          "Reálně tak získá **více kilometrů z každé sady** = nižší náklady na kilometr.",
-          "Menší počet předčasně vyhozených pneumatik = i ekologický argument."
-        ] },
+        { type: "p", text: "Ústřední filozofie Michelin podle oficiálního katalogu: **vynikající životnost v kombinaci s vysokou úrovní výkonů od prvního do posledního kilometru** — tedy až do zákonem stanoveného limitu opotřebení. Pneumatika nesmí být dobrá jen nová; musí bezpečně brzdit i sjetá." },
+        { type: "p", text: "Nezapomeňte na základní fakt z katalogu: pneumatiky jsou **jediná část vozidla v kontaktu s vozovkou** — a kontaktní plocha každé z nich má velikost lidské dlaně. Všechno, co auto umí, se přenáší přes čtyři dlaně." },
+        { type: "h", text: "Co zákazníci skutečně chtějí (studie z katalogu)" },
+        { type: "p", text: "Podle spotřebitelské studie CBM 2021 jsou nejdůležitějšími kritérii při výběru pneumatik **dlouhá životnost, spotřeba paliva, brzdný výkon na mokru** — a „všechny vlastnosti bez kompromisů, po dlouhou dobu“. Přesně na to je nabídka Michelin stavěná. A pozor: životnost na EU štítku nenajdete — vysvětlit ji je vaše role." },
         { type: "h", text: "Cena vs. náklad na kilometr" },
         { type: "p", text: "Prémiová pneumatika je dražší na účtence, ale často **levnější na kilometr**. Toto je klíčová změna perspektivy, kterou zákazníkovi nabídnete." },
         { type: "table",
@@ -55,32 +53,47 @@ window.MichelinAcademy.registerModule("cz", {
             ["Pořizovací cena (ilustrace)", "1 600 Kč/ks", "2 600 Kč/ks"],
             ["Očekávaný nájezd sady", "např. 30 000 km", "např. 50 000 km i více"],
             ["Náklad na 10 000 km (4 ks)", "≈ 2 133 Kč", "≈ 2 080 Kč"],
-            ["Brzdné vlastnosti při opotřebení", "často výrazně klesají", "navrženo pro výkon i sjeté"]
+            ["Výkon při opotřebení", "často výrazně klesá", "navrženo pro výkon až do limitu 1,6 mm"]
           ]
         },
-        { type: "warning", text: "Čísla v tabulce jsou ilustrační pro nácvik argumentace. Konkrétní nájezdy závisí na autě, stylu jízdy a podmínkách — nikdy zákazníkovi neslibujte konkrétní kilometry." },
-        { type: "tip", text: "Formulace k pultu: „Rozdíl v ceně je asi tisícovka na kus. Ale Michelin vám vydrží výrazně déle a brzdí dobře i sjetý — na kilometr vás nakonec vyjde stejně nebo levněji, a celou dobu jedete na bezpečnějším.“" }
+        { type: "warning", text: "Ceny a nájezdy v tabulce jsou ilustrační pro nácvik argumentace — závisí na autě, stylu jízdy a podmínkách. Nikdy zákazníkovi neslibujte konkrétní kilometry." },
+        { type: "keypoints", title: "Řady navržené pro dlouhotrvající výkony (dle katalogu)", items: [
+          "Celoroční: MICHELIN CrossClimate 2 a CrossClimate 2 SUV (dnes i nová generace CrossClimate 3).",
+          "Letní: MICHELIN Primacy 4+ (nově Primacy 5), e.Primacy, Pilot Sport 5, Pilot Sport 4 SUV, Pilot Sport EV.",
+          "Zimní: MICHELIN Alpin 6 (nově Alpin 7) a Pilot Alpin 5."
+        ] },
+        { type: "tip", text: "Formulace k pultu: „Rozdíl v ceně je asi tisícovka na kus. Ale Michelin je stavěný tak, aby brzdil skvěle i sjetý — takže dezén bezpečně dojezdíte, nebudete měnit předčasně a na kilometr vás vyjde stejně nebo levněji.“" }
       ]
     },
     {
-      id: "udrzitelnost",
-      title: "Udržitelnost a technologie budoucnosti",
-      minutes: 7,
+      id: "udrzitelnost-ev",
+      title: "Úspornost, udržitelnost a elektromobily",
+      minutes: 8,
       blocks: [
-        { type: "p", text: "Udržitelnost je pro rostoucí část zákazníků (a firemních flotil) rozhodovací kritérium. Michelin zde má silný a doložitelný příběh." },
+        { type: "p", text: "Úspornost a udržitelnost jsou pro rostoucí část zákazníků (a firemních flotil) rozhodovací kritérium. Michelin zde má silný a doložitelný příběh — přímo z technického katalogu." },
         { type: "list", items: [
-          "**Nízký valivý odpor** — pneumatiky jako e.Primacy snižují spotřebu paliva/energie, což šetří peníze i emise.",
+          "**Pneumatiky spotřebují v průměru 1 nádrž z 5** (20 % paliva jde na překonání valivého odporu). Nízký valivý odpor = přímá úspora.",
+          "Michelin uvedl energeticky účinnou pneumatiku jako první — **před 30 lety** — a od té doby valivý odpor snížil **na polovinu**: e.Primacy a Pilot Sport EV mají valivý odpor pod 5 kg/t.",
           "**Dlouhá životnost** — méně vyrobených a vyhozených pneumatik je nejpřímější ekologický přínos.",
-          "**Cíl 100% udržitelných materiálů** v pneumatikách do roku 2050 (rostoucí podíl obnovitelných a recyklovaných materiálů už dnes).",
-          "**Vhodnost pro elektromobily** — nízký valivý odpor (dojezd), únosnost pro těžší vozy a nízká hlučnost. Většina moderních pneumatik Michelin je plně kompatibilní s EV."
+          "Cíl **100 % udržitelných materiálů** v pneumatikách do roku 2050; podíl obnovitelných a recyklovaných materiálů roste už dnes."
         ] },
-        { type: "h", text: "EV je příležitost pro prodejce" },
-        { type: "p", text: "Elektromobily jsou těžší, mají okamžitý točivý moment a tišší kabinu — pneumatiky se na nich **sjíždí rychleji** a jejich hluk je více slyšet. Právě zde dává prémiová pneumatika s dlouhou životností a nízkou hlučností největší smysl. Ptejte se zákazníků, čím jezdí!" },
+        { type: "h", text: "Elektromobily: přesně to, v čem je Michelin silný" },
+        { type: "p", text: "Katalog Michelin uvádí, že elektromobily opotřebovávají pneumatiky **v průměru o 20 % rychleji** než vozy se spalovacím motorem — jsou těžší (baterie) a mají okamžitý točivý moment. Co EV od pneumatiky potřebuje, je přesně profil Michelin:" },
+        { type: "table",
+          headers: ["Potřeba elektromobilu", "Odpověď Michelin"],
+          rows: [
+            ["Vyšší hmotnost", "vysoká nosnost — XL a nový standard HL"],
+            ["Rychlejší opotřebení (+20 %)", "pověstná životnost Michelin"],
+            ["Dojezd baterie", "nízký valivý odpor (e.Primacy, Pilot Sport EV < 5 kg/t)"],
+            ["Tichá kabina", "MICHELIN Acoustic — až o 20 % nižší vnitřní hlučnost"]
+          ]
+        },
         { type: "keypoints", title: "Co si odnést", items: [
-          "Úspora paliva a dlouhá životnost = ekologie, která šetří peníze. Argument funguje u soukromníků i flotil.",
-          "U EV doporučujte pneumatiky s nízkým valivým odporem a vysokou životností — např. e.Primacy nebo řadu Primacy.",
-          "Udržitelnost podkládejte konkrétními fakty, ne frázemi."
-        ] }
+          "**Všechny pneumatiky MICHELIN jsou vhodné pro elektromobily** — oficiální stanovisko z katalogu; není nutná speciální „EV pneumatika“.",
+          "U EV zákazníka zdůrazněte životnost, dojezd a tichost — a zkontrolujte, zda vůz nevyžaduje HL nosnost.",
+          "Úspora paliva a dlouhá životnost = ekologie, která šetří peníze. Funguje u soukromníků i flotil."
+        ] },
+        { type: "tip", text: "Ptejte se: „Čím jezdíte — benzín, nafta, hybrid, elektro?“ U elektromobilu máte okamžitě tři argumenty: dojezd, tišší kabinu a pneumatiky, které vydrží jeho vyšší hmotnost i točivý moment." }
       ]
     }
   ],
@@ -100,72 +113,71 @@ window.MichelinAcademy.registerModule("cz", {
         explanation: "Radiální konstrukce, patentovaná Michelinem v roce 1946, je dnes celosvětovým standardem u osobních pneumatik."
       },
       {
-        q: "Co znamená filozofie „kombinace výkonů bez kompromisů“ (Total Performance)?",
+        q: "Co znamená filozofie „dlouhotrvajících výkonů“ Michelin?",
         options: [
-          "Pneumatika je nejlepší v jedné klíčové disciplíně",
-          "Pneumatika kombinuje vysoký výkon ve více disciplínách současně (brzdění, životnost, spotřeba)",
+          "Pneumatika je nejlepší v jedné klíčové disciplíně, dokud je nová",
+          "Vynikající životnost v kombinaci s vysokou úrovní výkonů od prvního do posledního kilometru — až do zákonného limitu opotřebení",
           "Pneumatika je vyrobena pouze pro závodní použití",
           "Pneumatika má nejnižší možnou cenu"
         ],
         correct: [1],
-        explanation: "Michelin odmítá zlepšovat jeden parametr na úkor jiných — bezpečnost, životnost i úspornost musí fungovat najednou."
+        explanation: "Přesně tak to formuluje technický katalog Michelin: špičkový výkon nejen u nové pneumatiky, ale po celou dobu její životnosti."
       },
       {
-        q: "V čem spočívá argument „bezpečná, i když sjetá“?",
+        q: "Kolik paliva spotřebují podle katalogu Michelin pneumatiky (překonáváním valivého odporu)?",
         options: [
-          "Pneumatiky Michelin se nemusí nikdy měnit",
-          "Michelin doporučuje jezdit pod zákonným limitem dezénu",
-          "Pneumatiky Michelin jsou navrženy tak, aby si držely výkon (zejména za mokra) i při opotřebení",
-          "Sjeté pneumatiky brzdí vždy stejně jako nové"
+          "Zanedbatelné množství",
+          "V průměru 1 nádrž z 20",
+          "V průměru 1 nádrž z 5 (20 %)",
+          "Polovinu spotřeby vozidla"
         ],
         correct: [2],
-        explanation: "Michelin konstruuje dezén a směs tak, aby pneumatika podávala vysoký výkon od prvního do posledního kilometru. Zákonný limit 1,6 mm samozřejmě platí vždy."
+        explanation: "V průměru 1 plná nádrž z 5 jde na valivý odpor pneumatik — proto se pneumatika s nízkým valivým odporem (e.Primacy) zákazníkovi reálně vyplatí."
       },
       {
         q: "Zákazník říká: „Michelin je moc drahý.“ Jaká je nejlepší první reakce?",
         options: [
           "Nabídnout okamžitě levnější značku",
-          "Přepočítat cenu na náklad na kilometr díky delší životnosti",
+          "Přepočítat cenu na náklad na kilometr díky delší životnosti a výkonu při opotřebení",
           "Říct, že kvalita se musí zaplatit",
           "Nabídnout slevu"
         ],
         correct: [1],
-        explanation: "Změna perspektivy z pořizovací ceny na náklad na kilometr je nejsilnější odpověď: delší životnost a stabilní výkon dělají z Michelinu ekonomickou volbu."
+        explanation: "Změna perspektivy z pořizovací ceny na náklad na kilometr je nejsilnější odpověď — podpořená studií CBM 2021: životnost je pro zákazníky nejdůležitější kritérium, které EU štítek neukazuje."
       },
       {
-        q: "Proč jsou pneumatiky s nízkým valivým odporem (např. e.Primacy) zvlášť vhodné pro elektromobily? Vyberte všechny správné odpovědi.",
+        q: "Proč elektromobily kladou na pneumatiky vyšší nároky? Vyberte všechny správné odpovědi.",
         options: [
-          "Prodlužují dojezd na jedno nabití",
-          "Elektromobily jsou lehčí, takže pneumatiky méně trpí",
-          "EV jsou těžší a mají vysoký točivý moment, takže je důležitá vysoká životnost",
-          "V tiché kabině EV je více slyšet hluk pneumatik, takže se hodí tišší pneumatika"
+          "Opotřebovávají pneumatiky v průměru o 20 % rychleji",
+          "Jsou lehčí, takže pneumatiky méně trpí",
+          "Kvůli hmotnosti baterií potřebují vyšší nosnost (XL/HL)",
+          "V tiché kabině je více slyšet hluk pneumatik"
         ],
         correct: [0, 2, 3],
         multi: true,
-        explanation: "EV jsou těžší (ne lehčí!), mají okamžitý točivý moment a tichou kabinu — proto potřebují úsporné, odolné a tiché pneumatiky."
+        explanation: "EV jsou těžší (ne lehčí!), mají okamžitý točivý moment (+20 % opotřebení dle katalogu) a tichou kabinu — proto potřebují odolné, únosné a tiché pneumatiky s nízkým valivým odporem."
+      },
+      {
+        q: "Jsou pneumatiky MICHELIN vhodné pro elektromobily?",
+        options: [
+          "Jen speciální EV modely",
+          "Ano — podle katalogu jsou všechny pneumatiky MICHELIN vhodné pro EV",
+          "Ne, pro EV Michelin pneumatiky nevyrábí",
+          "Jen zimní řady"
+        ],
+        correct: [1],
+        explanation: "Oficiální stanovisko z katalogu: všechny pneumatiky MICHELIN jsou vhodné pro elektromobily — jsou vyvinuté s ohledem na valivý odpor, opotřebení i hlučnost. U těžších EV zkontrolujte požadavek na HL nosnost."
       },
       {
         q: "Jaký cíl si Michelin stanovil v oblasti udržitelných materiálů?",
         options: [
-          "100% udržitelných materiálů v pneumatikách do roku 2050",
+          "100 % udržitelných materiálů v pneumatikách do roku 2050",
           "Ukončení výroby letních pneumatik",
           "Výrobu pneumatik pouze z přírodního kaučuku od roku 2030",
           "Recyklaci poloviny pneumatik do roku 2100"
         ],
         correct: [0],
         explanation: "Michelin veřejně cílí na 100 % udržitelných (obnovitelných či recyklovaných) materiálů do roku 2050 a podíl průběžně zvyšuje."
-      },
-      {
-        q: "Který ekologický přínos pneumatik Michelin je pro zákazníka zároveň přímou finanční úsporou? Vyberte všechny správné odpovědi.",
-        options: [
-          "Nižší spotřeba paliva díky nízkému valivému odporu",
-          "Delší životnost = méně nakoupených sad",
-          "Barevné logo na bočnici",
-          "Možnost dojezdit dezén bezpečně blíže k zákonnému limitu"
-        ],
-        correct: [0, 1, 3],
-        multi: true,
-        explanation: "Úspora paliva, delší životnost i plné využití dezénu šetří peníze zákazníka a zároveň snižují ekologickou stopu."
       }
     ]
   }
