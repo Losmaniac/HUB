@@ -132,7 +132,7 @@ window.MichelinAcademy.registerMarket({
 
     footer: {
       left: "Michelin Academy · Interní školicí nástroj pro Inter Cars",
-      right: "Obsah připravil Michelin CZ Marketing"
+      right: "Zdroje: Technický katalog Michelin 2024–2025 (CZ) · michelin.cz"
     }
   }
 });

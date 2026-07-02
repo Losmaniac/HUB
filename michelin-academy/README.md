@@ -89,16 +89,27 @@ Otázka s `multi: true` má více správných odpovědí.
 
 Přepínač trhů se v hlavičce objeví automaticky; každý trh má oddělený pokrok uživatele.
 
+## Zdroje obsahu
+
+Školicí obsah je postaven na oficiálních zdrojích Michelin:
+
+- **Technický katalog Michelin B2C 2024–2025 (CZ)** — „Profesionální průvodce
+  pneumatikami“: značení a indexy, OE homologace, EU štítek (vč. číselných
+  claimů), zimní legislativa v Evropě, tlak huštění a TPMS, stárnutí a
+  skladování pneumatik, kapitola o elektromobilech (HL, Acoustic).
+- **michelin.cz** — aktuální produktové řady a generace (CrossClimate 2/3,
+  Primacy 4+/5, Pilot Sport 5 / S 5, Alpin 6/7, Pilot Alpin 5), rodinné
+  slogany a rádce (zimní průvodce, EV průvodce).
+
 ## ⚠️ Validace obsahu před spuštěním
 
-Vzorový obsah připravil AI asistent jako výchozí bod pro Michelin CZ Marketing.
-Před nasazením pro prodejce **zvalidujte zejména**:
+Před nasazením pro prodejce doporučujeme interní kontrolu Michelin CZ Marketing:
 
-- názvy a generace produktů (Primacy, Pilot Sport, CrossClimate, Alpin) proti
-  aktuálnímu portfoliu a ceníku Michelin CZ,
-- ilustrační cenové příklady v modulu 1 a 4,
-- legislativní údaje v modulu 2 (zimní pravidla ČR),
-- soulad tvrzení s aktuálními marketingovými claimy Michelin (interní schválení).
+- ilustrační cenové příklady v modulu 1 a 4 (záměrně smyšlené pro nácvik),
+- dostupnost generací a rozměrů v aktuálním ceníku / katalogu Inter Cars,
+- legislativní údaje (zimní pravidla se mohou měnit; katalog uvádí stav 10/2023),
+- finální znění claimů (čísla z katalogu mají v originále metodické poznámky
+  pod čarou — pro školicí účely jsou zjednodušena).
 
 ## Roadmapa (návrh)
 

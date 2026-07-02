@@ -58,10 +58,10 @@ window.MichelinAcademy.registerModule("cz", {
           { who: "customer", text: "Hm, takhle jsem o tom nepřemýšlel." },
           { who: "seller", text: "A ještě jedna věc — díky nižšímu valivému odporu ušetříte i na palivu. Chcete, abych vám spočítal obě varianty?" }
         ] },
-        { type: "keypoints", title: "Argumenty, které mají čísla", items: [
-          "**Životnost:** více kilometrů ze sady = nižší cena za kilometr.",
-          "**Brzdná dráha za mokra:** rozdíl mezi třídami EU štítku může být mnoho metrů — ukažte štítky vedle sebe.",
-          "**Spotřeba:** nižší valivý odpor = úspora na palivu po celou životnost.",
+        { type: "keypoints", title: "Argumenty, které mají čísla (z katalogu Michelin)", items: [
+          "**Životnost:** více kilometrů ze sady = nižší cena za kilometr. A podle studie CBM 2021 je to pro zákazníky kritérium č. 1.",
+          "**Brzdná dráha za mokra:** pneumatika třídy A zastaví z 80 km/h o 9 metrů dříve než třída D — ukažte štítky vedle sebe.",
+          "**Spotřeba:** pneumatiky spotřebují průměrně 1 nádrž z 5; přechod z třídy E na A ušetří cca 150 l paliva na 40 000 km.",
           "**Výkon při opotřebení:** Michelin je navržen tak, aby brzdil skvěle i sjetý — levná pneumatika často ne."
         ] },
         { type: "warning", text: "Nikdy nepomlouvejte konkrétní levnou značku a neslibujte přesné nájezdy. Argumentujte principy a oficiálními údaji (EU štítek), zůstanete důvěryhodní." },
@@ -89,8 +89,9 @@ window.MichelinAcademy.registerModule("cz", {
         { type: "h", text: "Vytvořte důvod k návratu" },
         { type: "list", items: [
           "Zapište hloubku dezénu a doporučte termín další kontroly.",
-          "Připomeňte sezónní přezutí (SMS/e-mail podle praxe pobočky).",
-          "Při přezutí vždy zkontrolujte i druhou sadu — odhalíte příští prodej s předstihem."
+          "Připomeňte sezónní přezutí (SMS/e-mail podle praxe pobočky) a měsíční kontrolu tlaku — TPMS hlásí ztrátu až od 20 %.",
+          "Při přezutí vždy zkontrolujte i druhou sadu a datum DOT — po 10 letech od výroby Michelin doporučuje výměnu.",
+          "Odhalíte tak příští prodej s předstihem — a zákazník odchází s pocitem péče, ne prodeje."
         ] },
         { type: "keypoints", title: "Co si odnést", items: [
           "Ke každé sadě patří nabídka geometrie, uskladnění a kompletní montáže.",
