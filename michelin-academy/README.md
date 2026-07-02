@@ -8,7 +8,10 @@ na rozšíření do dalších zemí.
 ## Co platforma umí (v1)
 
 - **5 školicích modulů** (Proč Michelin · Základy pneumatik · Portfolio ·
-  Prodejní dovednosti · Konkurence a pozicování), každý s lekcemi a kvízem
+  Obchodní argumentace Michelin · Konkurence a pozicování), každý s lekcemi
+  a kvízem. Modul obchodní argumentace je psaný pro obchodníky Inter Cars
+  v terénu: byznys pneuservisu (marže v Kč, výtěžnost zvedáku, sell-out),
+  argumentační sada pro pult a vedení obchodní návštěvy
 - **Kvízy s okamžitou zpětnou vazbou** a vysvětlením správné odpovědi
 - **Závěrečná zkouška** (náhodný výběr otázek napříč moduly, práh 80 %),
   odemyká se po splnění všech modulových kvízů
