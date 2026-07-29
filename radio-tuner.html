@@ -274,7 +274,7 @@
 </div>
 
 <footer>
-  Data &amp; streams via <a href="https://www.radio-browser.info" target="_blank">Radio Browser</a> (community-run, free, open API). Favorites are kept only for this session — they reset on reload.
+  Data &amp; streams via <a href="https://www.radio-browser.info" target="_blank">Radio Browser</a> (community-run, free, open API). Favorites are saved on this device and survive closing the app.
 </footer>
 
 <script>
@@ -284,8 +284,25 @@ const API_SERVERS = [
   "https://at1.api.radio-browser.info"
 ];
 
+const FAVORITES_KEY = "americanRadioTuner.favorites";
+
+function loadFavorites(){
+  try{
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveFavorites(){
+  try{
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  }catch(e){ /* storage unavailable (e.g. private mode) — favorites stay in-memory only */ }
+}
+
 let currentServer = API_SERVERS[0];
-let favorites = []; // session-only, array of station objects
+let favorites = loadFavorites(); // persisted in localStorage, array of station objects
 let currentTab = "browse";
 let nowPlayingUuid = null;
 
@@ -418,6 +435,7 @@ function toggleFavorite(station){
   }else{
     favorites.push(station);
   }
+  saveFavorites();
   el("tabFavorites").textContent = `Favorites (${favorites.length})`;
   const isFav = favorites.some(f => f.stationuuid === station.stationuuid);
   favBtn.textContent = isFav ? "★ Favorited" : "☆ Favorite";
@@ -503,6 +521,7 @@ el("tabBrowse").addEventListener("click", () => switchTab("browse"));
 el("tabFavorites").addEventListener("click", () => switchTab("favorites"));
 
 (async function init(){
+  el("tabFavorites").textContent = `Favorites (${favorites.length})`;
   statusEl.textContent = "Connecting to station directory...";
   await findWorkingServer();
   await loadStates();
