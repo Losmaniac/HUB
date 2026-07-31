@@ -1,5 +1,5 @@
 country,date,category,metric,value,unit,source,ingested_at
-EU,2026-07-30,competitive,wiki_pageviews_michelin,1203,count,wikimedia,2026-07-30T06:45:53Z
-EU,2026-07-30,competitive,wiki_pageviews_continental,469,count,wikimedia,2026-07-30T06:45:54Z
-EU,2026-07-30,competitive,wiki_pageviews_bridgestone,471,count,wikimedia,2026-07-30T06:45:54Z
-EU,2026-07-30,competitive,michelin_attention_sov,56.1,pct,wikimedia,2026-07-30T06:45:54Z
+EU,2026-07-31,competitive,wiki_pageviews_michelin,1203,count,wikimedia,2026-07-31T07:18:24Z
+EU,2026-07-31,competitive,wiki_pageviews_continental,469,count,wikimedia,2026-07-31T07:18:24Z
+EU,2026-07-31,competitive,wiki_pageviews_bridgestone,471,count,wikimedia,2026-07-31T07:18:24Z
+EU,2026-07-31,competitive,michelin_attention_sov,56.1,pct,wikimedia,2026-07-31T07:18:24Z
