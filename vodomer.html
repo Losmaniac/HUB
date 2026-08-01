@@ -204,7 +204,19 @@
     font-weight: 600;
     margin: 0 0 0.9rem;
     color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
+
+  .sync-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--good);
+    flex-shrink: 0;
+  }
+  .sync-dot.offline { background: var(--accent-warm); }
 
   label {
     display: block;
@@ -476,18 +488,37 @@
 
     <div class="col-history">
       <section class="card">
-        <h2>Historie záznamů</h2>
+        <h2>Historie záznamů <span class="sync-dot" id="syncDot"></span></h2>
         <ul class="log" id="log"></ul>
         <p class="empty" id="empty">Zatím žádné záznamy. Zadejte první stav vodoměru výše.</p>
       </section>
     </div>
   </div>
 
-  <p class="storage-note">Data se ukládají pouze v tomto zařízení a prohlížeči (localStorage) — nejsou odesílána nikam jinam. Pro zálohu si stránku přidejte na plochu telefonu a nemažte data prohlížeče.</p>
+  <p class="storage-note" id="storageNote">Data se ukládají online a jsou vidět na všech tvých zařízeních.</p>
 </main>
 
-<script>
-  const STORAGE_KEY = "vodomer-readings-v1";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot,
+    enableIndexedDbPersistence,
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBnrU7HrOAZy7WdsmTMRGThZ1wKvBoaOVM",
+    authDomain: "vodomer434.firebaseapp.com",
+    projectId: "vodomer434",
+    storageBucket: "vodomer434.firebasestorage.app",
+    messagingSenderId: "299950311854",
+    appId: "1:299950311854:web:d4f8f325d2c23a80a4603f",
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const db = getFirestore(firebaseApp);
+  enableIndexedDbPersistence(db).catch(() => {});
+  const readingsCol = collection(db, "readings");
+
   const THEME_KEY = "vodomer-theme";
   const dateEl = document.getElementById("date");
   const valueEl = document.getElementById("value");
@@ -501,6 +532,7 @@
   const statAvg = document.getElementById("statAvg");
   const sparkEl = document.getElementById("spark");
   const themeToggle = document.getElementById("themeToggle");
+  const syncDot = document.getElementById("syncDot");
   const root = document.documentElement;
 
   function systemPrefersDark() {
@@ -542,18 +574,6 @@
   }
   dateEl.value = todayISO();
 
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-  function save(readings) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(readings));
-  }
-
   function fmt(n) {
     return n.toLocaleString("cs-CZ", { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   }
@@ -562,10 +582,23 @@
     return `${d}. ${m}. ${y}`;
   }
 
-  let readings = load().sort((a, b) => a.date.localeCompare(b.date) || a.ts - b.ts);
+  let readings = [];
+
+  onSnapshot(readingsCol, { includeMetadataChanges: true }, snapshot => {
+    readings = snapshot.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => a.date.localeCompare(b.date) || a.ts - b.ts);
+    syncDot.classList.toggle("offline", snapshot.metadata.fromCache);
+    syncDot.title = snapshot.metadata.fromCache
+      ? "Offline — změny se odešlou po připojení"
+      : "Synchronizováno online";
+    render();
+  }, () => {
+    syncDot.classList.add("offline");
+    syncDot.title = "Nepodařilo se připojit k online úložišti";
+  });
 
   function render() {
-    readings = readings.sort((a, b) => a.date.localeCompare(b.date) || a.ts - b.ts);
     logEl.innerHTML = "";
     emptyEl.hidden = readings.length > 0;
 
@@ -597,9 +630,10 @@
       delBtn.setAttribute("aria-label", "Smazat záznam");
       delBtn.textContent = "✕";
       delBtn.addEventListener("click", () => {
-        readings.splice(idx, 1);
-        save(readings);
-        render();
+        deleteDoc(doc(db, "readings", r.id)).catch(() => {
+          hintEl.textContent = "Smazání se nepodařilo odeslat, zkuste to znovu.";
+          hintEl.classList.add("warn");
+        });
       });
 
       li.appendChild(dateWrap);
@@ -738,13 +772,17 @@
       return;
     }
     const date = dateEl.value || todayISO();
-    readings.push({ date, value: v, note: noteEl.value.trim(), ts: Date.now() });
-    save(readings);
+    saveBtn.disabled = true;
+    addDoc(readingsCol, { date, value: v, note: noteEl.value.trim(), ts: Date.now() })
+      .catch(() => {
+        hintEl.textContent = "Uložení se nepodařilo odeslat, zkuste to znovu.";
+        hintEl.classList.add("warn");
+      })
+      .finally(() => { saveBtn.disabled = false; });
     valueEl.value = "";
     noteEl.value = "";
     hintEl.textContent = "";
     hintEl.classList.remove("warn");
-    render();
     valueEl.focus();
   });
 
