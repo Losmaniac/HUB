@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vodoměr — evidence stavů</title>
 <style>
   :root {
@@ -17,7 +19,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --ink: #eef4f3;
       --ink-soft: #9fb3b3;
       --paper: #0e1a1d;
@@ -65,8 +67,12 @@
 
   * { box-sizing: border-box; }
 
-  body {
+  html, body {
+    width: 100%;
     margin: 0;
+  }
+
+  body {
     background: var(--paper);
     color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -75,43 +81,36 @@
     padding-bottom: 3rem;
   }
 
-  .wrap {
-    max-width: 30rem;
+  .content {
+    width: 100%;
+    max-width: min(100%, 96rem);
     margin: 0 auto;
-    padding: 1.5rem 1.1rem 0;
+    padding: 0 clamp(1.1rem, 3.5vw, 3.25rem);
   }
 
-  @media (min-width: 860px) {
-    .wrap { max-width: 74rem; padding: 2.5rem 2.5rem 0; }
+  .topbar {
+    width: 100%;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
   }
 
-  header {
+  .topbar .content {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 1.4rem;
+    gap: 1rem;
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
   }
 
   @media (min-width: 860px) {
-    header { margin-bottom: 2rem; }
-    h1 { font-size: 2.1rem; }
+    .topbar .content { padding-top: 1.5rem; padding-bottom: 1.5rem; }
   }
 
-  .layout {
+  .brand {
     display: flex;
-    flex-direction: column;
-  }
-
-  @media (min-width: 860px) {
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(20rem, 26rem) 1fr;
-      align-items: start;
-      gap: 1.5rem;
-    }
-    .col-history { grid-column: 2; grid-row: 1 / span 2; }
-    .col-main { grid-column: 1; }
+    align-items: center;
+    gap: 0.85rem;
   }
 
   .eyebrow {
@@ -125,17 +124,65 @@
 
   h1 {
     font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     margin: 0;
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
 
+  @media (min-width: 860px) {
+    h1 { font-size: 1.9rem; }
+  }
+
   .meter-icon {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.35rem;
+    height: 2.35rem;
     flex-shrink: 0;
     color: var(--accent);
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: var(--panel-sunken);
+    color: var(--ink);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .theme-toggle svg { width: 1.2rem; height: 1.2rem; }
+  .theme-toggle .icon-moon { display: none; }
+  .theme-toggle.is-dark .icon-sun { display: none; }
+  .theme-toggle.is-dark .icon-moon { display: block; }
+
+  main.content {
+    padding-top: 1.5rem;
+  }
+
+  @media (min-width: 860px) {
+    main.content { padding-top: 2rem; }
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 860px) {
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(19rem, 30%) 1fr;
+      align-items: start;
+      gap: 1.75rem;
+    }
+    .col-history { grid-column: 2; grid-row: 1 / span 2; }
+    .col-main { grid-column: 1; }
   }
 
   section.card {
@@ -145,6 +192,10 @@
     box-shadow: var(--shadow);
     padding: 1.2rem;
     margin-bottom: 1.1rem;
+  }
+
+  @media (min-width: 860px) {
+    section.card { padding: 1.5rem; }
   }
 
   .card h2 {
@@ -274,6 +325,15 @@
     flex-direction: column;
   }
 
+  @media (min-width: 1180px) {
+    .log {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1.5rem;
+    }
+    .log li { border-bottom: 1px solid var(--line); }
+  }
+
   .log li {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -340,7 +400,7 @@
     font-size: 0.72rem;
     color: var(--ink-soft);
     margin-top: 1.6rem;
-    padding: 0 1rem;
+    padding-bottom: 0.5rem;
     line-height: 1.5;
   }
 
@@ -349,20 +409,33 @@
   }
 </style>
 
-<div class="wrap">
-  <header>
-    <div>
-      <p class="eyebrow">Domácí evidence</p>
-      <h1>Stav vodoměru</h1>
+<header class="topbar">
+  <div class="content">
+    <div class="brand">
+      <svg class="meter-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="24" cy="24" r="2.5" fill="currentColor"/>
+        <line x1="24" y1="24" x2="24" y2="10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="24" y1="24" x2="33" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+      <div>
+        <p class="eyebrow">Domácí evidence</p>
+        <h1>Stav vodoměru</h1>
+      </div>
     </div>
-    <svg class="meter-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2.5"/>
-      <circle cx="24" cy="24" r="2.5" fill="currentColor"/>
-      <line x1="24" y1="24" x2="24" y2="10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="24" y1="24" x2="33" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-    </svg>
-  </header>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Přepnout světlý a tmavý režim" aria-pressed="false">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"/>
+        <path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+    </button>
+  </div>
+</header>
 
+<main class="content">
   <div class="layout">
     <div class="col-main">
       <section class="card">
@@ -411,10 +484,11 @@
   </div>
 
   <p class="storage-note">Data se ukládají pouze v tomto zařízení a prohlížeči (localStorage) — nejsou odesílána nikam jinam. Pro zálohu si stránku přidejte na plochu telefonu a nemažte data prohlížeče.</p>
-</div>
+</main>
 
 <script>
   const STORAGE_KEY = "vodomer-readings-v1";
+  const THEME_KEY = "vodomer-theme";
   const dateEl = document.getElementById("date");
   const valueEl = document.getElementById("value");
   const noteEl = document.getElementById("note");
@@ -426,6 +500,40 @@
   const statLast = document.getElementById("statLast");
   const statAvg = document.getElementById("statAvg");
   const sparkEl = document.getElementById("spark");
+  const themeToggle = document.getElementById("themeToggle");
+  const root = document.documentElement;
+
+  function systemPrefersDark() {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function applyThemeUI(theme) {
+    themeToggle.classList.toggle("is-dark", theme === "dark");
+    themeToggle.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+  }
+  function setTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_KEY, theme);
+    applyThemeUI(theme);
+  }
+
+  const storedTheme = localStorage.getItem(THEME_KEY);
+  if (storedTheme === "dark" || storedTheme === "light") {
+    root.setAttribute("data-theme", storedTheme);
+    applyThemeUI(storedTheme);
+  } else {
+    applyThemeUI(systemPrefersDark() ? "dark" : "light");
+  }
+
+  themeToggle.addEventListener("click", () => {
+    const active = root.getAttribute("data-theme") || (systemPrefersDark() ? "dark" : "light");
+    setTheme(active === "dark" ? "light" : "dark");
+  });
+
+  if (window.matchMedia) {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+      if (!localStorage.getItem(THEME_KEY)) applyThemeUI(e.matches ? "dark" : "light");
+    });
+  }
 
   function todayISO() {
     const d = new Date();
