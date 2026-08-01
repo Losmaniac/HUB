@@ -81,12 +81,37 @@
     padding: 1.5rem 1.1rem 0;
   }
 
+  @media (min-width: 860px) {
+    .wrap { max-width: 74rem; padding: 2.5rem 2.5rem 0; }
+  }
+
   header {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 0.75rem;
     margin-bottom: 1.4rem;
+  }
+
+  @media (min-width: 860px) {
+    header { margin-bottom: 2rem; }
+    h1 { font-size: 2.1rem; }
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 860px) {
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(20rem, 26rem) 1fr;
+      align-items: start;
+      gap: 1.5rem;
+    }
+    .col-history { grid-column: 2; grid-row: 1 / span 2; }
+    .col-main { grid-column: 1; }
   }
 
   .eyebrow {
@@ -338,46 +363,52 @@
     </svg>
   </header>
 
-  <section class="card">
-    <h2>Nový záznam</h2>
-    <div class="field">
-      <label for="value">Stav (m³)</label>
-      <input class="reading-input" id="value" type="number" inputmode="decimal" step="0.001" placeholder="0,000" autocomplete="off">
-    </div>
-    <div class="row2">
-      <div class="field">
-        <label for="date">Datum</label>
-        <input id="date" type="date">
-      </div>
-      <div class="field">
-        <label for="note">Poznámka</label>
-        <input id="note" type="text" placeholder="volitelné" autocomplete="off">
-      </div>
-    </div>
-    <p class="hint" id="hint"></p>
-    <button class="primary" id="save">Uložit stav</button>
-  </section>
+  <div class="layout">
+    <div class="col-main">
+      <section class="card">
+        <h2>Nový záznam</h2>
+        <div class="field">
+          <label for="value">Stav (m³)</label>
+          <input class="reading-input" id="value" type="number" inputmode="decimal" step="0.001" placeholder="0,000" autocomplete="off">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="date">Datum</label>
+            <input id="date" type="date">
+          </div>
+          <div class="field">
+            <label for="note">Poznámka</label>
+            <input id="note" type="text" placeholder="volitelné" autocomplete="off">
+          </div>
+        </div>
+        <p class="hint" id="hint"></p>
+        <button class="primary" id="save">Uložit stav</button>
+      </section>
 
-  <section class="card" id="statsCard" hidden>
-    <h2>Přehled</h2>
-    <div class="stat-row">
-      <div class="stat">
-        <div class="label">Poslední odečet</div>
-        <div class="value" id="statLast">—</div>
-      </div>
-      <div class="stat">
-        <div class="label">Denní spotřeba (Ø)</div>
-        <div class="value" id="statAvg">—</div>
-      </div>
+      <section class="card" id="statsCard" hidden>
+        <h2>Přehled</h2>
+        <div class="stat-row">
+          <div class="stat">
+            <div class="label">Poslední odečet</div>
+            <div class="value" id="statLast">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">Denní spotřeba (Ø)</div>
+            <div class="value" id="statAvg">—</div>
+          </div>
+        </div>
+        <canvas id="spark" width="600" height="64"></canvas>
+      </section>
     </div>
-    <canvas id="spark" width="600" height="64"></canvas>
-  </section>
 
-  <section class="card">
-    <h2>Historie záznamů</h2>
-    <ul class="log" id="log"></ul>
-    <p class="empty" id="empty">Zatím žádné záznamy. Zadejte první stav vodoměru výše.</p>
-  </section>
+    <div class="col-history">
+      <section class="card">
+        <h2>Historie záznamů</h2>
+        <ul class="log" id="log"></ul>
+        <p class="empty" id="empty">Zatím žádné záznamy. Zadejte první stav vodoměru výše.</p>
+      </section>
+    </div>
+  </div>
 
   <p class="storage-note">Data se ukládají pouze v tomto zařízení a prohlížeči (localStorage) — nejsou odesílána nikam jinam. Pro zálohu si stránku přidejte na plochu telefonu a nemažte data prohlížeče.</p>
 </div>
