@@ -265,6 +265,25 @@
     border-color: var(--accent);
   }
 
+  #price {
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.5rem 0.6rem;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel-sunken);
+    color: var(--ink);
+    width: 6rem;
+    text-align: right;
+  }
+  #price:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+
   .row2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -321,6 +340,24 @@
     font-weight: 600;
   }
   .stat .value small { font-size: 0.7rem; font-weight: 500; color: var(--ink-soft); }
+
+  .cost-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 1.1rem 0 1rem;
+  }
+
+  .cost-price-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+  }
+  .cost-price-field label {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
 
   canvas#spark {
     width: 100%;
@@ -483,6 +520,23 @@
           </div>
         </div>
         <canvas id="spark" width="600" height="64"></canvas>
+
+        <div class="cost-divider"></div>
+
+        <div class="field cost-price-field">
+          <label for="price">Cena vody (Kč/m³)</label>
+          <input id="price" type="number" inputmode="decimal" step="0.01" min="0">
+        </div>
+        <div class="stat-row">
+          <div class="stat">
+            <div class="label">Útrata / 30 dní</div>
+            <div class="value" id="statMonthSpend">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">Průměrná útrata (Ø)</div>
+            <div class="value" id="statDailySpend">—</div>
+          </div>
+        </div>
       </section>
     </div>
 
@@ -520,6 +574,8 @@
   const readingsCol = collection(db, "readings");
 
   const THEME_KEY = "vodomer-theme";
+  const PRICE_KEY = "vodomer-price-per-m3";
+  const DEFAULT_PRICE = 125;
   const dateEl = document.getElementById("date");
   const valueEl = document.getElementById("value");
   const noteEl = document.getElementById("note");
@@ -530,10 +586,21 @@
   const statsCard = document.getElementById("statsCard");
   const statLast = document.getElementById("statLast");
   const statAvg = document.getElementById("statAvg");
+  const statMonthSpend = document.getElementById("statMonthSpend");
+  const statDailySpend = document.getElementById("statDailySpend");
+  const priceEl = document.getElementById("price");
   const sparkEl = document.getElementById("spark");
   const themeToggle = document.getElementById("themeToggle");
   const syncDot = document.getElementById("syncDot");
   const root = document.documentElement;
+
+  const storedPrice = parseFloat(localStorage.getItem(PRICE_KEY));
+  priceEl.value = Number.isFinite(storedPrice) ? storedPrice : DEFAULT_PRICE;
+  priceEl.addEventListener("input", () => {
+    const p = parseFloat(priceEl.value);
+    if (Number.isFinite(p) && p >= 0) localStorage.setItem(PRICE_KEY, p);
+    renderStats();
+  });
 
   function systemPrefersDark() {
     return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -658,6 +725,31 @@
     return div.innerHTML;
   }
 
+  function fmtCzk(n) {
+    return Math.round(n).toLocaleString("cs-CZ") + " Kč";
+  }
+
+  function lastMonthUsage() {
+    if (readings.length < 2) return null;
+    const last = readings[readings.length - 1];
+    const lastDate = new Date(last.date);
+    const cutoff = new Date(lastDate.getTime() - 30 * 86400000);
+
+    let base = null;
+    for (let i = readings.length - 2; i >= 0; i--) {
+      if (new Date(readings[i].date) <= cutoff) { base = readings[i]; break; }
+    }
+    if (base) {
+      return { usage: last.value - base.value, estimated: false };
+    }
+
+    const first = readings[0];
+    const days = (lastDate - new Date(first.date)) / 86400000;
+    if (days < 1) return null;
+    const usage = last.value - first.value;
+    return { usage: (usage / days) * 30, estimated: true };
+  }
+
   function renderStats() {
     if (readings.length === 0) {
       statsCard.hidden = true;
@@ -667,14 +759,25 @@
     const last = readings[readings.length - 1];
     statLast.textContent = fmt(last.value) + " m³";
 
+    const price = parseFloat(priceEl.value) || 0;
+
     if (readings.length >= 2) {
       const first = readings[0];
       const totalUse = last.value - first.value;
       const days = Math.max(1, (new Date(last.date) - new Date(first.date)) / 86400000);
       const avg = totalUse / days;
       statAvg.innerHTML = fmt(avg) + ' <small>m³/den</small>';
+      statDailySpend.innerHTML = fmtCzk(avg * price) + ' <small>/den</small>';
     } else {
       statAvg.innerHTML = '<small>zatím nelze spočítat</small>';
+      statDailySpend.innerHTML = '<small>zatím nelze spočítat</small>';
+    }
+
+    const month = lastMonthUsage();
+    if (month) {
+      statMonthSpend.innerHTML = fmtCzk(month.usage * price) + (month.estimated ? ' <small>odhad</small>' : '');
+    } else {
+      statMonthSpend.innerHTML = '<small>zatím nelze spočítat</small>';
     }
 
     drawSpark();
