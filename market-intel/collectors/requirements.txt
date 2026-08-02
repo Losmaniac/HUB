@@ -1,6 +1,0 @@
-# All collectors use the Python standard library only — nothing to install, and
-# no API keys or secrets are required (every source is free / no-key).
-#
-# Optional, only to enable the fuller "pointer" collectors noted in the code:
-#   pytrends       # Google Trends (categories 3 & 7)
-#   openpyxl       # parse the EU Weekly Oil Bulletin .xlsx live (category 1)

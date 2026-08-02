@@ -3,176 +3,140 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dětské portfolio (XRP) – realtime</title>
+  <title>Losmaniac – rozcestník projektů</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
-    h1 { margin: 0 0 8px; }
-    .meta { color: #555; margin-bottom: 16px; }
-    table { border-collapse: collapse; width: 100%; max-width: 720px; }
-    th, td { padding: 10px 12px; border-bottom: 1px solid #e6e6e6; text-align: right; }
-    th:first-child, td:first-child { text-align: left; }
-    tfoot td { font-weight: 700; }
-    .card { max-width: 720px; padding: 16px; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
-    .row { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0 16px; }
-    .pill { padding: 8px 10px; border: 1px solid #eee; border-radius: 999px; background: #fafafa; }
-    .ok { color: #0a7a2f; }
-    .bad { color: #a40000; }
-    button { cursor: pointer; padding: 10px 12px; border-radius: 10px; border: 1px solid #ddd; background: white; }
-    button:hover { background: #f6f6f6; }
-    code { background: #f6f6f6; padding: 2px 6px; border-radius: 6px; }
+    :root { color-scheme: light dark; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      margin: 0; padding: 32px 16px 64px;
+      background: #f7f7f8; color: #1a1a1a;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background: #14161a; color: #eaeaea; }
+      .card { background: #1d2026 !important; border-color: #2a2e36 !important; }
+      .desc { color: #a9adb4 !important; }
+      a.btn { border-color: #3a3f48 !important; }
+      a.btn:hover { background: #262a31 !important; }
+    }
+    main { max-width: 880px; margin: 0 auto; }
+    h1 { margin: 0 0 4px; font-size: 1.6rem; }
+    p.lead { color: #666; margin: 0 0 28px; }
+    .grid {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    .card {
+      background: #fff; border: 1px solid #e6e6e6; border-radius: 14px;
+      padding: 16px 18px; box-shadow: 0 1px 6px rgba(0,0,0,.04);
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .card h2 { margin: 0; font-size: 1.05rem; }
+    .desc { color: #555; font-size: .9rem; margin: 0; flex-grow: 1; }
+    .links { display: flex; gap: 8px; margin-top: 4px; }
+    a.btn {
+      text-decoration: none; font-size: .85rem; padding: 6px 10px;
+      border: 1px solid #ddd; border-radius: 8px; color: inherit;
+    }
+    a.btn:hover { background: #f0f0f0; }
+    a.btn.primary { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    @media (prefers-color-scheme: dark) {
+      a.btn.primary { background: #eaeaea; color: #14161a; border-color: #eaeaea; }
+    }
+    footer { max-width: 880px; margin: 40px auto 0; color: #888; font-size: .82rem; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Portfolio dětí (XRP) – realtime</h1>
-    <div class="meta">
-      Zdroj cen: <code>CoinGecko</code> (XRP/USD) + <code>Frankfurter</code> (USD→CZK).
-      Aktualizace každých <span id="refreshSec">20</span> s.
-    </div>
+  <main>
+    <h1>Losmaniac – projekty</h1>
+    <p class="lead">Každý projekt žije ve vlastním repozitáři s vlastní historií a nasazením přes GitHub Pages.</p>
 
-    <div class="row">
-      <div class="pill">XRP/USD: <strong id="xrpUsd">—</strong></div>
-      <div class="pill">USD/CZK: <strong id="usdCzk">—</strong></div>
-      <div class="pill">1 XRP v CZK: <strong id="xrpCzk">—</strong></div>
-      <div class="pill">Stav: <strong id="status">—</strong></div>
-    </div>
+    <div class="grid">
+      <div class="card">
+        <h2>💰 XRP portfolio</h2>
+        <p class="desc">Realtime dětské portfolio (XRP) – cena, kurz a hodnota v CZK.</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/xrp-portfolio/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/xrp-portfolio">Repo</a>
+        </div>
+      </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Dítě</th>
-          <th>XRP</th>
-          <th>Hodnota (USD)</th>
-          <th>Hodnota (CZK)</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-      <tfoot>
-        <tr>
-          <td>Celkem</td>
-          <td id="totXrp">—</td>
-          <td id="totUsd">—</td>
-          <td id="totCzk">—</td>
-        </tr>
-      </tfoot>
-    </table>
+      <div class="card">
+        <h2>🧭 Leadership game</h2>
+        <p class="desc">Interaktivní hra na procvičení leadership rozhodování.</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/leadership-game/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/leadership-game">Repo</a>
+        </div>
+      </div>
 
-    <div class="row" style="margin-top:16px;">
-      <button id="btnRefresh">Obnovit teď</button>
-      <div class="meta" style="margin: 10px 0 0;">
-        Poslední update: <strong id="lastUpdate">—</strong>
+      <div class="card">
+        <h2>🎵 Lyrics explained</h2>
+        <p class="desc">Vysvětlování textů písní.</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/lyrics-explained/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/lyrics-explained">Repo</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>✈️ Plane games</h2>
+        <p class="desc">Letadlové hry.</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/plane-games/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/plane-games">Repo</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📻 Radio tuner</h2>
+        <p class="desc">Ladění a přehrávání internetových rádií.</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/radio-tuner/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/radio-tuner">Repo</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🗣️ Shadowing</h2>
+        <p class="desc">Nácvik výslovnosti metodou shadowing.</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/shadowing/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/shadowing">Repo</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>💧 Vodoměr</h2>
+        <p class="desc">Evidence stavu vodoměru, spotřeby a nákladů (Firebase sync).</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/vodomer/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/vodomer">Repo</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🎓 Michelin academy</h2>
+        <p class="desc">Interní vzdělávací modul (značka, prodej, konkurence, portfolio).</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/michelin-academy/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/michelin-academy">Repo</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Market intel</h2>
+        <p class="desc">CEE/SEE tržní dashboard + automatizované collectory veřejných dat.</p>
+        <div class="links">
+          <a class="btn primary" href="https://losmaniac.github.io/market-intel/">Otevřít</a>
+          <a class="btn" href="https://github.com/losmaniac/market-intel">Repo</a>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
-  <script>
-    // === Nastavení portfolia ===
-    const kids = [
-      { name: "Ema", xrp: 968.3 },
-      { name: "Jáchym", xrp: 964.3 },
-      { name: "Adam", xrp: 373.3 },
-    ];
-
-    // === Interval aktualizace ===
-    const REFRESH_MS = 20_000;
-
-    // === API endpoints ===
-    // XRP/USD (CoinGecko): https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd
-    const COINGECKO_XRP_USD =
-      "https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd";
-
-    // USD->CZK (Frankfurter): https://api.frankfurter.app/latest?from=USD&to=CZK
-    const FRANKFURTER_USD_CZK =
-      "https://api.frankfurter.app/latest?from=USD&to=CZK";
-
-    const el = (id) => document.getElementById(id);
-
-    const fmt2 = (n) => (Number.isFinite(n) ? n.toLocaleString("cs-CZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—");
-    const fmt4 = (n) => (Number.isFinite(n) ? n.toLocaleString("cs-CZ", { minimumFractionDigits: 4, maximumFractionDigits: 4 }) : "—");
-    const fmt0 = (n) => (Number.isFinite(n) ? n.toLocaleString("cs-CZ") : "—");
-
-    function setStatus(ok, msg) {
-      const s = el("status");
-      s.textContent = msg;
-      s.className = ok ? "ok" : "bad";
-    }
-
-    function renderTable(xrpUsd, usdCzk) {
-      const tbody = el("rows");
-      tbody.innerHTML = "";
-
-      const xrpCzk = xrpUsd * usdCzk;
-
-      let totXrp = 0, totUsd = 0, totCzk = 0;
-
-      for (const k of kids) {
-        const usd = k.xrp * xrpUsd;
-        const czk = usd * usdCzk;
-        totXrp += k.xrp;
-        totUsd += usd;
-        totCzk += czk;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${k.name}</td>
-          <td>${fmt0(k.xrp)}</td>
-          <td>${fmt2(usd)}</td>
-          <td>${fmt2(czk)}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-
-      el("totXrp").textContent = fmt0(totXrp);
-      el("totUsd").textContent = fmt2(totUsd);
-      el("totCzk").textContent = fmt2(totCzk);
-
-      el("xrpUsd").textContent = fmt4(xrpUsd);
-      el("usdCzk").textContent = fmt4(usdCzk);
-      el("xrpCzk").textContent = fmt4(xrpCzk);
-    }
-
-    async function fetchJson(url) {
-      const r = await fetch(url, { cache: "no-store" });
-      if (!r.ok) throw new Error(`HTTP ${r.status} pro ${url}`);
-      return r.json();
-    }
-
-    async function refresh() {
-      try {
-        setStatus(true, "Načítám…");
-
-        // Paralelně stáhneme obě ceny
-        const [xrpData, fxData] = await Promise.all([
-          fetchJson(COINGECKO_XRP_USD),
-          fetchJson(FRANKFURTER_USD_CZK),
-        ]);
-
-        const xrpUsd = xrpData?.ripple?.usd;
-        const usdCzk = fxData?.rates?.CZK;
-
-        if (!Number.isFinite(xrpUsd) || !Number.isFinite(usdCzk)) {
-          throw new Error("Nepovedlo se načíst validní kurzy (XRP/USD nebo USD/CZK).");
-        }
-
-        renderTable(xrpUsd, usdCzk);
-
-        el("lastUpdate").textContent = new Date().toLocaleString("cs-CZ");
-        setStatus(true, "OK");
-      } catch (e) {
-        console.error(e);
-        setStatus(false, "Chyba při načítání kurzů");
-      }
-    }
-
-    // UI
-    el("btnRefresh").addEventListener("click", refresh);
-
-    // Auto-refresh
-    el("refreshSec").textContent = Math.round(REFRESH_MS / 1000);
-    refresh();
-    setInterval(refresh, REFRESH_MS);
-  </script>
+  <footer>
+    Tento repozitář (<code>kp</code>) slouží jen jako rozcestník. Zdrojový kód jednotlivých projektů
+    je v jejich vlastních repozitářích – viz odkazy „Repo“ výše.
+  </footer>
 </body>
 </html>
-
-
