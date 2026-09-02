@@ -1,6 +1,6 @@
 country,date,category,metric,value,unit,source,ingested_at
-EU,2026-09-01,competitive,wiki_pageviews_michelin,31209,count,wikimedia,2026-09-01T09:27:48Z
-EU,2026-09-01,competitive,wiki_pageviews_continental,12924,count,wikimedia,2026-09-01T09:27:48Z
-EU,2026-09-01,competitive,wiki_pageviews_goodyear,18087,count,wikimedia,2026-09-01T09:27:48Z
-EU,2026-09-01,competitive,wiki_pageviews_bridgestone,15131,count,wikimedia,2026-09-01T09:27:48Z
-EU,2026-09-01,competitive,michelin_attention_sov,40.3,pct,wikimedia,2026-09-01T09:27:48Z
+EU,2026-09-02,competitive,wiki_pageviews_michelin,937,count,wikimedia,2026-09-02T08:50:19Z
+EU,2026-09-02,competitive,wiki_pageviews_continental,462,count,wikimedia,2026-09-02T08:50:19Z
+EU,2026-09-02,competitive,wiki_pageviews_goodyear,648,count,wikimedia,2026-09-02T08:50:19Z
+EU,2026-09-02,competitive,wiki_pageviews_bridgestone,489,count,wikimedia,2026-09-02T08:50:20Z
+EU,2026-09-02,competitive,michelin_attention_sov,36.9,pct,wikimedia,2026-09-02T08:50:20Z
